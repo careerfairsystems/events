@@ -54,4 +54,8 @@ module.exports = function (app) {
   // Setting the paypal oauth routes
   app.route('/api/auth/paypal').get(users.oauthCall('paypal'));
   app.route('/api/auth/paypal/callback').get(users.oauthCallback('paypal'));
+
+  // Setting the cas oauth routes
+  app.route('/api/auth/cas').get(users.oauthCall('cas'));
+  app.route('/api/auth/cas/callback').get(users.oauthCallback('cas'));
 };
