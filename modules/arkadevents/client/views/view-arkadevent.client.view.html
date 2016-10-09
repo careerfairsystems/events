@@ -1,0 +1,26 @@
+<section>
+  <div class="page-header">
+    <h1 ng-bind="vm.arkadevent.name"></h1>
+  </div>
+  <div class="pull-right"
+       ng-show="vm.arkadevent.isCurrentUserOwner">
+    <a class="btn btn-primary"
+       ui-sref="arkadevents.edit({ arkadeventId: vm.arkadevent._id })">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="vm.arkadevent.created | date:'mediumDate'"></span>
+      by
+      <span ng-if="vm.arkadevent.user"
+            ng-bind="vm.arkadevent.user.displayName"></span>
+      <span ng-if="!vm.arkadevent.user">Deleted User</span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="vm.arkadevent.content"></p>
+</section>

@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Reminders</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="reminder in vm.reminders"
+       ui-sref="reminders.view({ reminderId: reminder._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="reminder.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="reminder.user" ng-bind="reminder.user.displayName"></span>
+        <span ng-if="!reminder.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="reminder.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.reminders.$resolved && !vm.reminders.length">
+    No Reminders yet, why don't you <a ui-sref="reminders.create">create one</a>?
+  </div>
+</section>

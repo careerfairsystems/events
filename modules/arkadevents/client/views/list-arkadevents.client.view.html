@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Arkadevents</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="arkadevent in vm.arkadevents"
+       ui-sref="arkadevents.view({ arkadeventId: arkadevent._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="arkadevent.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="arkadevent.user" ng-bind="arkadevent.user.displayName"></span>
+        <span ng-if="!arkadevent.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="arkadevent.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.arkadevents.$resolved && !vm.arkadevents.length">
+    No Arkadevents yet, why don't you <a ui-sref="arkadevents.create">create one</a>?
+  </div>
+</section>
