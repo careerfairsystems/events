@@ -7,7 +7,7 @@
       <fieldset>
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Reminder name</label>
-          Specify the name of the reminder as seen by admin. Should preferably descriptive.
+          Specify the name of the reminder as seen by admin. Should preferably be descriptive.
           <input name="name" type="text" ng-model="vm.reminder.name" id="name" class="form-control" placeholder="Name" required>
           <div ng-messages="vm.form.reminderForm.name.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Reminder name is required.</p>
