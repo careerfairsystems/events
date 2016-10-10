@@ -13,13 +13,42 @@ var ArkadeventSchema = new Schema({
   name: {
     type: String,
     default: '',
-    required: 'Please fill Arkadevent name',
+    required: 'Please fill in a name for the event.',
     trim: true
   },
-  image: {
+  photo: {
     type: String,
-    default: 'https://s-media-cache-ak0.pinimg.com/originals/5b/2a/0a/5b2a0a845e530ca0f2e38a954b3f4523.jpg'
+    default: ''
   },
+  description: {
+    type: String,
+    required: 'Please fill in a description for the event.'
+  },
+  nrofseats: {
+    type: Number,
+    required: 'Please fill in the maximum number of seats.'
+  },
+  foodserved: {
+    type: Boolean,
+    requried: 'Please fill in if food will be served at the event.'
+  },
+  typeoffood: {
+    type: String
+  },
+  date: {
+    type: Date,
+    required: 'Pick a time and date for the event.'
+  },
+  reminders: [{
+    reminder: Schema.ObjectId,
+    hoursbeforeevent: Number
+  }],
+  enrolled: [
+    Schema.ObjectId
+  ],
+  standby: [
+    Schema.ObjectId
+  ],
   created: {
     type: Date,
     default: Date.now
