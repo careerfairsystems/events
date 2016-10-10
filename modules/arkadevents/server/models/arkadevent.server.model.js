@@ -59,12 +59,6 @@ var ArkadeventSchema = new Schema({
     reminder: Schema.ObjectId,
     hoursbeforeevent: Number
   }],
-  enrolled: [
-    Schema.ObjectId
-  ],
-  standby: [
-    Schema.ObjectId
-  ],
   created: {
     type: Date,
     default: Date.now
