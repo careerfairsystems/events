@@ -26,8 +26,8 @@
             <pre>{{ event.description }}</pre>
             <span> {{ event.spotsLeft }} spots left.
             </span>
-            <button class="btn btn-sm btn-primary pull-right" ng-show="event.spotsLeft > 0" ng-click="goToEvent()">Reserve a spot</button>
-            <button class="btn btn-sm btn-primary pull-right" ng-show="event.spotsLeft <= 0" ng-click="reservlistToEvent()">Sign up to reservlist</button>
+            <a class="btn btn-sm btn-primary pull-right" ng-show="event.spotsLeft > 0" data-ui-sref="reservations.create({ arkadeventId: event._id })">Reserve a spot</a>
+            <a class="btn btn-sm btn-primary pull-right" ng-show="event.spotsLeft <= 0" data-ui-sref="reservations.create({ arkadeventId: event._id })">Sign up to reservlist</a>
           </div>
         </div>
       </div>

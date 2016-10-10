@@ -24,12 +24,13 @@
         }
       })
       .state('reservations.create', {
-        url: '/create',
+        url: '/create/:arkadeventId',
         templateUrl: 'modules/reservations/client/views/form-reservation.client.view.html',
         controller: 'ReservationsController',
         controllerAs: 'vm',
         resolve: {
-          reservationResolve: newReservation
+          reservationResolve: newReservation,
+          eventResolve: getEvent
         },
         data: {
           roles: ['user', 'admin'],
@@ -75,5 +76,13 @@
 
   function newReservation(ReservationsService) {
     return new ReservationsService();
+  }
+
+  getEvent.$inject = ['$stateParams', 'ArkadeventsService'];
+
+  function getEvent($stateParams, ArkadeventsService) {
+    return ArkadeventsService.get({
+      arkadeventId: $stateParams.arkadeventId
+    }).$promise;
   }
 }());
