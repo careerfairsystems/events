@@ -1,0 +1,195 @@
+/* Event design */
+.tag {
+  position: relative;
+  display: inline-block;
+  margin: 3px 2px;
+  font-size: 8px;
+  padding: 3px 5px;
+  border: 1px solid #eee;
+  background: #eee;
+  border-radius: 5px;
+  cursor: default;
+}
+
+$eventWidth: 300px;
+$eventHeight: 450px;
+$imgHeight: $eventHeight / 2;
+$nameTop: $imgHeight - 40px;
+
+.eventgrid {
+  /*background: white;*/
+  border-radius: 3px;
+  margin-bottom: 100px;
+
+  .events {
+    padding: 20px;
+
+    .eventbox {
+      position:relative;
+      float: left;
+      width: $eventWidth;
+      height: $eventHeight;
+      border: solid 1px #eee;
+      margin: 10px;
+      box-sizing: content-box;
+      background-color: white;
+
+      &:hover {
+        img{
+          -webkit-transform: scale(1.05);
+          -ms-transform: scale(1.05);
+          transform: scale(1.05);
+          -moz-transform: scale(1.05) rotate(.02deg);
+        }
+      }
+
+      table{
+        width: 100%;
+        font-size: 10px;
+      }
+
+      hr {
+       margin-top: 10px;
+       margin-bottom: 10px;
+      }
+      
+      pre{
+        border: none;
+        background-color: white;
+        font-family: myriad pro;
+      }
+      .info{
+        padding: 15px;
+      }
+
+      .name{
+        position: absolute;
+        top: $nameTop;
+        left: 15px;
+        font-size: 24px;
+        font-weight: 100;
+        color: white;
+      }
+      .imgcontainer{
+        width: $eventWidth;
+        height: $eventHeight / 2;
+        overflow: hidden;
+        
+        img {
+          position:relative;
+          display: inline-block;
+          vertical-align: middle;
+          margin: auto;
+          width: 100%;
+          transition: transform .5s ease-in-out;
+        }
+      }
+    }
+  }
+}
+
+/* ARKAD design */
+$white: #FFFFFF;
+$gray: gray;
+$black: #333;
+$break-mobile: 768px;
+$menu-black: rgba(30,30,30,0.95);
+
+body {
+  //background: #002B64;
+  background: url("/modules/core/client/img/bakground-image.png");
+  background-attachment: fixed;
+}
+
+.navbar nav {
+  @media screen and (max-width: $break-mobile) {
+    background-color: $menu-black;
+
+    .navbar-nav .open .dropdown-menu > .active > a {
+      background: none;
+      color: #4a87ff;
+    }
+    .dropdown-menu > li > a {
+      color: $white;
+    }
+  }
+}
+section.container {
+  background-color: rgba(230,230,230, 0.8);
+  border-radius: 2px;
+  padding: 25px;
+  min-height: 400px;
+}
+.navbar-nav > li.open > a.dropdown-toggle {
+  color: $black;
+}
+.navbar-nav > li > a {
+  color: $white;
+  text-shadow: none;
+
+  &:focus, &:hover, &:active {
+    color: $black;
+  }
+}
+.navbar-brand {
+  color: $white;
+  text-shadow: none;
+  &:focus {
+    text-shadow: none;
+    color: $gray;
+  }
+  &:hover {
+    text-shadow: none;
+    color: $gray;
+  }
+}
+.icon-bar {
+  background-color: $white;
+}
+
+
+
+
+
+/* Old CSS */
+.content {
+  margin-top: 50px;
+}
+.undecorated-link:hover {
+  text-decoration: none;
+}
+[ng\:cloak],
+[ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+  display: none !important;
+}
+.header-profile-image {
+  opacity: 0.8;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.open .header-profile-image,
+a:hover .header-profile-image {
+  opacity: 1;
+}
+.user-header-dropdown-toggle {
+  padding-top: 11px !important;
+  padding-bottom: 11px !important;
+}
+.error-text {
+  display: none;
+}
+.has-error .help-block.error-text {
+  display: block;
+}
+.has-error .help-inline.error-text {
+  display: inline;
+}
+a {
+  cursor: pointer;
+}
+

@@ -1,84 +1,56 @@
 <section ng-controller="HomeController">
   <div class="jumbotron text-center">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
-        <img alt="MEAN.JS" class="img-responsive text-center" src="modules/core/client/img/brand/logo.png" />
+    <h1>Events</h1>
+    <p>
+      Book a seat at our fab ARKAD-events!
+      <br />
+    <p>
+    <button class="btn btn-warning btn-sm" ng-click="gotoSelected()">Read about the events</button>
+  </div>
+  <!-- HtmlDescription -->
+  <div ng-bind-html="vm.frontpagehtml"></div>
+  <!-- Events -->
+  <div class="row eventgrid">
+    <div class="events" >
+        <div class="eventbox" ng-click="viewEvent(event)" data-ng-repeat="event in vm.events" >
+          <div class="imgcontainer">
+          <img data-ng-show="event.image" class="" ng-src="{{event.image}}" />
+          </div>
+          <span class="name">{{ event.name }}</span>
+          <div class="info">
+            <table>
+              <tr>
+                <td> Location / Plats  </td>
+                <td> {{ event.location }} </td>
+                <td> Date / Datum  </td>
+                <td> {{ event.date }} </td>
+              </tr>
+              <tr>
+                <td> Language / Språk  </td>
+                <td> {{ event.language }} </td>
+                <td> Time / Tid  </td>
+                <td> {{ event.startTime }} - {{ event.endTime }} </td>
+              </tr>
+            </table>
+            <hr />
+            <pre>{{ event.description }}</pre>
+            <span> {{ event.spotsLeft }} spots left.
+            </span>
+            <button class="btn btn-sm btn-primary pull-right" ng-show="event.hasSpotsLeft" ng-click="goToEvent()">Reserve a spot</button>
+            <button class="btn btn-sm btn-primary pull-right" ng-show="!event.hasSpotsLeft" ng-click="reservlistToEvent()">Sign up to reservlist</button>
+          </div>
+        </div>
       </div>
     </div>
-    <br>
-    <div class="row">
-      <p class="lead">
-        Open-Source Full-Stack Solution For MEAN Applications
-      </p>
+    <div class="alert alert-warning text-center" data-ng-if="vm.events.$resolved && !vm.events.length">
+      No Events yet, why don't you <a data-ui-sref="events.create">create one</a>?
     </div>
-    <div class="row">
-      <p>
-        <a class="btn btn-primary btn-lg" href="http://meanjs.org" target="_blank">Learn more</a>
-      </p>
-    </div>
-  </div>
-  <div>
-    <h2>Congrats! You've configured and run the sample application.</h2>
-    <p>MEAN.JS is a web application boilerplate, which means you should start changing everything :-)</p>
-    <p>This sample application tracks users and articles.</p>
-    <ul>
-      <li>
-        Click
-        <em>Sign Up</em> to get started.
-      </li>
-      <li>
-        Configure your app to work with your social accounts, by editing the
-        <em>/config/env/*.js</em> files.
-      </li>
-      <li>
-        Edit your users module.
-      </li>
-      <li>
-        Add new CRUD modules.
-      </li>
-      <li>
-        Have fun...
-      </li>
-    </ul>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
-      <h2><strong>M</strong>ongoDB</h2>
-      <p><a target="_blank" href="http://mongodb.org/">MongoDB</a> is a NoSQL database. MongoDB's <a target="_blank" href="http://docs.mongodb.org/manual/">great manual</a> is the place to get started with NoSQL and MongoDB.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>E</strong>xpress</h2>
-      <p><a target="_blank" href="http://expressjs.com/"> Express</a> is a NodeJS server-side application web framework. Check out <a target="_blank" href="http://expressjs.com/4x/api.html">The ExpressJS API reference for more information</a> or <a target="_blank" href="http://stackoverflow.com/questions/8144214/learning-express-for-node-js">StackOverflow</a> for more info.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>A</strong>ngularJS</h2>
-      <p><a target="_blank" href="http://angularjs.org/">AngularJS</a> is client-side web application framework. The <a target="_blank" href="http://www.thinkster.io/">Thinkster Popular Guide</a> and <a target="_blank" href="https://egghead.io/">Egghead Videos</a> are great resources.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>N</strong>ode.js</h2>
-      <p><a target="_blank" href="http://nodejs.org/">Node.js</a> is a JavaScript run-time, popular for being a web server platform. Node's website and this <a target="_blank" href="http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js">stackOverflow thread</a> offer excellent starting points to get to grasps with node.</p>
-    </div>
+
   </div>
   <div class="well">
-    <h2>MEAN.JS Documentation</h2>
-    <p>
-      Once you're familiar with the foundation technology, check out the MEAN.JS Documentation:
-      <ul>
-        <li><a target="_blank" href="http://meanjs.org/docs.html">MEAN.JS Documentation</a>
-        </li>
-        <!-- <li><a target="_blank" href="http://meanjs.org/generator.html">Yeoman Generator</a>
-				</li> -->
-        <li><a target="_blank" href="http://meanjs.org/modules.html">Modules</a>
-        </li>
-        <li><a target="_blank" href="http://meanjs.org/changelog.html">Changelog</a>
-        </li>
-        <li><a target="_blank" href="http://meanjs.org/community.html">Community</a>
-        </li>
-        <li><a target="_blank" href="http://blog.meanjs.org">Blog</a>
-        </li>
-      </ul>
+    <p class="text-center">
+      If you have any questions contact: <a href="mailto:event.arkad@tlth.se">
+event.arkad@tlth.se</a>
     </p>
   </div>
-  <br>Enjoy &amp; Keep Us Updated,
-  <br>The MEAN.JS Team.
 </section>

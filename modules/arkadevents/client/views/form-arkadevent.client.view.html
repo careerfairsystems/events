@@ -12,6 +12,10 @@
             <p class="help-block error-text" ng-message="required">Arkadevent name is required.</p>
           </div>
         </div>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="image">Image (url)</label>
+          <input name="url" type="text" ng-model="vm.arkadevent.image" id="image" class="form-control" placeholder="http://..." required>
+        </div>
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.arkadevent._id ? 'Update' : 'Create'}}</button>
         </div>
