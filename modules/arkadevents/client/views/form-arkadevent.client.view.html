@@ -3,22 +3,48 @@
     <h1>{{vm.arkadevent._id ? 'Edit Arkadevent' : 'New Arkadevent'}}</h1>
   </div>
   <div class="col-md-12">
-    <form name="vm.form.arkadeventForm" class="form-horizontal" ng-submit="vm.save(vm.form.arkadeventForm.$valid)" novalidate>
+    <form name="arkadeventForm" class="form-horizontal" ng-submit="vm.save(arkadeventForm.$valid)" >
       <fieldset>
-        <div class="form-group" show-errors>
-          <label class="control-label" for="name">Name</label>
-          <input name="name" type="text" ng-model="vm.arkadevent.name" id="name" class="form-control" placeholder="Name" required>
-          <div ng-messages="vm.form.arkadeventForm.name.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Arkadevent name is required.</p>
+
+        <!-- Is foodserved -->
+        <div class="form-group">
+          <label class="control-label col-sm-3" for="foodserved">Is food served:</label>
+          <div class="checkbox col-sm-8" required>
+            <label><input name="foodserved" type="checkbox" ng-model="vm.arkadevent.foodserved" value="true">Yes</label>
+          </div>
+
+          <div ng-messages="arkadeventForm.description.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Beskrivning är obligatorisk.</p>
           </div>
         </div>
-        <div class="form-group" show-errors>
-          <label class="control-label" for="image">Image (url)</label>
-          <input name="url" type="text" ng-model="vm.arkadevent.image" id="image" class="form-control" placeholder="http://..." required>
+
+        <!-- Input form questions -->
+        <div class="form-group" ng-repeat="q in inputQuestions">
+          <label class="control-label col-sm-3" for="{{ q.name }}">{{ q.question }}:</label>
+          <div class="col-sm-8">
+            <input name="{{ q.name }}" type="{{ q.type }}" ng-model="q.variable" id="{{ q.name }}" class="form-control" placeholder="{{ q.placeholder }}" required>
+         </div>
+          <div ng-messages="arkadeventForm.{{ q.name }}.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">{{ q.question }} är obligatorisk.</p>
+          </div>
         </div>
+
+        <!-- Description -->
         <div class="form-group">
-          <button type="submit" class="btn btn-default">{{vm.arkadevent._id ? 'Update' : 'Create'}}</button>
+          <label class="control-label col-sm-3" for="description">Description:</label>
+          <div class="col-sm-8">
+            <textarea class="form-control" ng-model="vm.arkadevent.description" row="10"></textarea>
+         </div>
+          <div ng-messages="arkadeventForm.description.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Beskrivning är obligatorisk.</p>
+          </div>
         </div>
+
+        <!-- Submit -->
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary col-sm-offset-2">{{vm.arkadevent._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <!-- Error-msg -->
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>
         </div>

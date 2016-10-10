@@ -28,9 +28,21 @@
     // Save Arkadevent
     function save(isValid) {
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.arkadeventForm');
+        console.log("aoeu");
+        $scope.$broadcast('show-errors-check-validity', 'arkadeventForm');
         return false;
       }
+ 
+      // Update with values from inputQuestions.... 
+      vm.arkadevent.name = $scope.inputQuestions[0].variable;
+      vm.arkadevent.photo = $scope.inputQuestions[1].variable;
+      vm.arkadevent.location = $scope.inputQuestions[2].variable;
+      vm.arkadevent.language = $scope.inputQuestions[3].variable;
+      vm.arkadevent.typeoffood = $scope.inputQuestions[4].variable;
+      vm.arkadevent.nrofseats = $scope.inputQuestions[5].variable;
+      vm.arkadevent.date = $scope.inputQuestions[6].variable;
+      vm.arkadevent.starttime = $scope.inputQuestions[7].variable;
+      vm.arkadevent.endtime = $scope.inputQuestions[8].variable;
 
       // TODO: move create/update logic to service
       if (vm.arkadevent._id) {
@@ -49,5 +61,63 @@
         vm.error = res.data.message;
       }
     }
+
+
+    // Create form-question Array
+    $scope.inputQuestions = [ 
+      { 
+        name : 'name', 
+        question : 'Name', 
+        placeholder : '', 
+        type : 'text', 
+        variable : vm.arkadevent.name 
+      }, { 
+        name : 'photo', 
+        question : 'Photo (url)', 
+        placeholder : 'http://...', 
+        type : 'text', 
+        variable : vm.arkadevent.photo 
+      }, { 
+        name : 'location', 
+        question : 'Location', 
+        type : 'text', 
+        variable : vm.arkadevent.location 
+      }, { 
+        name : 'language', 
+        question : 'Language', 
+        type : 'text', 
+        variable : vm.arkadevent.language 
+      }, { 
+        name : 'typeoffood', 
+        question : 'typeoffood', 
+        type : 'text', 
+        variable : vm.arkadevent.typeoffood 
+      }, { 
+        name : 'nrofseats', 
+        question : 'Number of seats', 
+        type : 'number', 
+        variable : vm.arkadevent.nrofseats 
+      }, { 
+        name : 'date', 
+        question : 'Date', 
+        type : 'date', 
+        variable : vm.arkadevent.date 
+      }, { 
+        name : 'starttime', 
+        question : 'Start time', 
+        type : 'time', 
+        variable : vm.arkadevent.starttime 
+      }, { 
+        name : 'endtime', 
+        question : 'End time', 
+        type : 'time', 
+        variable : vm.arkadevent.endtime 
+      },
+    ];
+
+
+
+
+
   }
 }());
