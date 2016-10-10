@@ -13,7 +13,7 @@ var ReminderSchema = new Schema({
   name: {
     type: String,
     default: '',
-    required: 'Please fill Reminder name',
+    required: 'Please fill in reminder name.',
     trim: true
   },
   emailtitle: {
