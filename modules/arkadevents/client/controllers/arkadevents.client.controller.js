@@ -63,6 +63,12 @@
     }
 
 
+    // Convert date-string to date-object
+    function dtStrToObj(str){ return new Date(str); }
+    var date = dtStrToObj(vm.arkadevent.date);
+    var starttime = dtStrToObj(vm.arkadevent.starttime);
+    var endtime = dtStrToObj(vm.arkadevent.endtime);
+
     // Create form-question Array
     $scope.inputQuestions = [ 
       { 
@@ -101,17 +107,17 @@
         name : 'date', 
         question : 'Date', 
         type : 'date', 
-        variable : vm.arkadevent.date 
+        variable : date 
       }, { 
         name : 'starttime', 
         question : 'Start time', 
         type : 'time', 
-        variable : vm.arkadevent.starttime 
+        variable : starttime 
       }, { 
         name : 'endtime', 
         question : 'End time', 
         type : 'time', 
-        variable : vm.arkadevent.endtime 
+        variable : endtime 
       },
     ];
 

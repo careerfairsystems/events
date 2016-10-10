@@ -41,11 +41,14 @@
         background-color: white;
         font-family: myriad pro; }
       .eventgrid .events .eventbox .info {
-        padding: 15px; }
+        padding: 15px;
+        padding-top: 5px; }
       .eventgrid .events .eventbox .name {
         position: absolute;
-        top: 185px;
-        left: 15px;
+        top: 190px;
+        padding-left: 15px;
+        background-color: rgba(30, 30, 30, 0.8);
+        width: 100%;
         font-size: 24px;
         font-weight: 100;
         color: white; }

@@ -14,7 +14,7 @@
 $eventWidth: 300px;
 $eventHeight: 450px;
 $imgHeight: $eventHeight / 2;
-$nameTop: $imgHeight - 40px;
+$nameTop: $imgHeight - 35px;
 
 .eventgrid {
   /*background: white;*/
@@ -60,12 +60,15 @@ $nameTop: $imgHeight - 40px;
       }
       .info{
         padding: 15px;
+        padding-top: 5px;
       }
 
       .name{
         position: absolute;
         top: $nameTop;
-        left: 15px;
+        padding-left: 15px;
+        background-color: rgba(30,30,30,0.8);
+        width: 100%;
         font-size: 24px;
         font-weight: 100;
         color: white;

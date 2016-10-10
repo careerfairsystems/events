@@ -18,26 +18,16 @@
           </div>
           <span class="name">{{ event.name }}</span>
           <div class="info">
-            <table>
-              <tr>
-                <td> Location / Plats  </td>
-                <td> {{ event.location }} </td>
-                <td> Date / Datum  </td>
-                <td> {{ event.date }} </td>
-              </tr>
-              <tr>
-                <td> Language / Språk  </td>
-                <td> {{ event.language }} </td>
-                <td> Time / Tid  </td>
-                <td> {{ event.startTime }} - {{ event.endTime }} </td>
-              </tr>
-            </table>
+            <span class="tag"> {{ event.location }} </span>
+            <span class="tag"> {{ event.date | date:"mediumDate" }} </span>
+            <span class="tag"> {{ event.starttime | date:"HH:mm" }} - {{ event.endtime | date:"HH:mm" }} </span>
+            <span class="tag"> {{ event.language }} </span>
             <hr />
             <pre>{{ event.description }}</pre>
             <span> {{ event.spotsLeft }} spots left.
             </span>
-            <button class="btn btn-sm btn-primary pull-right" ng-show="event.hasSpotsLeft" ng-click="goToEvent()">Reserve a spot</button>
-            <button class="btn btn-sm btn-primary pull-right" ng-show="!event.hasSpotsLeft" ng-click="reservlistToEvent()">Sign up to reservlist</button>
+            <button class="btn btn-sm btn-primary pull-right" ng-show="event.spotsLeft > 0" ng-click="goToEvent()">Reserve a spot</button>
+            <button class="btn btn-sm btn-primary pull-right" ng-show="event.spotsLeft <= 0" ng-click="reservlistToEvent()">Sign up to reservlist</button>
           </div>
         </div>
       </div>

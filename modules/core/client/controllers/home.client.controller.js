@@ -24,7 +24,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     }
 
     function calcSpotsLeft(e){
-      e.spotsLeft = vm.reservations.reduce(reservedSpots, e.nrofseats || 0);
+      e.spotsLeft = Math.max(vm.reservations.reduce(reservedSpots, e.nrofseats || 0), 0);
       function reservedSpots(pre, curr){ return pre - (curr.event === e._id); }
     }
 
