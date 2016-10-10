@@ -20,6 +20,14 @@ var ArkadeventSchema = new Schema({
     type: String,
     default: ''
   },
+  location: {
+    type: String,
+    required: 'Please fill in a location for the event.'
+  },
+  language: {
+    type: String,
+    required: 'Please pick a language for the event.'
+  },
   description: {
     type: String,
     required: 'Please fill in a description for the event.'
@@ -37,18 +45,20 @@ var ArkadeventSchema = new Schema({
   },
   date: {
     type: Date,
-    required: 'Pick a time and date for the event.'
+    required: 'Pick a date for the event.'
+  },
+  starttime: {
+    type: Date,
+    required: 'Pick a start time for the event.'
+  },
+  endtime: {
+    type: Date,
+    requred: 'Pick an end time for the event.'
   },
   reminders: [{
     reminder: Schema.ObjectId,
     hoursbeforeevent: Number
   }],
-  enrolled: [
-    Schema.ObjectId
-  ],
-  standby: [
-    Schema.ObjectId
-  ],
   created: {
     type: Date,
     default: Date.now

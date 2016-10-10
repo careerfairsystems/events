@@ -14,6 +14,13 @@
         <span ng-if="!reminder.user">Deleted User</span>
       </small>
       <h4 class="list-group-item-heading" ng-bind="reminder.name"></h4>
+
+      <h5>Titel för emailet</h5>
+      <p class="list-group-item-heading" ng-bind="reminder.emailtitle"></p>
+
+      <h5>Body för emailet</h5>
+      <p class="list-group-item-heading" ng-bind="reminder.emailbody"></p>
+
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="vm.reminders.$resolved && !vm.reminders.length">

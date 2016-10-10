@@ -6,12 +6,32 @@
     <form name="vm.form.reminderForm" class="form-horizontal" ng-submit="vm.save(vm.form.reminderForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
-          <label class="control-label" for="name">Name</label>
+          <label class="control-label" for="name">Reminder name</label>
+          Specify the name of the reminder as seen by admin. Should preferably be descriptive.
           <input name="name" type="text" ng-model="vm.reminder.name" id="name" class="form-control" placeholder="Name" required>
           <div ng-messages="vm.form.reminderForm.name.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Reminder name is required.</p>
           </div>
         </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="emailtitle">Title of email</label>
+          Specify the title of the reminder email that will be sent.
+          <input name="emailtitle" type="text" ng-model="vm.reminder.emailtitle" id="emailtitle" class="form-control" placeholder="Email title" required>
+          <div ng-messages="vm.form.reminderForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Title of email is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="emailbody">Email body</label>
+        Specify the body of the reminder email.
+          <textarea name="emailbody" ng-model="vm.reminder.emailbody" id="emailbody" class="form-control" placeholder="Email body" word-break ="break-word" rows="10" required></textarea>
+          <div ng-messages="vm.form.reminderForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Email body is required.</p>
+          </div>
+        </div>
+
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.reminder._id ? 'Update' : 'Create'}}</button>
         </div>
