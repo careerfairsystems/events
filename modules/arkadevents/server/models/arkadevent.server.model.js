@@ -38,7 +38,7 @@ var ArkadeventSchema = new Schema({
   },
   foodserved: {
     type: Boolean,
-    requried: 'Please fill in if food will be served at the event.'
+    default: false
   },
   typeoffood: {
     type: String
@@ -66,6 +66,14 @@ var ArkadeventSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  public: {
+    type: Boolean,
+    default: false
+  },
+  applicationopen: {
+    type: Boolean,
+    default: false
   }
 });
 

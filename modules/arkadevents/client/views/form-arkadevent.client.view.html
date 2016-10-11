@@ -5,16 +5,29 @@
   <div class="col-md-12">
     <form name="arkadeventForm" class="form-horizontal" ng-submit="vm.save(arkadeventForm.$valid)" >
       <fieldset>
+      All data can be changed at a later time. For example you may not want the application for an event to be open already at creation. Then don't check the box for open application for now but edit the event later when you want the application to open.
 
         <!-- Is foodserved -->
         <div class="form-group">
-          <label class="control-label col-sm-3" for="foodserved">Is food served:</label>
+          <label class="control-label col-sm-3" for="foodserved">Will food be served at the event?</label>
           <div class="checkbox col-sm-8" required>
             <label><input name="foodserved" type="checkbox" ng-model="vm.arkadevent.foodserved" value="true">Yes</label>
           </div>
+        </div>
 
-          <div ng-messages="arkadeventForm.description.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Beskrivning är obligatorisk.</p>
+        <!-- Should event be public -->
+        <div class="form-group">
+          <label class="control-label col-sm-3" for="public">Should event be public (shown to guests and users)?</label>
+          <div class="checkbox col-sm-8" required>
+            <label><input name="public" type="checkbox" ng-model="vm.arkadevent.public" value="true">Yes</label>
+          </div>
+        </div>
+
+        <!-- Should application be open -->
+        <div class="form-group">
+          <label class="control-label col-sm-3" for="public">Should application be open?</label>
+          <div class="checkbox col-sm-8" required>
+            <label><input name="public" type="checkbox" ng-model="vm.arkadevent.applicationopen" value="true">Yes</label>
           </div>
         </div>
 
@@ -22,7 +35,7 @@
         <div class="form-group" ng-repeat="q in inputQuestions">
           <label class="control-label col-sm-3" for="{{ q.name }}">{{ q.question }}:</label>
           <div class="col-sm-8">
-            <input name="{{ q.name }}" type="{{ q.type }}" ng-model="q.variable" id="{{ q.name }}" class="form-control" placeholder="{{ q.placeholder }}" required>
+            <input name="{{ q.name }}" type="{{ q.type }}" ng-model="q.variable" id="{{ q.name }}" class="form-control" placeholder="{{ q.placeholder }}">
          </div>
           <div ng-messages="arkadeventForm.{{ q.name }}.$error" role="alert">
             <p class="help-block error-text" ng-message="required">{{ q.question }} är obligatorisk.</p>
