@@ -25,7 +25,7 @@ exports.invokeRolesPolicies = function () {
     roles: ['user'],
     allows: [{
       resources: '/api/arkadevents',
-      permissions: ['get', 'post']
+      permissions: ['get']
     }, {
       resources: '/api/arkadevents/:arkadeventId',
       permissions: ['get']

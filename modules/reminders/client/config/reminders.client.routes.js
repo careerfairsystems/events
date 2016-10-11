@@ -32,7 +32,7 @@
           reminderResolve: newReminder
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle: 'Reminders Create'
         }
       })
@@ -45,7 +45,7 @@
           reminderResolve: getReminder
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle: 'Edit Reminder {{ reminderResolve.name }}'
         }
       })

@@ -46,7 +46,7 @@
           reservationResolve: getReservation
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle: 'Edit Reservation {{ reservationResolve.name }}'
         }
       })

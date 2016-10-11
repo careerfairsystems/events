@@ -13,7 +13,7 @@
       title: 'Arkadevents',
       state: 'arkadevents',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['admin']
     });
 
     // Add the dropdown list item
@@ -25,8 +25,7 @@
     // Add the dropdown create item
     menuService.addSubMenuItem('topbar', 'arkadevents', {
       title: 'Create Arkadevent',
-      state: 'arkadevents.create',
-      roles: ['user']
+      state: 'arkadevents.create'
     });
   }
 }());

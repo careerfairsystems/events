@@ -32,7 +32,7 @@
           arkadeventResolve: newArkadevent
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle: 'Arkadevents Create'
         }
       })
@@ -45,7 +45,7 @@
           arkadeventResolve: getArkadevent
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle: 'Edit Arkadevent {{ arkadeventResolve.name }}'
         }
       })
