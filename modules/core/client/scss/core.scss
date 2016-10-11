@@ -26,7 +26,7 @@
 }
 
 $eventWidth: 300px;
-$eventHeight: 450px;
+$eventHeight: 550px;
 $imgHeight: $eventHeight / 2;
 $nameTop: $imgHeight - 35px;
 
@@ -72,6 +72,7 @@ $nameTop: $imgHeight - 35px;
         background-color: white;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         padding: 0;
+        white-space: pre-wrap;
       }
       .info{
         padding: 15px;
@@ -84,7 +85,7 @@ $nameTop: $imgHeight - 35px;
         padding-left: 15px;
         background-color: rgba(30,30,30,0.8);
         width: 100%;
-        font-size: 24px;
+        font-size: 18px;
         font-weight: 100;
         color: white;
       }
@@ -100,7 +101,7 @@ $nameTop: $imgHeight - 35px;
           vertical-align: middle;
           margin: auto;
           width: 100%;
-          transition: transform .5s ease-in-out;
+          transition: transform .5s ease;
         }
       }
     }

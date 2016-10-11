@@ -29,7 +29,7 @@
       position: relative;
       float: left;
       width: 300px;
-      height: 450px;
+      height: 550px;
       border: solid 1px #eee;
       margin: 10px;
       box-sizing: content-box;
@@ -49,22 +49,23 @@
         border: none;
         background-color: white;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        padding: 0; }
+        padding: 0;
+        white-space: pre-wrap; }
       .eventgrid .events .eventbox .info {
         padding: 15px;
         padding-top: 5px; }
       .eventgrid .events .eventbox .name {
         position: absolute;
-        top: 190px;
+        top: 240px;
         padding-left: 15px;
         background-color: rgba(30, 30, 30, 0.8);
         width: 100%;
-        font-size: 24px;
+        font-size: 18px;
         font-weight: 100;
         color: white; }
       .eventgrid .events .eventbox .imgcontainer {
         width: 300px;
-        height: 225px;
+        height: 275px;
         overflow: hidden;
         background: #aaa; }
         .eventgrid .events .eventbox .imgcontainer img {
@@ -73,7 +74,7 @@
           vertical-align: middle;
           margin: auto;
           width: 100%;
-          transition: transform .5s ease-in-out; }
+          transition: transform .5s ease; }
 
 /* ARKAD design */
 body {
