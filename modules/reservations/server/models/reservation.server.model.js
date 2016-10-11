@@ -32,10 +32,10 @@ var ReservationSchema = new Schema({
     type: String,
     required: 'Please fill the email'
   },
-  foodpref: {
+  foodpref: [{
     type: String,
     required: 'Please fill the food preferences'
-  },
+  }],
   showedup: {
     type: Boolean,
     default: false

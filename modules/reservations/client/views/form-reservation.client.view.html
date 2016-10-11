@@ -64,7 +64,7 @@
           <div class="tag tag-btn" ng-class="{selected: vegan}" ng-click="vegan = !vegan"> Vegan </div>
           <div class="tag tag-btn" ng-class="{selected: gluten}" ng-click="gluten = !gluten"> Gluten </div>
           <!-- Other -->
-          <input name="foodpref" type="text" ng-model="vm.reservation.other" id="other" placeholder="Other..." class="form-control" required>
+          <input name="foodpref" type="text" ng-model="other" id="other" placeholder="Other..." class="form-control" required>
           <div ng-messages="vm.form.reservationForm.phone.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Reservation phone is required.</p>
           </div>

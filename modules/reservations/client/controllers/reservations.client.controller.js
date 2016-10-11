@@ -45,7 +45,7 @@
         food_arr.push('Gluten');
       if($scope.other) 
         food_arr.push($scope.other);
-      vm.reservation.foodpref = food_arr.join();
+      vm.reservation.foodpref = food_arr;
 
       // TODO: move create/update logic to service
       if (vm.reservation._id) {
