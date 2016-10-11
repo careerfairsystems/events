@@ -5,7 +5,7 @@
   <div class="col-md-12">
     <form name="arkadeventForm" class="form-horizontal" ng-submit="vm.save(arkadeventForm.$valid)" >
       <fieldset>
-      All data can be changed at a later time. For example you may not want the application for an event to be open already at creation. Then don't check the box for open application for now but edit the event later when you want the application to open.
+      All data can be changed at a later time. For example you may not want the reservation for an event to be open already at creation. Then don't check the box for open reservation for now but edit the event later when you want the reservation to open.
 
         <!-- Is foodserved -->
         <div class="form-group">
@@ -23,11 +23,11 @@
           </div>
         </div>
 
-        <!-- Should application be open -->
+        <!-- Should reservation be open -->
         <div class="form-group">
-          <label class="control-label col-sm-3" for="public">Should application be open?</label>
+          <label class="control-label col-sm-3" for="reservationopen">Should reservation be open?</label>
           <div class="checkbox col-sm-8" required>
-            <label><input name="public" type="checkbox" ng-model="vm.arkadevent.applicationopen" value="true">Yes</label>
+            <label><input name="public" type="checkbox" ng-model="vm.arkadevent.reservationopen" value="true">Yes</label>
           </div>
         </div>
 

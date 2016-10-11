@@ -71,7 +71,7 @@ var ArkadeventSchema = new Schema({
     type: Boolean,
     default: false
   },
-  applicationopen: {
+  reservationopen: {
     type: Boolean,
     default: false
   }

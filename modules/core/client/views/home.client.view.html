@@ -12,7 +12,7 @@
   <!-- Events -->
   <div class="row eventgrid">
     <div class="events" >
-        <div class="eventbox" ng-click="viewEvent(event)" data-ng-repeat="event in vm.events" >
+        <div class="eventbox" ng-click="viewEvent(event)" data-ng-repeat="event in vm.events" ng-show="event.public">
           <div class="imgcontainer">
           <img data-ng-show="event.photo" class="" ng-src="{{event.photo}}" />
           </div>
@@ -26,8 +26,13 @@
             <pre>{{ event.description }}</pre>
             <span> {{ event.spotsLeft }} spots left.
             </span>
-            <a class="btn btn-sm btn-primary pull-right" ng-show="event.spotsLeft > 0" data-ui-sref="reservations.create({ arkadeventId: event._id })">Reserve a spot</a>
-            <a class="btn btn-sm btn-primary pull-right" ng-show="event.spotsLeft <= 0" data-ui-sref="reservations.create({ arkadeventId: event._id })">Sign up to reservlist</a>
+
+            reservation open: {{event.reservationopen}}
+
+            <!--Should be: ng-show="event.spotsLeft > 0 && event.reservationopen"-->
+            <a class="btn btn-sm btn-primary pull-right" ng-show="event.reservationopen" data-ui-sref="reservations.create({ arkadeventId: event._id })">Reserve a spot</a>
+            <!--Should be: ng-show="event.spotsLeft <= 0 && event.reservationopen" -->
+            <a class="btn btn-sm btn-primary pull-right" ng-show="false && event.reservationopen" data-ui-sref="reservations.create({ arkadeventId: event._id })">Sign up to reservlist</a>
           </div>
         </div>
       </div>
