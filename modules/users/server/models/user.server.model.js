@@ -70,6 +70,9 @@ var UserSchema = new Schema({
   foodpref: [{
     type: String
   }],
+  other: {
+    type: String
+  },
   password: {
     type: String,
     default: ''

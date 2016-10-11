@@ -27,6 +27,7 @@
       vm.reservation.phone = vm.user.phone;
       vm.reservation.email = vm.user.email;
       vm.reservation.foodpref = vm.user.foodpref;
+      vm.reservation.other = vm.user.other;
       vm.reservation.guild = vm.user.guild;
       vm.reservation.year = vm.user.year;
     }
@@ -38,11 +39,20 @@
       vm.user.phone = vm.reservation.phone;
       vm.user.email = vm.reservation.email;
       vm.user.foodpref = vm.reservation.foodpref;
+      vm.user.other = vm.reservation.other;
       vm.user.guild = vm.reservation.guild;
       vm.user.year = vm.reservation.year;
 
       var myUser = new Users(vm.user);
       myUser.$update(successUserCallback, errorCallback);
+    }
+    fillFoodPref();
+    function fillFoodPref(){
+      $scope.laktos = vm.reservation.foodpref.indexOf('Laktos') >= 0;
+      $scope.vegetarian = vm.reservation.foodpref.indexOf('Vegetarian') >= 0;
+      $scope.vegan = vm.reservation.foodpref.indexOf('Vegan') >= 0;
+      $scope.gluten = vm.reservation.foodpref.indexOf('Gluten') >= 0;
+      $scope.other = vm.reservation.other;
     }
 
     // Remove existing Reservation
@@ -68,9 +78,8 @@
         food_arr.push('Vegan');
       if($scope.gluten) 
         food_arr.push('Gluten');
-      if($scope.other) 
-        food_arr.push($scope.other);
       vm.reservation.foodpref = food_arr;
+      vm.reservation.other = $scope.other;
 
       // TODO: move create/update logic to service
       if (vm.reservation._id) {
