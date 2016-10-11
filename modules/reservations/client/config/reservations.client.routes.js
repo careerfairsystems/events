@@ -30,7 +30,7 @@
         controllerAs: 'vm',
         resolve: {
           reservationResolve: newReservation,
-          eventResolve: getEvent
+          arkadeventResolve: getEvent
         },
         data: {
           roles: ['user', 'admin'],
@@ -56,7 +56,8 @@
         controller: 'ReservationsController',
         controllerAs: 'vm',
         resolve: {
-          reservationResolve: getReservation
+          reservationResolve: getReservation,
+          arkadeventResolve: function(){ return {}; }
         },
         data: {
           pageTitle: 'Reservation {{ reservationResolve.name }}'

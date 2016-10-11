@@ -1,20 +1,79 @@
 <section>
   <div class="page-header">
-    <h1>{{vm.reservation._id ? 'Edit Reservation' : 'New Reservation'}}</h1>
+    <h1>{{vm.reservation._id ? 'Edit Reservation' : 'Book a reservation at: ' + vm.arkadevent.name}}</h1>
   </div>
   <div class="col-md-12">
     <form name="vm.form.reservationForm" class="form-horizontal" ng-submit="vm.save(vm.form.reservationForm.$valid)" novalidate>
       <fieldset>
+        <!-- Name -->
         <div class="form-group" show-errors>
-          <label class="control-label" for="name">Name</label>
+          <label class="control-label" for="name">Namn / Namn</label>
           <input name="name" type="text" ng-model="vm.reservation.name" id="name" class="form-control" placeholder="Name" required>
           <div ng-messages="vm.form.reservationForm.name.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Reservation name is required.</p>
           </div>
         </div>
+        <!-- Guild -->
+        <div class="form-group" show-errors>
+          <label class="control-label" for="guild">Sektion / Guild</label>
+          <select name="guild" class="form-control" ng-model="vm.reservation.guild">
+            <option> aoeu / ntnth</option>
+            <option> snth / aoeu </option>
+          </select>
+          <div ng-messages="vm.form.reservationForm.guild.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reservation guild is required.</p>
+          </div>
+        </div>
+        <!-- Year -->
+        <div class="form-group" show-errors>
+          <label class="control-label" for="year">Årskurs / Year</label>
+          <select name="year" class="form-control" ng-model="vm.reservation.year">
+            <option> 1</option>
+            <option> 2 </option>
+            <option> 3 </option>
+            <option> 4 </option>
+            <option> 5 </option>
+          </select>
+          <div ng-messages="vm.form.reservationForm.year.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reservation year is required.</p>
+          </div>
+        </div>
+        <!-- Email -->
+        <div class="form-group" show-errors>
+          <label class="control-label" for="email">Epost / Email</label>
+          <input name="email" type="text" ng-model="vm.reservation.email" id="name" class="form-control" required>
+          <div ng-messages="vm.form.reservationForm.email.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reservation email is required.</p>
+          </div>
+        </div>
+        <!-- Phone -->
+        <div class="form-group" show-errors>
+          <label class="control-label" for="phone">Telefon / Phone</label>
+          <input name="phone" type="text" ng-model="vm.reservation.phone" id="name" class="form-control" required>
+          <div ng-messages="vm.form.reservationForm.phone.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reservation phone is required.</p>
+          </div>
+        </div>
+        <!-- Foodpref -->
+        <div class="form-group" show-errors>
+          <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
+          <br />
+          <!-- Choices -->
+          <div class="tag tag-btn" ng-class="{selected: laktos}" ng-click="laktos = !laktos"> Laktos </div>
+          <div class="tag tag-btn" ng-class="{selected: vegetarian}" ng-click="vegetarian = !vegetarian"> vegetarian </div>
+          <div class="tag tag-btn" ng-class="{selected: vegan}" ng-click="vegan = !vegan"> Vegan </div>
+          <div class="tag tag-btn" ng-class="{selected: gluten}" ng-click="gluten = !gluten"> Gluten </div>
+          <!-- Other -->
+          <input name="foodpref" type="text" ng-model="vm.reservation.other" id="other" placeholder="Other..." class="form-control" required>
+          <div ng-messages="vm.form.reservationForm.phone.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reservation phone is required.</p>
+          </div>
+        </div>
+        <!-- Submit -->
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.reservation._id ? 'Update' : 'Create'}}</button>
         </div>
+        <!-- Error-msg -->
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>
         </div>

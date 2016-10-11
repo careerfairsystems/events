@@ -9,6 +9,16 @@
   background: #eee;
   border-radius: 5px;
   cursor: default;
+
+  &.tag-btn{
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  &.selected {
+    background-color: #777; 
+    color: #eee; 
+  }
 }
 
 $eventWidth: 300px;

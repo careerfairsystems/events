@@ -6,13 +6,15 @@
     .module('reservations')
     .controller('ReservationsController', ReservationsController);
 
-  ReservationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reservationResolve'];
+  ReservationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reservationResolve', 'arkadeventResolve'];
 
-  function ReservationsController ($scope, $state, $window, Authentication, reservation) {
+  function ReservationsController ($scope, $state, $window, Authentication, reservation, arkadeventResolve) {
     var vm = this;
 
     vm.authentication = Authentication;
     vm.reservation = reservation;
+    vm.arkadevent = arkadeventResolve;
+    vm.reservation.arkadevent = vm.arkadevent._id;
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
@@ -31,6 +33,19 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.reservationForm');
         return false;
       }
+
+      var food_arr = [];
+      if($scope.laktos) 
+        food_arr.push('Laktos');
+      if($scope.vegetarian) 
+        food_arr.push('Vegetarian');
+      if($scope.vegan) 
+        food_arr.push('Vegan');
+      if($scope.gluten) 
+        food_arr.push('Gluten');
+      if($scope.other) 
+        food_arr.push($scope.other);
+      vm.reservation.foodpref = food_arr.join();
 
       // TODO: move create/update logic to service
       if (vm.reservation._id) {
