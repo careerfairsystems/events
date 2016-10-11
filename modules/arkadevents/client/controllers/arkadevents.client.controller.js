@@ -6,9 +6,9 @@
     .module('arkadevents')
     .controller('ArkadeventsController', ArkadeventsController);
 
-  ArkadeventsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arkadeventResolve'];
+  ArkadeventsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arkadeventResolve', 'RemindersService'];
 
-  function ArkadeventsController ($scope, $state, $window, Authentication, arkadevent) {
+  function ArkadeventsController ($scope, $state, $window, Authentication, arkadevent, RemindersService) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -17,6 +17,14 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.reminders = RemindersService.query();
+
+    $scope.chosenReminders = [];
+    $scope.reminderNames = [];
+
+    angular.forEach(vm.reminders, function(reminder) {
+      $scope.reminderNames.push(reminder.name);
+    });
 
     // Remove existing Arkadevent
     function remove() {
@@ -121,9 +129,25 @@
       },
     ];
 
+    $scope.selectReminder = function (){
+      var selection = $('#selectreminders').find(':selected').text();
+      if (!selection)
+        return;
+      var index = $('#selectreminders').val();
+      $scope.reminderNames.splice(index, 1);
+      $scope.chosenReminders.push({ name: selection, motivation: '', edit: true });
+    };
 
+    $scope.deleteReminder = function (index){
+      $scope.remainderNames.push($scope.chosenRemainders[index].name);
+      $scope.remainderNames.sort();
+      $scope.chosenRemainders.splice(index, 1);
+    };
 
+    $scope.choiceOn = false;
 
-
+    $('#selectreminders').on('change', function() {
+      $scope.choiceOn = true;
+    });
   }
 }());

@@ -7,6 +7,10 @@
       <fieldset>
       All data can be changed at a later time. For example you may not want the reservation for an event to be open already at creation. Then don't check the box for open reservation for now but edit the event later when you want the reservation to open.
 
+      Reminders: {{vm.reminders}}
+
+      Reminders names: {{ vm.reminders.name}}
+
         <!-- Is foodserved -->
         <div class="form-group">
           <label class="control-label col-sm-3" for="foodserved">Will food be served at the event?</label>
@@ -51,6 +55,61 @@
           <div ng-messages="arkadeventForm.description.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Beskrivning är obligatorisk.</p>
           </div>
+        </div>
+
+        <!-- Reminders -->
+        <div class="form-group form-inline">
+          <label for="selectreminders"> Reminders </label>
+          <p>
+          Pick the reminders you want and pick the time and day you want them sent.
+          </p>
+          <select class="form-control" name="selectreminders" id="selectreminders" ng-model="vm.application.reminders" ng-options='rem.name for rem in vm.reminders'>
+          </select>
+          <button type="button" class="btn btn-primary btn-sm" ng-click="selectReminder()" ng-class="{ disabled: !choiceOn}">Add reminder</button>
+          <br />
+          <br />
+          <label ng-show="vm.reminders.length > 0">Chosen reminders</label>
+          <table class="table table-bordered table-condensed" ng-show="vm.reminders.length > 0">
+            <tr class="active">
+              <th style="width: 25%;">
+                Reminder
+              </th>
+              <th>
+                Date
+              </th>
+              <th style="width: 150px">
+              Time
+              </th>
+              <th style="width: 5%;">
+              </th>
+            </tr>
+            <tr class="active" ng-repeat="reminder in vm.application.reminders track by $index">
+              <td>
+                {{ c.name}}
+              </td>
+              <td>
+                <div ng-show="!reminder.edit">
+                  <pre>{{ c.motivation}}</pre>
+                </div>
+                <div ng-show="c.edit">
+                  <label class="control-label col-sm-3" for="{{ q.name }}">{{ q.question }}:</label>
+                  <div class="col-sm-8">
+                    <input name="date" type="date" ng-model="reminder.variable" id="{{ q.name }}" class="form-control" placeholder="{{ q.placeholder }}">
+                  </div>
+                </div>
+              </td>
+              <td>
+              <td style="white-space: nowrap">
+                <div class="buttons" ng-show="reminder.edit">
+                  <button type="button" class="btn btn-sm btn-primary" ng-click="reminder.edit = false"><i class="glyphicon glyphicon-ok"></i></button>
+                  <button type="button" class="btn btn-sm btn-danger" ng-click="deleteCompany($index)"><i class="glyphicon glyphicon-trash"></i></button>
+                </div>
+                <div class="buttons" ng-show="!reminder.edit">
+                  <button type="button" class="btn btn-primary" ng-click="c.edit = true;"><i class="glyphicon glyphicon-edit"></i></a>
+                </div>
+              </td>
+            </tr>
+          </table>
         </div>
 
         <!-- Submit -->
