@@ -22,6 +22,15 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
+    roles: ['host'],
+    allows: [{
+      resources: '/api/reservations',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/:reservationId',
+      permissions: ['*']
+    }]
+  }, {
     roles: ['user'],
     allows: [{
       resources: '/api/reservations',

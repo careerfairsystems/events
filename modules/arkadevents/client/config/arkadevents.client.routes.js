@@ -23,6 +23,15 @@
           pageTitle: 'Arkadevents List'
         }
       })
+      .state('arkadevents.check', {
+        url: '/check',
+        templateUrl: 'modules/arkadevents/client/views/check-arkadevents.client.view.html',
+        controller: 'ArkadeventsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Arkadevents List'
+        }
+      })
       .state('arkadevents.create', {
         url: '/create',
         templateUrl: 'modules/arkadevents/client/views/form-arkadevent.client.view.html',

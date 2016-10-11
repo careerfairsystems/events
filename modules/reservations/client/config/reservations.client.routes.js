@@ -23,6 +23,19 @@
           pageTitle: 'Reservations List'
         }
       })
+      .state('reservations.check', {
+        url: '/check/:arkadeventId',
+        templateUrl: 'modules/reservations/client/views/check-reservation.client.view.html',
+        controller: 'ReservationsCheckController',
+        controllerAs: 'vm',
+        resolve: {
+          arkadeventResolve: getEvent
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle: 'Reservations Create'
+        }
+      })
       .state('reservations.create', {
         url: '/create/:arkadeventId',
         templateUrl: 'modules/reservations/client/views/form-reservation.client.view.html',

@@ -13,7 +13,7 @@
       title: 'Reservations',
       state: 'reservations',
       type: 'dropdown',
-      roles: ['admin']
+      roles: ['host', 'admin']
     });
 
     // Add the dropdown list item

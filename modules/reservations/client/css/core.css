@@ -1,0 +1,20 @@
+.reservations .reservation {
+  padding: 15px; }
+  .reservations .reservation button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0; }
+  .reservations .reservation input {
+    vertical-align: top; }
+  .reservations .reservation .info {
+    display: inline-block; }
+  .reservations .reservation span {
+    font-size: 15px;
+    margin-left: 10px; }
+    .reservations .reservation span.food {
+      font-size: 11px; }
+
+/*# sourceMappingURL=core.css.map */

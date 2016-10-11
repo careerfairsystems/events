@@ -1,0 +1,33 @@
+.reservations{
+
+  .reservation{
+    padding: 15px;
+
+    button{
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    input{
+      vertical-align: top;
+    }
+    .info{
+      display: inline-block;
+    }
+    span{
+      font-size: 15px;
+      margin-left: 10px;
+
+      &.food{
+        font-size: 11px;
+      }
+    }
+
+
+  } 
+
+
+}

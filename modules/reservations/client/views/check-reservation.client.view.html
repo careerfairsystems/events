@@ -1,0 +1,25 @@
+<section>
+  <div class="page-header">
+    <div class="row">
+      <div class="col-md-4">
+        <h1>Reservations</h1>
+      </div>
+      <div class="col-md-4" style="margin-top: 2em">
+        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+      </div>
+    </div>
+  </div>
+  <div class="list-group reservations">
+    <div ng-repeat="reservation in filteredItems" class="reservation list-group-item">
+      <input type="checkbox" value="true" ng-model="reservation.edit">
+      <div class="info">
+        <span class="list-group-item-heading" ng-bind="reservation.name"></span>
+        <br/>
+        <span class="food" ng-bind="reservation.foodpref"></span>
+      </div>
+      <button class="btn btn-success" ng-click="checkReservation(reservation)" ng-show="reservation.edit"> Check</button>
+      <p class="list-group-item-text pull-right small" ng-bind="user.roles"></p>
+      <p class="list-group-item-text" ng-bind="user.email"></p>
+    </div>
+  </div>
+</section>

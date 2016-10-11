@@ -1,0 +1,15 @@
+<section>
+  <div class="page-header">
+    <h1>Arkadevents</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="arkadevent in vm.arkadevents"
+       ui-sref="reservations.check({ arkadeventId: arkadevent._id })"
+       class="list-group-item">
+      <h4 class="list-group-item-heading" ng-bind="arkadevent.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.arkadevents.$resolved && !vm.arkadevents.length">
+    No Arkadevents yet, why don't you <a ui-sref="arkadevents.create">create one</a>?
+  </div>
+</section>
