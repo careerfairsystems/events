@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ArkadeventsService', 'ReservationsService',
-  function ($scope, Authentication, ArkadeventsService, ReservationsService) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ArkadeventsService',
+  function ($scope, Authentication, ArkadeventsService) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     var vm = this;
@@ -12,12 +12,14 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     ArkadeventsService.query(getEventsDone);
     function getEventsDone (data){
       vm.events = data;
-      ReservationsService.query(getReservationsDone);
+      //ReservationsService.query(getReservationsDone);
     }
+    /*
     function getReservationsDone (data){
       vm.reservations = data;
       getDataDone();
     }
+    */
 
     function getDataDone(){
       vm.events.forEach(calcSpotsLeft);
