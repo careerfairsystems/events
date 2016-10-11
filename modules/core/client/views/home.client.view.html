@@ -3,9 +3,7 @@
     <h1>Events</h1>
     <p>
       Book a seat at our fab ARKAD-events!
-      <br />
     <p>
-    <button class="btn btn-warning btn-sm" ng-click="gotoSelected()">Read about the events</button>
   </div>
   <!-- HtmlDescription -->
   <div ng-bind-html="vm.frontpagehtml"></div>
@@ -32,10 +30,6 @@
         </div>
       </div>
     </div>
-    <div class="alert alert-warning text-center" data-ng-if="vm.events.$resolved && !vm.events.length">
-      No Events yet, why don't you <a data-ui-sref="events.create">create one</a>?
-    </div>
-
   </div>
   <div class="well">
     <p class="text-center">
