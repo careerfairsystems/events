@@ -58,6 +58,18 @@ var UserSchema = new Schema({
     lowercase: true,
     trim: true
   },
+  phone: {
+    type: String
+  },
+  guild: {
+    type: String
+  },
+  year: {
+    type: String
+  },
+  foodpref: [{
+    type: String
+  }],
   password: {
     type: String,
     default: ''

@@ -6,9 +6,9 @@
     .module('reservations')
     .controller('ReservationsController', ReservationsController);
 
-  ReservationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reservationResolve', 'arkadeventResolve'];
+  ReservationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reservationResolve', 'arkadeventResolve', 'Users'];
 
-  function ReservationsController ($scope, $state, $window, Authentication, reservation, arkadeventResolve) {
+  function ReservationsController ($scope, $state, $window, Authentication, reservation, arkadeventResolve, Users) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -19,6 +19,31 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.user = vm.authentication.user;
+
+    loadUserData();
+    function loadUserData(){
+      vm.reservation.name = vm.user.displayName;
+      vm.reservation.phone = vm.user.phone;
+      vm.reservation.email = vm.user.email;
+      vm.reservation.foodpref = vm.user.foodpref;
+      vm.reservation.guild = vm.user.guild;
+      vm.reservation.year = vm.user.year;
+    }
+    function saveDataToUser(){
+      vm.user.displayName = vm.reservation.name;
+      var name = vm.reservation.name.split(" ");
+      vm.user.firstName = name[0];
+      vm.user.lastName = name.slice(1).join(" ");
+      vm.user.phone = vm.reservation.phone;
+      vm.user.email = vm.reservation.email;
+      vm.user.foodpref = vm.reservation.foodpref;
+      vm.user.guild = vm.reservation.guild;
+      vm.user.year = vm.reservation.year;
+
+      var myUser = new Users(vm.user);
+      myUser.$update(successUserCallback, errorCallback);
+    }
 
     // Remove existing Reservation
     function remove() {
@@ -49,20 +74,23 @@
 
       // TODO: move create/update logic to service
       if (vm.reservation._id) {
-        vm.reservation.$update(successCallback, errorCallback);
+        vm.reservation.$update(successReservationCallback, errorCallback);
       } else {
-        vm.reservation.$save(successCallback, errorCallback);
+        vm.reservation.$save(successReservationCallback, errorCallback);
       }
 
-      function successCallback(res) {
-        $state.go('reservations.view', {
-          reservationId: res._id
-        });
+      function successReservationCallback(res) {
+        vm.resId = res._id;
+        saveDataToUser();
       }
-
-      function errorCallback(res) {
-        vm.error = res.data.message;
-      }
+    }
+    function errorCallback(res) {
+      vm.error = res.data.message;
+    }
+    function successUserCallback(res) {
+      $state.go('reservations.view', {
+        reservationId: vm.resId
+      });
     }
   }
 }());
