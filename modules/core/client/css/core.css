@@ -11,10 +11,13 @@
   cursor: default; }
   .tag.tag-btn {
     cursor: pointer;
-    font-size: 14px; }
+    font-size: 14px;
+    opacity: 0.7; }
   .tag.selected {
-    background-color: #777;
-    color: #eee; }
+    background-color: #555;
+    border-color: #555;
+    color: #eee;
+    opacity: 1; }
 
 .eventgrid {
   /*background: white;*/
