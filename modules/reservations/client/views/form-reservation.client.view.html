@@ -2,7 +2,10 @@
   <div class="page-header">
     <h1>{{vm.reservation._id ? 'Edit Reservation' : 'Book a reservation at: ' + vm.arkadevent.name}}</h1>
   </div>
-  <div class="col-md-12">
+
+  <div class="lead" ng-show="!vm.arkadevent.reservationopen">Registreringen för detta event är stängt.</div>
+
+  <div class="col-md-12" ng-show="vm.arkadevent.reservationopen">
     <form name="vm.form.reservationForm" class="form-horizontal" ng-submit="vm.save(vm.form.reservationForm.$valid)" novalidate>
       <fieldset>
         <!-- Name -->
