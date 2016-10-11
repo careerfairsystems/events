@@ -33,9 +33,9 @@
     }
     function saveDataToUser(){
       vm.user.displayName = vm.reservation.name;
-      var name = vm.reservation.name.split(" ");
+      var name = vm.reservation.name.split(' ');
       vm.user.firstName = name[0];
-      vm.user.lastName = name.slice(1).join(" ");
+      vm.user.lastName = name.slice(1).join(' ');
       vm.user.phone = vm.reservation.phone;
       vm.user.email = vm.reservation.email;
       vm.user.foodpref = vm.reservation.foodpref;
