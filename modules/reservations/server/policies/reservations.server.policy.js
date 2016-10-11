@@ -25,14 +25,14 @@ exports.invokeRolesPolicies = function () {
     roles: ['user'],
     allows: [{
       resources: '/api/reservations',
-      permissions: ['get', 'post']
+      permissions: ['post', 'get']
     }, {
       resources: '/api/reservations/:reservationId',
       permissions: ['get']
     }]
   }, {
     roles: ['guest'],
-    allows: [{
+        allows: [{
       resources: '/api/reservations',
       permissions: ['get']
     }, {

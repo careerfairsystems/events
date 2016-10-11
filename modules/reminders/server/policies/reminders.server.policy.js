@@ -23,22 +23,10 @@ exports.invokeRolesPolicies = function () {
     }]
   }, {
     roles: ['user'],
-    allows: [{
-      resources: '/api/reminders',
-      permissions: ['get', 'post']
-    }, {
-      resources: '/api/reminders/:reminderId',
-      permissions: ['get']
-    }]
+    allows: []
   }, {
     roles: ['guest'],
-    allows: [{
-      resources: '/api/reminders',
-      permissions: ['get']
-    }, {
-      resources: '/api/reminders/:reminderId',
-      permissions: ['get']
-    }]
+    allows: []
   }]);
 };
 

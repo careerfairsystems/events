@@ -13,7 +13,7 @@
       title: 'Reminders',
       state: 'reminders',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['admin']
     });
 
     // Add the dropdown list item
@@ -26,7 +26,6 @@
     menuService.addSubMenuItem('topbar', 'reminders', {
       title: 'Create Reminder',
       state: 'reminders.create',
-      roles: ['user']
     });
   }
 }());
