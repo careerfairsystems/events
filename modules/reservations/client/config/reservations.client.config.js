@@ -19,7 +19,7 @@
     // Add the dropdown list item
     menuService.addSubMenuItem('topbar', 'reservations', {
       title: 'List Reservations',
-      state: 'reservations.list'
+      state: 'reservations.eventlist'
     });
   }
 }());

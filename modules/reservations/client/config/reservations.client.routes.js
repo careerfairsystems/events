@@ -14,8 +14,17 @@
         url: '/reservations',
         template: '<ui-view/>'
       })
+      .state('reservations.eventlist', {
+        url: 'events',
+        templateUrl: 'modules/reservations/client/views/list-events.client.view.html',
+        controller: 'ReservationsEventsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Reservations List'
+        }
+      })
       .state('reservations.list', {
-        url: '',
+        url: '/:arkadeventId/list',
         templateUrl: 'modules/reservations/client/views/list-reservations.client.view.html',
         controller: 'ReservationsListController',
         controllerAs: 'vm',
