@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Reservation = mongoose.model('Reservation'),
+  Arkadevent = mongoose.model('Arkadevent'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -16,15 +17,37 @@ exports.create = function(req, res) {
   var reservation = new Reservation(req.body);
   reservation.user = req.user;
 
-  reservation.save(function(err) {
+  var count = 0;
+  Reservation.find({ enrolled: true }).sort('-created').exec(reservationsFound);
+  function reservationsFound(err, reservations) {
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+      console.log("Error: " + err);
     } else {
-      res.jsonp(reservation);
+      count = reservations.length;
+      Arkadevent.find({ _id: reservation.arkadevent }).exec(eventFound);
     }
-  });
+  }
+  function eventFound(err, arkadevent){
+    if(err){
+      console.log("Error, event not found: " + err);
+    } else {
+      arkadevent = arkadevent[0];
+      reservation.enrolled = arkadevent.nrofseats > count;
+      reservation.standby = arkadevent.nrofseats <= count;
+      doSave();
+    }
+  }
+  function doSave(){
+    reservation.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(reservation);
+      }
+    });
+  }
 };
 
 /**
