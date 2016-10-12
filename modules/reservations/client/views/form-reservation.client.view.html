@@ -61,16 +61,17 @@
           <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
           <br />
           <!-- Choices -->
-          <div class="tag tag-btn" ng-class="{selected: laktos}" ng-click="laktos = !laktos"> Laktos </div>
-          <div class="tag tag-btn" ng-class="{selected: vegetarian}" ng-click="vegetarian = !vegetarian"> vegetarian </div>
-          <div class="tag tag-btn" ng-class="{selected: vegan}" ng-click="vegan = !vegan"> Vegan </div>
-          <div class="tag tag-btn" ng-class="{selected: gluten}" ng-click="gluten = !gluten"> Gluten </div>
+          <input type="checkbox" ng-model="laktos" /> Laktos
+          <input type="checkbox" ng-model="vegetarian" /> Vegetarian
+          <input type="checkbox" ng-model="vegan" /> Vegan
+          <input type="checkbox" ng-model="gluten" /> Gluten
           <!-- Other -->
           <input name="foodpref" type="text" ng-model="other" id="other" placeholder="Other..." class="form-control">
         </div>
         <!-- Submit -->
+        <hr>
         <div class="form-group">
-          <button type="submit" class="btn btn-primary">{{vm.reservation._id ? 'Update' : 'Create'}}</button>
+          <button type="submit" class="btn btn-primary">{{vm.reservation._id ? 'Update' : 'Skicka bokning / Send Reservation'}}</button>
         </div>
         <!-- Error-msg -->
         <div ng-show="vm.error" class="text-danger">

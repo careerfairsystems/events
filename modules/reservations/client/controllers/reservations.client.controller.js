@@ -75,6 +75,7 @@
       vm.reservation.other = vm.user.other;
       vm.reservation.guild = vm.user.guild;
       vm.reservation.year = vm.user.year;
+      vm.reservation.program = vm.user.program;
     }
     function saveDataToUser(){
       vm.user.displayName = vm.reservation.name;
@@ -87,6 +88,7 @@
       vm.user.other = vm.reservation.other;
       vm.user.guild = vm.reservation.guild;
       vm.user.year = vm.reservation.year;
+      vm.user.program = vm.reservation.program;
 
       var myUser = new Users(vm.user);
       myUser.$update(successUserCallback, errorCallback);

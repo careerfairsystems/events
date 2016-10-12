@@ -64,6 +64,9 @@ var UserSchema = new Schema({
   guild: {
     type: String
   },
+  program: {
+    type: String
+  },
   year: {
     type: String
   },
