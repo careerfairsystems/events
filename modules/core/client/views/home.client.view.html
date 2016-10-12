@@ -10,11 +10,11 @@
   <!-- Events -->
   <div class="row eventgrid">
     <div class="events" >
-        <div class="eventbox" ng-click="viewEvent(event)" data-ng-repeat="event in vm.events" ng-show="event.public">
+        <div class="eventbox" ng-click="viewEvent(event)" data-ng-repeat="event in vm.events" ng-show="event.public || isAdmin">
           <div class="imgcontainer">
           <img data-ng-show="event.photo" class="" ng-src="{{event.photo}}" />
           </div>
-          <span class="name">{{ event.name }}</span>
+          <span class="name">{{ event.name }} <span ng-show="!event.public">(private)</span></span>
           <div class="info">
             <span class="tag"> {{ event.location }} </span>
             <span class="tag"> {{ event.date | date:"mediumDate" }} </span>
