@@ -22,7 +22,7 @@
             <span class="tag"> {{ event.language }} </span>
             <hr />
             <pre>{{ event.description }}</pre>
-            <span> {{ event.spotsLeft }} spots left.
+            <span> {{ event.nrofseats - event.seatstaken }} spots left.
             </span>
 
             <!--Should be: ng-show="event.spotsLeft > 0 && event.reservationopen"-->

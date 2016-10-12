@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Arkadevent = mongoose.model('Arkadevent'),
+  Reservation = mongoose.model('Reservation'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -38,7 +39,15 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   arkadevent.isCurrentUserOwner = req.user && arkadevent.user && arkadevent.user._id.toString() === req.user._id.toString();
 
-  res.jsonp(arkadevent);
+  Reservation.find({ arkadevent: arkadevent._id }).count(function(err, count){
+    if(err){
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    arkadevent.seatstaken = count;
+    res.jsonp(arkadevent);
+  });        
 };
 
 /**
@@ -82,12 +91,27 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
   Arkadevent.find().sort('-created').populate('user', 'displayName').exec(function(err, arkadevents) {
+    var incr = 0;
+    function calcSpots(e){
+      Reservation.find({ arkadevent: e._id }).count(function(err, count){
+        if(err){
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        }
+        e.seatstaken = count;
+        incr++;
+        if(incr === arkadevents.length){
+          res.jsonp(arkadevents);
+        }
+      });        
+    }
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(arkadevents);
+      arkadevents.map(calcSpots);
     }
   });
 };
