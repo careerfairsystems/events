@@ -32,6 +32,9 @@ var ArkadeventSchema = new Schema({
     type: String,
     required: 'Please fill in a description for the event.'
   },
+  seatstaken: {
+    type: Number,
+  },
   nrofseats: {
     type: Number,
     required: 'Please fill in the maximum number of seats.'
