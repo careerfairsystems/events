@@ -1,3 +1,4 @@
+/* global $:false */
 (function () {
   'use strict';
 
@@ -129,6 +130,11 @@
       },
     ];
 
+    $scope.choiceOn = false;
+    $('#selectreminders').on('change', function() {
+      $scope.choiceOn = true;
+    });
+
     $scope.selectReminder = function (){
       var selection = $('#selectreminders').find(':selected').text();
       if (!selection)
@@ -143,11 +149,5 @@
       $scope.remainderNames.sort();
       $scope.chosenRemainders.splice(index, 1);
     };
-
-    $scope.choiceOn = false;
-
-    $('#selectreminders').on('change', function() {
-      $scope.choiceOn = true;
-    });
   }
 }());

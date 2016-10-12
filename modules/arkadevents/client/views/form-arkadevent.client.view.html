@@ -69,7 +69,10 @@
           <br />
           <br />
           <label ng-show="vm.reminders.length > 0">Chosen reminders</label>
-          <table class="table table-bordered table-condensed" ng-show="vm.reminders.length > 0">
+
+          <p ng-show="chosenReminders.length ===0">You have not chosen any reminders. </p>
+
+          <table class="table table-bordered table-condensed" ng-show="chosenReminders.length > 0">
             <tr class="active">
               <th style="width: 25%;">
                 Reminder
@@ -83,26 +86,37 @@
               <th style="width: 5%;">
               </th>
             </tr>
-            <tr class="active" ng-repeat="reminder in vm.application.reminders track by $index">
+            <tr class="active" ng-repeat="reminder in chosenReminders track by $index">
               <td>
-                {{ c.name}}
+                {{ reminder.name }}
               </td>
+              <!-- Date -->
               <td>
                 <div ng-show="!reminder.edit">
-                  <pre>{{ c.motivation}}</pre>
+                  <pre>{{ reminder.date.getFullYear(); }}-{{ reminder.date.getMonth(); }}-{{ reminder.date.getDate(); }} </pre>
                 </div>
-                <div ng-show="c.edit">
-                  <label class="control-label col-sm-3" for="{{ q.name }}">{{ q.question }}:</label>
-                  <div class="col-sm-8">
-                    <input name="date" type="date" ng-model="reminder.variable" id="{{ q.name }}" class="form-control" placeholder="{{ q.placeholder }}">
-                  </div>
+                <div ng-show="reminder.edit">
+                  <input name="date" type="date" ng-model="reminder.date" id="{{ q.name }}" class="form-control" placeholder="{{ q.placeholder }}">
                 </div>
               </td>
+              <!-- Time -->
               <td>
+                <div ng-show="!reminder.edit">
+                    <div class="col-sm-8">
+                      <pre>{{ reminder.time.getHours(); }}:{{ reminder.getMinutes(); }} </pre>
+                    </div>
+                  </div>
+                  <div ng-show="reminder.edit">
+                    <div class="col-sm-8">
+                      <input name="time" type="time" ng-model="reminder.time" id="{{ q.name }}" class="form-control" placeholder="{{ q.placeholder }}">
+                    </div>
+                  </div>
+                </td>
+              <!-- Controls -->
               <td style="white-space: nowrap">
                 <div class="buttons" ng-show="reminder.edit">
                   <button type="button" class="btn btn-sm btn-primary" ng-click="reminder.edit = false"><i class="glyphicon glyphicon-ok"></i></button>
-                  <button type="button" class="btn btn-sm btn-danger" ng-click="deleteCompany($index)"><i class="glyphicon glyphicon-trash"></i></button>
+                  <button type="button" class="btn btn-sm btn-danger" ng-click="deleteReminder($index)"><i class="glyphicon glyphicon-trash"></i></button>
                 </div>
                 <div class="buttons" ng-show="!reminder.edit">
                   <button type="button" class="btn btn-primary" ng-click="c.edit = true;"><i class="glyphicon glyphicon-edit"></i></a>
