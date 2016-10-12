@@ -16,15 +16,14 @@
             <p class="help-block error-text" ng-message="required">Reservation name is required.</p>
           </div>
         </div>
-        <!-- Guild -->
+        <!-- Program -->
         <div class="form-group" show-errors>
-          <label class="control-label" for="guild">Sektion / Guild</label>
-          <select name="guild" class="form-control" ng-model="vm.reservation.guild">
-            <option> aoeu / ntnth</option>
-            <option> snth / aoeu </option>
+          <label class="control-label" for="program">Program / Education</label>
+          <select class="form-control" name="program" ng-model="vm.reservation.program" ng-options="program for program in programs" required>
+            <option disabled></option>
           </select>
-          <div ng-messages="vm.form.reservationForm.guild.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Reservation guild is required.</p>
+          <div ng-messages="vm.form.reservationForm.program.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Program is required.</p>
           </div>
         </div>
         <!-- Year -->

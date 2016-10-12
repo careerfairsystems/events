@@ -16,9 +16,9 @@ var ReservationSchema = new Schema({
     required: 'Please fill Reservation name',
     trim: true
   },
-  guild: {
+  program: {
     type: String,
-    required: 'Please fill Guild'
+    required: 'Please fill program'
   },
   year: {
     type: String,
