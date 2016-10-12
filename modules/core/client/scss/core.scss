@@ -1,3 +1,10 @@
+pre{
+  border: none;
+  background-color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 0;
+  white-space: pre-wrap;
+}
 /* Event design */
 .tag {
   position: relative;
@@ -67,13 +74,6 @@ $nameTop: $imgHeight - 35px;
        margin-bottom: 10px;
       }
       
-      pre{
-        border: none;
-        background-color: white;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        padding: 0;
-        white-space: pre-wrap;
-      }
       .info{
         padding: 15px;
         padding-top: 5px;

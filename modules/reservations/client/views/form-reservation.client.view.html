@@ -1,83 +1,110 @@
 <section>
-  <div class="page-header">
-    <h1>{{vm.reservation._id ? 'Edit Reservation' : 'Book a reservation at: ' + vm.arkadevent.name}}</h1>
+
+  <div class="row arkadeventinfo">
+    <div class="col-sm-5">
+      <h1>{{ vm.arkadevent.name }}</h1> 
+      <span class="tag"> {{ vm.arkadevent.location }} </span>
+      <span class="tag"> {{ vm.arkadevent.date | date:"mediumDate" }} </span>
+      <span class="tag"> {{ vm.arkadevent.starttime | date:"HH:mm" }} - {{ vm.arkadevent.endtime | date:"HH:mm" }} </span>
+      <span class="tag"> {{ vm.arkadevent.language }} </span>
+      <br />
+      <br />
+      <pre>
+        {{ vm.arkadevent.description }}
+      </pre>
+      <span>Spots left:<strong> {{ vm.arkadevent.nrofseats - vm.arkadevent.seatstaken }}</strong> <span>
+    </div>
+    <div class="col-sm-5 col-sm-offset-1">
+      <img src="{{ vm.arkadevent.photo }}">
+    </div>
   </div>
+  <hr>
+
 
   <div class="lead" ng-show="!vm.arkadevent.reservationopen">Registreringen för detta event är stängt.</div>
 
-  <div class="col-md-12" ng-show="vm.arkadevent.reservationopen">
-    <form name="vm.form.reservationForm" class="form-horizontal" ng-submit="vm.save(vm.form.reservationForm.$valid)" novalidate>
-      <fieldset>
-        <!-- Name -->
-        <div class="form-group" show-errors>
-          <label class="control-label" for="name">Namn / Namn</label>
-          <input name="name" type="text" ng-model="vm.reservation.name" id="name" class="form-control" placeholder="Name" required>
-          <div ng-messages="vm.form.reservationForm.name.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Reservation name is required.</p>
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4" ng-show="vm.arkadevent.reservationopen">
+      <h3>Boka en plats / Reserve a spot</h3>
+      <form name="vm.form.reservationForm" class="form-horizontal" ng-submit="vm.save(vm.form.reservationForm.$valid)" novalidate>
+        <fieldset>
+          <!-- Name -->
+          <div class="form-group" show-errors>
+            <label class="control-label" for="name">Namn / Namn</label>
+            <input name="name" type="text" ng-model="vm.reservation.name" id="name" class="form-control" placeholder="Name" required>
+            <div ng-messages="vm.form.reservationForm.name.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Reservation name is required.</p>
+            </div>
           </div>
-        </div>
-        <!-- Program -->
-        <div class="form-group" show-errors>
-          <label class="control-label" for="program">Program / Education</label>
-          <select class="form-control" name="program" ng-model="vm.reservation.program" ng-options="program for program in programs" required>
-            <option disabled></option>
-          </select>
-          <div ng-messages="vm.form.reservationForm.program.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Program is required.</p>
+          <!-- Program -->
+          <div class="form-group" show-errors>
+            <label class="control-label" for="program">Program / Education</label>
+            <select class="form-control" name="program" ng-model="vm.reservation.program" ng-options="program for program in programs" required>
+              <option disabled></option>
+            </select>
+            <div ng-messages="vm.form.reservationForm.program.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Program is required.</p>
+            </div>
           </div>
-        </div>
-        <!-- Year -->
-        <div class="form-group" show-errors>
-          <label class="control-label" for="year">Årskurs / Year</label>
-          <select name="year" class="form-control" ng-model="vm.reservation.year">
-            <option> 1</option>
-            <option> 2 </option>
-            <option> 3 </option>
-            <option> 4 </option>
-            <option> 5 </option>
-          </select>
-          <div ng-messages="vm.form.reservationForm.year.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Reservation year is required.</p>
+          <!-- Year -->
+          <div class="form-group" show-errors>
+            <label class="control-label" for="year">Årskurs / Year</label>
+            <select name="year" class="form-control" ng-model="vm.reservation.year">
+              <option> 1</option>
+              <option> 2 </option>
+              <option> 3 </option>
+              <option> 4 </option>
+              <option> 5 </option>
+            </select>
+            <div ng-messages="vm.form.reservationForm.year.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Reservation year is required.</p>
+            </div>
           </div>
-        </div>
-        <!-- Email -->
-        <div class="form-group" show-errors>
-          <label class="control-label" for="email">Epost / Email</label>
-          <input name="email" type="text" ng-model="vm.reservation.email" id="name" class="form-control" required>
-          <div ng-messages="vm.form.reservationForm.email.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Reservation email is required.</p>
+          <!-- Email -->
+          <div class="form-group" show-errors>
+            <label class="control-label" for="email">Epost / Email</label>
+            <input name="email" type="text" ng-model="vm.reservation.email" id="name" class="form-control" required>
+            <div ng-messages="vm.form.reservationForm.email.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Reservation email is required.</p>
+            </div>
           </div>
-        </div>
-        <!-- Phone -->
-        <div class="form-group" show-errors>
-          <label class="control-label" for="phone">Telefon / Phone</label>
-          <input name="phone" type="text" ng-model="vm.reservation.phone" id="name" class="form-control" required>
-          <div ng-messages="vm.form.reservationForm.phone.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Reservation phone is required.</p>
+          <!-- Phone -->
+          <div class="form-group" show-errors>
+            <label class="control-label" for="phone">Telefon / Phone</label>
+            <input name="phone" type="text" ng-model="vm.reservation.phone" id="name" class="form-control" required>
+            <div ng-messages="vm.form.reservationForm.phone.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Reservation phone is required.</p>
+            </div>
           </div>
-        </div>
-        <!-- Foodpref -->
-        <div class="form-group" show-errors>
-          <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
-          <br />
-          <!-- Choices -->
-          <input type="checkbox" ng-model="laktos" /> Laktos
-          <input type="checkbox" ng-model="vegetarian" /> Vegetarian
-          <input type="checkbox" ng-model="vegan" /> Vegan
-          <input type="checkbox" ng-model="gluten" /> Gluten
-          <!-- Other -->
-          <input name="foodpref" type="text" ng-model="other" id="other" placeholder="Other..." class="form-control">
-        </div>
-        <!-- Submit -->
-        <hr>
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary">{{vm.reservation._id ? 'Update' : 'Skicka bokning / Send Reservation'}}</button>
-        </div>
-        <!-- Error-msg -->
-        <div ng-show="vm.error" class="text-danger">
-          <strong ng-bind="vm.error"></strong>
-        </div>
-      </fieldset>
-    </form>
+          <!-- Foodpref -->
+          <div class="form-group" show-errors>
+            <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
+            <br />
+            <!-- Choices -->
+            <input type="checkbox" ng-model="laktos" /> Laktos
+            <input type="checkbox" ng-model="vegetarian" /> Vegetarian
+            <input type="checkbox" ng-model="vegan" /> Vegan
+            <input type="checkbox" ng-model="gluten" /> Gluten
+            <!-- Other -->
+            <input name="foodpref" type="text" ng-model="other" id="other" placeholder="Other..." class="form-control">
+          </div>
+          <!-- Submit -->
+          <hr>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">{{vm.reservation._id ? 'Update' : 'Skicka bokning / Send Reservation'}}</button>
+          </div>
+          <!-- Error-msg -->
+          <div ng-show="vm.error" class="text-danger">
+            <strong ng-bind="vm.error"></strong>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+  <div class="row well" style="margin-top: 150px;">
+    <p class="text-center">
+      If you have any questions contact: <a href="mailto:event.arkad@tlth.se">
+event.arkad@tlth.se</a>
+    </p>
   </div>
 </section>
