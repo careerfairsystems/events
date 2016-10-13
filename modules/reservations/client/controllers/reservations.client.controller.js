@@ -102,7 +102,7 @@
       vm.error = res.data.message;
     }
     function successUserCallback(res) {
-      $state.go('reservations.view', {
+      $state.go('reservations.confirmation', {
         reservationId: vm.resId
       });
     }

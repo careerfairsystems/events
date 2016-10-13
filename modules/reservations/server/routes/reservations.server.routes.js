@@ -8,6 +8,10 @@ var reservationsPolicy = require('../policies/reservations.server.policy'),
 
 module.exports = function(app) {
   // Reservations Routes
+
+  app.route('/api/reservations/confirmationmail')
+    .post(reservations.confirmationMail);
+
   app.route('/api/reservations').all(reservationsPolicy.isAllowed)
     .get(reservations.list)
     .post(reservations.create);

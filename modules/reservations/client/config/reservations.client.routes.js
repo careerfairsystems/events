@@ -72,6 +72,18 @@
           pageTitle: 'Edit Reservation {{ reservationResolve.name }}'
         }
       })
+      .state('reservations.confirmation', {
+        url: '/confirmation/:reservationId',
+        templateUrl: 'modules/reservations/client/views/confirmation-reservation.client.view.html',
+        controller: 'ReservationsConfirmationController',
+        controllerAs: 'vm',
+        resolve: {
+          reservationResolve: getReservation,
+        },
+        data: {
+          pageTitle: 'Reservation {{ reservationResolve.name }}'
+        }
+      })
       .state('reservations.view', {
         url: '/:reservationId',
         templateUrl: 'modules/reservations/client/views/view-reservation.client.view.html',

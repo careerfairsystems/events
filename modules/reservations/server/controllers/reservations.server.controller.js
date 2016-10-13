@@ -7,8 +7,14 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Reservation = mongoose.model('Reservation'),
   Arkadevent = mongoose.model('Arkadevent'),
+  nodemailer = require('nodemailer'),
+  async = require('async'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  config = require(path.resolve('./config/config.js')),
   _ = require('lodash');
+  
+// Create smtpTransport for mailing.
+var smtpTransport = nodemailer.createTransport(config.mailer.options);
 
 /**
  * Create a Reservation
@@ -138,3 +144,76 @@ exports.reservationByID = function(req, res, next, id) {
     next();
   });
 };
+
+
+
+/**
+  * Send confirmation mail to reservation (POST)
+  */
+exports.confirmationMail = function (req, res, next) {
+  var id = req.body.reservationId;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'Reservation is invalid'
+    });
+  }
+  async.waterfall([
+    function (done) {
+      Reservation.findById(id).populate('user', 'displayName').exec(function (err, reservation) {
+        if (err) {
+          return next(err);
+        } else if (!reservation) {
+          return res.status(404).send({
+            message: 'No Reservation with that identifier has been found'
+          });
+        }
+        done(err, reservation);
+      });
+    },
+    function (reservation, done) {
+      var httpTransport = 'http://';
+      if (config.secure && config.secure.ssl === true) {
+        httpTransport = 'https://';
+      }
+
+      //TODO: Fix data from reservation to send in to email-html.
+
+      res.render(path.resolve('modules/reservations/server/templates/mailconfirmation'), {
+        name: reservation.name,
+        appName: config.app.title,
+      }, function (err, emailHTML) {
+        done(err, emailHTML, reservation);
+      });
+    },
+    // If valid email, send reset email using service
+    function (emailHTML, reservation, done) {
+      var mailOptions = {
+        to: reservation.email,
+        from: config.mailer.from,
+        subject: 'Bekräftelse Event anmälan / Confirmation Event booking',
+        html: emailHTML
+      };
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (!err) {
+          res.send({
+            message: 'An email has been sent to the provided email with further instructions.'
+          });
+        } else {
+          return res.status(400).send({
+            message: 'Failure sending email: ' + err
+          });
+        }
+        done(err);
+      });
+    }
+  ], function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+};
+
+
+
+
+
