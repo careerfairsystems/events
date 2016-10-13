@@ -10,14 +10,15 @@
     </div>
   </div>
   <div class="list-group reservations">
-    <div ng-repeat="reservation in filteredItems" class="reservation list-group-item">
-      <input type="checkbox" value="true" ng-model="reservation.edit">
+    <div ng-repeat="reservation in filteredItems" class="reservation list-group-item" ng-class='{ "list-group-item-success": reservation.showedup}'>
+      <input type="checkbox" value="true" ng-model="reservation.edit" style="width: 20px; height: 35px;">
       <div class="info">
         <span class="list-group-item-heading" ng-bind="reservation.name"></span>
         <br/>
         <span class="food" ng-bind="reservation.foodpref"></span>
       </div>
-      <button class="btn btn-success" ng-click="checkReservation(reservation)" ng-show="reservation.edit"> Check</button>
+      <button class="btn btn-success" ng-click="checkReservation(reservation)" ng-show="reservation.edit && !reservation.showedup"> Check</button>
+      <button class="btn btn-danger" ng-click="checkReservation(reservation)" ng-show="reservation.edit && reservation.showedup"> Remove</button>
       <p class="list-group-item-text pull-right small" ng-bind="user.roles"></p>
       <p class="list-group-item-text" ng-bind="user.email"></p>
     </div>

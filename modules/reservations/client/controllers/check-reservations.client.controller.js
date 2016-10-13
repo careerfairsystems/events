@@ -20,13 +20,25 @@
     $scope.reservations = [];
     ReservationsService.query(function (data){
       function sameEvent(r) { return r.arkadevent === vm.arkadevent._id; }
-      $scope.reservations = data.filter(sameEvent);
+      function minimizeObject(r){ return { _id: r._id, name: r.name, showedup: r.showedup, foodpref: r.foodpref }; }
+      $scope.reservations = data.filter(sameEvent).map(minimizeObject);
       $scope.filteredItems = $scope.reservations;
     });
 
     $scope.checkReservation = function(reservation){
       // TODO: Implement. Send data to server, on callback update color on list-item.
+      reservation.showedup = !reservation.showedup;
+      reservation.edit = false;
+      updateReservation(reservation);
     };
+
+    function updateReservation(reservation){
+      var res = ReservationsService.get({ reservationId: reservation._id }, function() {
+        res.showedup = reservation.showedup;
+        res.$save();
+      });
+    }
+
 
 
     // Save Reservation
