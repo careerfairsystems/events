@@ -28,7 +28,6 @@
     // Save Arkadevent
     function save(isValid) {
       if (!isValid) {
-        console.log("aoeu");
         $scope.$broadcast('show-errors-check-validity', 'arkadeventForm');
         return false;
       }

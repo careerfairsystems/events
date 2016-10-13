@@ -27,7 +27,7 @@ exports.create = function(req, res) {
   Reservation.find({ enrolled: true }).sort('-created').exec(reservationsFound);
   function reservationsFound(err, reservations) {
     if (err) {
-      console.log("Error: " + err);
+      console.log('Error: ' + err);
     } else {
       count = reservations.length;
       Arkadevent.find({ _id: reservation.arkadevent }).exec(eventFound);
@@ -35,7 +35,7 @@ exports.create = function(req, res) {
   }
   function eventFound(err, arkadevent){
     if(err){
-      console.log("Error, event not found: " + err);
+      console.log('Error, event not found: ' + err);
     } else {
       arkadevent = arkadevent[0];
       reservation.enrolled = arkadevent.nrofseats > count;
@@ -68,6 +68,47 @@ exports.read = function(req, res) {
   reservation.isCurrentUserOwner = req.user && reservation.user && reservation.user._id.toString() === req.user._id.toString();
 
   res.jsonp(reservation);
+};
+
+/**
+ * Unregister a reservation to a event.
+ */
+exports.unregister = function(req, res) {
+  var arkadeventId = req.body.arkadeventId;
+  var user = req.user;
+
+
+  var count = 0;
+  Reservation.find({ user: user._id, arkadevent: arkadeventId }).exec(reservationsFound);
+  function reservationsFound(err, reservations) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      count = reservations.length;
+      reservations.forEach(unRoll);
+    }
+  }
+  function unRoll(reservation){
+    Reservation.findOne({ _id: reservation._id }).exec(function(err, reserv) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        reserv.enrolled = false;
+        reserv.standby = false;
+        reserv.pending = false;
+        reserv.showedup = false;
+        reserv.save();
+        count--;
+        if(count === 0){
+          res.status(200).send('Unrollment successfull');
+        }
+      }
+    });
+  }
 };
 
 /**

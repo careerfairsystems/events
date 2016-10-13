@@ -1,0 +1,26 @@
+<section>
+  <div class="jumbotron text-center">
+    <h1>Unregister to; {{ vm.arkadevent.name }}</h1>
+    <hr>
+    <div ng-show="!isSure">
+      <p class="lead"> Are you sure you want to unregister? </p>
+      <button class="btn btn-warning" ng-click="isSure = true"> Yes </button>
+      <a class="btn btn-default" data-ui-sref="home">Back to home</a>
+    </div>
+    <div ng-show="isSure && !error">
+      <p class="lead">
+      </p>
+      <button class="btn btn-danger" ng-click="unregister()">
+        Unregister
+      </button>
+      <button class="btn btn-default" ng-click="isSure = false">
+        Back
+      </button>
+    </div>
+    <div ng-show="error">
+      <p class="lead"> {{ error }}
+      <a class="btn btn-default" data-ui-sref="home">Back to home</a>
+      </p>
+    </div>
+  </div>
+</section>

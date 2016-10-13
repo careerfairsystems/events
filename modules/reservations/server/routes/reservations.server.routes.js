@@ -9,6 +9,9 @@ var reservationsPolicy = require('../policies/reservations.server.policy'),
 module.exports = function(app) {
   // Reservations Routes
 
+  app.route('/api/reservations/unregister')
+    .post(reservations.unregister);
+
   app.route('/api/reservations/confirmationmail')
     .post(reservations.confirmationMail);
 

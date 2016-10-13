@@ -45,6 +45,18 @@
           pageTitle: 'Reservations Create'
         }
       })
+      .state('reservations.unregister', {
+        url: '/unregister/:arkadeventId',
+        templateUrl: 'modules/reservations/client/views/unregister-reservation.client.view.html',
+        controller: 'ReservationUnregisterController',
+        controllerAs: 'vm',
+        resolve: {
+          arkadeventResolve: getEvent
+        },
+        data: {
+          roles: ['user']
+        }
+      })
       .state('reservations.create', {
         url: '/create/:arkadeventId',
         templateUrl: 'modules/reservations/client/views/form-reservation.client.view.html',

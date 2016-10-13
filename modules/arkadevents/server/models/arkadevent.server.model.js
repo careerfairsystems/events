@@ -20,6 +20,7 @@ var ArkadeventSchema = new Schema({
     type: String,
     default: ''
   },
+  data: {},
   location: {
     type: String,
     required: 'Please fill in a location for the event.'
