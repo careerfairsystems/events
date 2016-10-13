@@ -77,7 +77,6 @@ exports.unregister = function(req, res) {
   var arkadeventId = req.body.arkadeventId;
   var user = req.user;
 
-
   var count = 0;
   Reservation.find({ user: user._id, arkadevent: arkadeventId }).exec(reservationsFound);
   function reservationsFound(err, reservations) {

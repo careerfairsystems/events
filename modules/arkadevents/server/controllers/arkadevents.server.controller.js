@@ -91,6 +91,10 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
   var user = req.user;
+  var userId = '';
+  if(user){
+    userId = user._id;
+  }
   Arkadevent.find().sort('-created').populate('user', 'displayName').exec(function(err, arkadevents) {
     var incr = 0;
     function calcSpots(e){
@@ -100,7 +104,7 @@ exports.list = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         }
-        function isUserSame(r) { return JSON.stringify(r.user) === JSON.stringify(user._id); }
+        function isUserSame(r) { return JSON.stringify(r.user) === JSON.stringify(userId); }
         e.data = {};
         e.seatstaken = reservations.length;
         e.data.isRegistered = reservations.filter(isUserSame).length > 0;

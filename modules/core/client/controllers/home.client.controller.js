@@ -8,8 +8,10 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.vm = vm;
     vm.events = [];
     vm.reservations = [];
-    $scope.isAdmin = $scope.authentication.user.roles.indexOf('admin') >= 0;
-
+    $scope.isAdmin = false;
+    if($scope.authentication.user){
+      $scope.isAdmin = $scope.authentication.user.roles.indexOf('admin') >= 0;
+    }
     ArkadeventsService.query(getEventsDone);
     function getEventsDone (data){
       function dateHasntPassed(arkadevent){ return (new Date()).getTime() < (new Date(arkadevent.date)).getTime(); }

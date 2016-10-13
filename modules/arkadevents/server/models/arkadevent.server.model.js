@@ -59,6 +59,10 @@ var ArkadeventSchema = new Schema({
     type: Date,
     requred: 'Pick an end time for the event.'
   },
+  lastregistrationdate: {
+    type: Date,
+    requred: 'Pick a last registration date for the event.'
+  },
   reminders: [{
     reminder: Schema.ObjectId,
     hoursbeforeevent: Number

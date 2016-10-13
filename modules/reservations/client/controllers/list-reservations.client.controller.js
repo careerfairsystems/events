@@ -1,4 +1,4 @@
-/* global $:false */
+/* global Chart:false, $:false */
 (function () {
   'use strict';
 
@@ -14,6 +14,41 @@
     var eventId = $stateParams.arkadeventId;
     vm.arkadevent = ArkadeventsService.get({ arkadeventId: eventId });
 
+    vm.enrolled = 0;
+    vm.pending = 0;
+    vm.standby = 0;
+    vm.unregistered = 0;
+
+
+    vm.createChart = function(){
+      // Chartjs code
+      vm.ctx = $("#myChart");
+      vm.data = {
+        datasets: [{
+          data: [ vm.enrolled, vm.pending, vm.standby, vm.unregistered ],
+          backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56", "#36A2EB"],
+          label: 'Reservation Data', // for legend
+          borderWidth: 1
+        }],
+        labels: [
+          "Enrolled", "Pending", "Standby", "Unregistered"
+          ]
+      };
+      vm.chart = new Chart(vm.ctx, {
+        data: vm.data,
+        type: 'polarArea',
+        options: {
+          elements: {
+            arc: {
+              borderColor: "#000000"
+            }
+          }
+        }
+      });
+    };
+
+
+
 
     vm.reservations = ReservationsService.query(function (data){
       function isReservationForThisEvent(reservation){ return reservation.arkadevent === eventId; }
@@ -23,12 +58,18 @@
         reservation.nr = 1 + key;
         reservation.date = $filter('date')(reservation.created, 'yyyy-MM-dd');
         reservation.pending = reservation.pending || false;
-        reservation.offer = reservation.offer || false;
+        reservation.offer = reservation.offer || '';
         reservation.enrolled = reservation.enrolled || false;
         reservation.standby = reservation.standby || false;
         reservation.program = reservation.program || '';
         reservation.other = reservation.other || '';
+        
+        vm.enrolled += reservation.enrolled;
+        vm.pending += reservation.pending;
+        vm.standby += reservation.standby;
+        vm.unregistered += (reservation.standby + reservation.pending + reservation.enrolled) === 0;
       });
+      vm.createChart();
       // Datatable code
       // Setup - add a text input to each footer cell
       $('#reservationsList thead tr:first th:not(:first)').each(function (index) {

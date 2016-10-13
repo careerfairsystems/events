@@ -42,6 +42,7 @@
       vm.arkadevent.date = $scope.inputQuestions[6].variable;
       vm.arkadevent.starttime = $scope.inputQuestions[7].variable;
       vm.arkadevent.endtime = $scope.inputQuestions[8].variable;
+      vm.arkadevent.lastregistrationdate = $scope.inputQuestions[9].variable;
 
       // TODO: move create/update logic to service
       if (vm.arkadevent._id) {
@@ -67,6 +68,7 @@
     var date = dtStrToObj(vm.arkadevent.date);
     var starttime = dtStrToObj(vm.arkadevent.starttime);
     var endtime = dtStrToObj(vm.arkadevent.endtime);
+    var lastregistrationdate = dtStrToObj(vm.arkadevent.lastregistrationdate);
 
     // Create form-question Array
     $scope.inputQuestions = [ 
@@ -117,6 +119,11 @@
         question : 'End time', 
         type : 'time', 
         variable : endtime 
+      }, { 
+        name : 'lastregistrationdate', 
+        question : 'Last date of registration', 
+        type : 'date', 
+        variable : lastregistrationdate 
       },
     ];
 

@@ -26,7 +26,7 @@ module.exports = {
         'public/lib/datatables.net-buttons/js/buttons.flash.min.js',
         'public/lib/datatables.net-buttons/js/buttons.print.min.js',
         'public/lib/datatables.net-buttons-bs/js/buttons.bootstrap.min.js',
-
+        'public/lib/chart.js/dist/Chart.bundle.min.js',
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
