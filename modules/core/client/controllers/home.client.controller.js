@@ -12,7 +12,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
     ArkadeventsService.query(getEventsDone);
     function getEventsDone (data){
-      vm.events = data;
+      function dateHasntPassed(arkadevent){ return (new Date()).getTime() > (new Date(arkadevent.date)).getTime(); }
+      vm.events = data.filter(dateHasntPassed);
     }
   }
 ]);
