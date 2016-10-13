@@ -22,13 +22,12 @@
             <span class="tag"> {{ event.language }} </span>
             <hr />
             <pre>{{ event.description }}</pre>
-            <span> {{ event.nrofseats - event.seatstaken }} spots left.
+            <hr />
+            <span> {{ event.seatsLeft }} spots left.
             </span>
 
-            <!--Should be: ng-show="event.spotsLeft > 0 && event.reservationopen"-->
-            <button class="btn btn-sm btn-primary disabled pull-right" ng-show="!event.reservationopen || event.nrofseats <= event.seatstaken">Event is full</button>
-            <a class="btn btn-sm btn-primary pull-right" ng-show="event.reservationopen" data-ui-sref="reservations.create({ arkadeventId: event._id })">Reserve a spot</a>
-            <!--Should be: ng-show="event.spotsLeft <= 0 && event.reservationopen" -->
+            <button class="btn btn-sm btn-warning pull-right" ng-show="!event.reservationopen || event.nrofseats <= event.seatstaken" data-ui-sref="reservations.create({ arkadeventId: event._id })">Event is full, apply to reservlist</button>
+            <a class="btn btn-sm btn-primary pull-right" ng-show="event.reservationopen && event.seatstaken < event.nrofseats" data-ui-sref="reservations.create({ arkadeventId: event._id })">Reserve a spot</a>
             <a class="btn btn-sm btn-primary pull-right" ng-show="false && event.reservationopen" data-ui-sref="reservations.create({ arkadeventId: event._id })">Sign up to reservlist</a>
           </div>
         </div>

@@ -14,6 +14,11 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     function getEventsDone (data){
       function dateHasntPassed(arkadevent){ return (new Date()).getTime() > (new Date(arkadevent.date)).getTime(); }
       vm.events = data.filter(dateHasntPassed);
+      function addSeatsLeft(e){
+        e.seatsLeft = e.nrofseats - e.seatstaken;
+        e.seatsLeft = Math.max(e.seatsLeft, 0);
+      }
+      vm.events.forEach(addSeatsLeft);
     }
   }
 ]);

@@ -21,6 +21,9 @@
     vm.save = save;
     vm.user = vm.authentication.user;
 
+    vm.spotsLeft = vm.arkadevent.nrofseats - vm.arkadevent.seatstaken;
+    vm.hasSeatsLeft = vm.spotsLeft > 0;
+
     var set = new Set(ProgramsService);
     $scope.programs = Array.from(set);
     
