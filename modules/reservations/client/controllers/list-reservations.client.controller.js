@@ -22,16 +22,16 @@
 
     vm.createChart = function(){
       // Chartjs code
-      vm.ctx = $("#myChart");
+      vm.ctx = $('#myChart');
       vm.data = {
         datasets: [{
           data: [ vm.enrolled, vm.pending, vm.standby, vm.unregistered ],
-          backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56", "#36A2EB"],
+          backgroundColor: ['#FF6384', '#4BC0C0', '#FFCE56', '#36A2EB'],
           label: 'Reservation Data', // for legend
           borderWidth: 1
         }],
         labels: [
-          "Enrolled", "Pending", "Standby", "Unregistered"
+          'Enrolled', 'Pending', 'Standby', 'Unregistered'
           ]
       };
       vm.chart = new Chart(vm.ctx, {
@@ -40,7 +40,7 @@
         options: {
           elements: {
             arc: {
-              borderColor: "#000000"
+              borderColor: '#000000'
             }
           }
         }
@@ -75,7 +75,7 @@
       $('#reservationsList thead tr:first th:not(:first)').each(function (index) {
         var title = $(this).text();
         var pos = index + 1;
-        $(this).html('<input class="form-control" id="col-search-'+pos+'" type="text" placeholder="Search '+title+'" />');
+        $(this).html('<input class='form-control' id='col-search-'+pos+'' type='text' placeholder='Search '+title+'' />');
       });
 
       vm.createDatatable(vm.reservations);
@@ -108,7 +108,7 @@
           { data: 'date' },
           { data: 'name',
             'fnCreatedCell': function (nTd, sData, oData, iRow, iCol) {
-              $(nTd).html('<button class="btn-link" data-ng-click="vm.openReservation('+ iRow+')">'+sData+'</button>');
+              $(nTd).html('<button class='btn-link' data-ng-click='vm.openReservation('+ iRow+')'>'+sData+'</button>');
               // VIKTIG: för att ng-click ska kompileras och finnas.
               $compile(nTd)($scope);
             }
