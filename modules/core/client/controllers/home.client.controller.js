@@ -12,7 +12,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
     ArkadeventsService.query(getEventsDone);
     function getEventsDone (data){
-      function dateHasntPassed(arkadevent){ return (new Date()).getTime() > (new Date(arkadevent.date)).getTime(); }
+      function dateHasntPassed(arkadevent){ return (new Date()).getTime() < (new Date(arkadevent.date)).getTime(); }
       vm.events = data.filter(dateHasntPassed);
       function addSeatsLeft(e){
         e.seatsLeft = e.nrofseats - e.seatstaken;
