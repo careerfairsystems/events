@@ -14,12 +14,12 @@
     var eventId = $stateParams.arkadeventId;
     vm.arkadevent = ArkadeventsService.get({ arkadeventId: eventId });
 
+
+    // Current Data tracking
     vm.enrolled = 0;
     vm.pending = 0;
     vm.standby = 0;
     vm.unregistered = 0;
-
-
     vm.createChart = function(){
       // Chartjs code
       vm.ctx = $('#myChart');
@@ -46,9 +46,6 @@
         }
       });
     };
-
-
-
 
     vm.reservations = ReservationsService.query(function (data){
       function isReservationForThisEvent(reservation){ return reservation.arkadevent === eventId; }
@@ -81,12 +78,26 @@
       vm.createDatatable(vm.reservations);
     });
 
-
     // Open Link to reservation.view
+
     vm.openReservation = function(index) {
       vm.currentIndex = index;
       var current = vm.reservations[index];
       $state.go('reservations.view', { reservationId: current._id });
+    };
+  
+    vm.setEnrolled = function (index){
+      var imSure = window.confirm("Are you sure?");
+      if(imSure){
+        vm.reservations[index].enrolled = !vm.reservations[index].enrolled;
+        var reservation = vm.reservations[index];
+        var res = ReservationsService.get({ reservationId: reservation._id }, function() {
+          res.enrolled = reservation.enrolled;
+          res.$save(function(r){
+            //alert("Set to: " + r.enrolled);
+          });
+        });
+      }
     };
 
     // Init datatable
@@ -119,9 +130,24 @@
           { data: 'phone' },
           { data: 'foodpref' },
           { data: 'other' },
-          { data: 'enrolled' },
-          { data: 'standby' },
-          { data: 'pending' },
+          { data: 'enrolled', 
+            'fnCreatedCell': function (nTd, sData, oData, iRow, iCol) {
+              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' data-ng-click="vm.setEnrolled('+ iRow+')" />');
+              $compile(nTd)($scope);
+            }
+          },
+          { data: 'standby',
+            'fnCreatedCell': function (nTd, sData, oData, iRow, iCol) {
+              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' disabled />');
+              $compile(nTd)($scope);
+            }
+          },
+          { data: 'pending',
+            'fnCreatedCell': function (nTd, sData, oData, iRow, iCol) {
+              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' disabled />');
+              $compile(nTd)($scope);
+            }
+          },
           { data: 'offer' },
         ]
       });
