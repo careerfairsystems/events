@@ -87,7 +87,7 @@
     };
   
     vm.setEnrolled = function (index){
-      var imSure = window.confirm("Are you sure?");
+      var imSure = window.confirm('Are you sure?');
       if(imSure){
         vm.reservations[index].enrolled = !vm.reservations[index].enrolled;
         var reservation = vm.reservations[index];

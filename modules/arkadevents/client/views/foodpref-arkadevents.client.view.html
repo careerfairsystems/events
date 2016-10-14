@@ -1,0 +1,50 @@
+<section>
+  <div class="page-header">
+    <h1>Foodpref - Arkadevents</h1>
+  </div>
+  <div class="row jumbotron" ng-repeat="arkadevent in vm.arkadevents track by $index">
+    <h3 class="col-sm-11 col-sm-offset-1">{{ arkadevent.name }} </h3>
+    
+    <div class="col-sm-11 col-sm-offset-1">
+      <table class="table">
+        <tr>
+          <td> Unregistered </td>
+          <td> {{ arkadevent.unregistered }} </td>
+        </tr>
+        <tr>
+          <td> Registered </td>
+          <td> {{ arkadevent.registered }} </td>
+        </tr>
+        <tr class="active">
+          <td> <strong>Total</strong> </td>
+          <td> {{ arkadevent.unregistered + arkadevent.registered }} </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-sm-5 col-sm-offset-1">
+      <label>Registered food preferences</label>
+      <canvas id="registered-{{ $index }}" width="100" height="100"></canvas>
+    </div>
+    <div class="col-sm-5">
+      <label>Unregistered food preferences</label>
+      <canvas id="unregistered-{{ $index }}" width="100" height="100"></canvas>
+    </div>
+    <div class="col-sm-11 col-sm-offset-1">
+      <ul class="col-sm-5">
+        <label>Registered other</label>
+        <li ng-repeat="other in arkadevent.registeredother track by $index">
+          {{ other }}
+        </li>
+      </ul>
+      <ul class="col-sm-5">
+        <label>Unregistered other</label>
+        <li ng-repeat="other in arkadevent.unregisteredother track by $index">
+          {{ other }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.arkadevents.$resolved && !vm.arkadevents.length">
+    No Arkadevents yet, why don't you <a ui-sref="arkadevents.create">create one</a>?
+  </div>
+</section>

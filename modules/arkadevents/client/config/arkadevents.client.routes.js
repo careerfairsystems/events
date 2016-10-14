@@ -23,6 +23,12 @@
           pageTitle: 'Arkadevents List'
         }
       })
+      .state('arkadevents.foodpref', {
+        url: '/foodpref',
+        templateUrl: 'modules/arkadevents/client/views/foodpref-arkadevents.client.view.html',
+        controller: 'ArkadeventsFoodprefController',
+        controllerAs: 'vm',
+      })
       .state('arkadevents.check', {
         url: '/check',
         templateUrl: 'modules/arkadevents/client/views/check-arkadevents.client.view.html',
