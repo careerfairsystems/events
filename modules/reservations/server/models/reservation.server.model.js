@@ -18,7 +18,8 @@ var ReservationSchema = new Schema({
   },
   program: {
     type: String,
-    required: 'Please fill program'
+    required: 'Please fill program',
+    default: ''
   },
   year: {
     type: String,
@@ -30,7 +31,7 @@ var ReservationSchema = new Schema({
   },
   phone: {
     type: String,
-    required: 'Please fill the email'
+    required: 'Please fill the phonenumber'
   },
   foodpref: [{
     type: String,

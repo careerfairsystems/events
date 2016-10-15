@@ -5,12 +5,16 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
+  ObjectId = mongoose.Types.ObjectId,
   Arkadevent = mongoose.model('Arkadevent'),
   Reservation = mongoose.model('Reservation'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   MailController = require(path.resolve('./modules/reservations/server/controllers/mail.server.controller')),
   _ = require('lodash');
 
+function idCompare(id1,id2){
+  return JSON.stringify(id1) === JSON.stringify(id2);
+}
 /**
  * Create a Arkadevent
  */
@@ -57,9 +61,13 @@ exports.read = function(req, res) {
 exports.offerseats = function(req, res) {
   // Convert mongoose document to JSON
   var arkadevent = req.arkadevent ? req.arkadevent.toJSON() : {};
+  offerSeatsOnEvent(arkadevent, res);
+};
 
+exports.offerSeatsOnEvent = offerSeatsOnEvent;
+function offerSeatsOnEvent(arkadevent, res){
   // Get all reservations to this event.
-  Reservation.find({ arkadevent: arkadevent._id }).exec(function(err, reservations){
+  Reservation.find({ arkadevent: new ObjectId(arkadevent._id) }).exec(function(err, reservations){
     if(err){
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -71,7 +79,7 @@ exports.offerseats = function(req, res) {
 
     // Get reservations that should be offered a spot.
     var nrofseats = arkadevent.nrofseats;
-    var resOffer = sortRes.reduce(resToOffer);
+    var resOffer = sortRes.reduce(resToOffer, []);
     function resToOffer (pre, reservation){
       if(nrofseats > 0){
         return pre;
@@ -89,21 +97,19 @@ exports.offerseats = function(req, res) {
       // Update to DB
       r.pending = true; 
       r.offer = Date.now(); 
-      r.save(function(err){
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
+
+      r.update({ _id: new ObjectId(r._id) }, { pending: false, offer: new Date() }, function(err, affected, resp){
+        if (err) { 
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         } 
+        // Email the reservations and ask for accept/decline
+        MailController.offerSpot(r, arkadevent, res);
       });
-      // Email the reservations and ask for accept/decline
-      MailController.offerSpot(r, res);
     }
     resOffer.forEach(offerSeat);
     res.send(200);
   });        
-};
-
+}
 /**
  * Update a Arkadevent
  */
@@ -158,7 +164,7 @@ exports.list = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         }
-        function isUserSame(r) { return JSON.stringify(r.user) === JSON.stringify(userId); }
+        function isUserSame(r) { return r.enrolled && idCompare(r.user, userId); }
         e.data = {};
         e.seatstaken = reservations.length;
         e.data.isRegistered = reservations.filter(isUserSame).length > 0;

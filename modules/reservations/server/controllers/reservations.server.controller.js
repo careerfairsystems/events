@@ -141,11 +141,13 @@ exports.acceptoffer = function(req, res) {
     var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
 
     // If offer not older than 24h
-    if((reservation.offer.getTime() > yesterday.getTime()) && (isCurrentUserOwner || isCurrentUserAdmin)){
-      reservation.enrolled = true;
-      reservation.pending = true;
-      reservation.save();
-      return res.status(200).send({ message: "Success" });
+    if((reservation.offer && reservation.offer.getTime() > yesterday.getTime()) && (isCurrentUserOwner || isCurrentUserAdmin)){
+      Reservation.update({ _id: new ObjectId(reservation._id) }, { pending: false, enrolled: true, offer: null }, function(err, affected, resp){
+        if(err){
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        }
+        return res.status(200).send({ message: "Success" });
+      });
     } else {
       return res.status(400).send({ message: "The offer period has expired" });
     }
@@ -159,8 +161,8 @@ exports.declineoffer = function(req, res) {
   var arkadeventId = req.body.arkadeventId;
   var user = req.user;
 
-  Reservation.findOne({ user: user._id, arkadevent: arkadeventId }).exec(reservationsFound);
-  function reservationsFound(err, reservation) {
+  Reservation.findOne({ user: new ObjectId(user._id), arkadevent: new ObjectId(arkadeventId) }, reservationFound);
+  function reservationFound(err, reservation) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
@@ -169,18 +171,20 @@ exports.declineoffer = function(req, res) {
     var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
     
     // If offer not older than 24h
-    if((reservation.offer.getTime() > yesterday.getTime()) && (isCurrentUserOwner || isCurrentUserAdmin)){
-      reservation.pending = false;
-      reservation.save();
-      
-      // Offer spot to another one.
-      Arkadevent.find({ _id: arkadeventId }).exec(function(err, arkadevent){
-        if (err) {
+    if((reservation.offer && reservation.offer.getTime() > yesterday.getTime()) && (isCurrentUserOwner || isCurrentUserAdmin)){
+      Reservation.update({ _id: new ObjectId(reservation._id) }, { pending: false, offer: null }, function(err, affected, resp){
+        if(err){
           return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-        } else {
-          ArkadeventController.offerseats({ arkadevent: arkadevent }, res);         
         }
-        return res.status(200).send('Decline successfull');
+
+        // Offer spot to another one.
+        Arkadevent.find({ _id: arkadeventId }).exec(function(err, arkadevent){
+          if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+          } else {
+            ArkadeventController.offerSeatsOnEvent(arkadevent, res);         
+          }
+        });
       });
     } else {
       return res.status(400).send({ message: "The offer period has expired" });
