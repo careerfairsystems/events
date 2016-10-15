@@ -1,0 +1,13 @@
+<section>
+  <div class="jumbotron text-center">
+    <h3>{{ vm.arkadevent.name }}</h3>
+    <hr>
+    <p class="lead">
+      Please accept or decline the seat offered to you for the event.  
+    </p>
+    <button class="btn btn-primary" ng-click="vm.accept()">Accept</button>
+    <button class="btn btn-warning" ng-click="vm.decline()">Decline</button>
+    <p data-bind="error">
+    </p>
+  </div>
+</section>

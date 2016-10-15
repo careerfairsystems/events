@@ -84,6 +84,18 @@
           pageTitle: 'Edit Reservation {{ reservationResolve.name }}'
         }
       })
+      .state('reservations.offer', {
+        url: '/offer/:arkadeventId',
+        templateUrl: 'modules/reservations/client/views/offer-reservation.client.view.html',
+        controller: 'ReservationsOfferController',
+        controllerAs: 'vm',
+        resolve: {
+          arkadeventResolve: getEvent,
+        },
+        data: {
+          pageTitle: 'Reservation {{ reservationResolve.name }}'
+        }
+      })
       .state('reservations.confirmation', {
         url: '/confirmation/:reservationId',
         templateUrl: 'modules/reservations/client/views/confirmation-reservation.client.view.html',
