@@ -69,19 +69,17 @@ function offerSeatsOnEvent(arkadevent, res){
   // Get all reservations to this event.
   Reservation.find({ arkadevent: new ObjectId(arkadevent._id) }).exec(function(err, reservations){
     if(err){
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     }
     // Sort reservations after created-date
-    function afterCreated(r1, r2) { return r1.created > r2.created; }
-    var sortRes = reservations.filter(afterCreated);
+    function afterCreated(r1, r2) { return r1.created && r2.created && r1.created.getTime() > r2.created.getTime(); }
+    var sortRes = reservations.sort(afterCreated);
 
     // Get reservations that should be offered a spot.
     var nrofseats = arkadevent.nrofseats;
     var resOffer = sortRes.reduce(resToOffer, []);
     function resToOffer (pre, reservation){
-      if(nrofseats > 0){
+      if(nrofseats <= 0){
         return pre;
       }
       // Standby that hasnt been offered or enrolled.
@@ -92,22 +90,21 @@ function offerSeatsOnEvent(arkadevent, res){
       return pre;
     }
 
-    resOffer.forEach(offerSeat);
-    function offerSeat(r){
+    var count = resOffer.length;
+    resOffer.forEach(updateDb);
+    function updateDb(r){
       // Update to DB
-      r.pending = true; 
-      r.offer = Date.now(); 
-
-      r.update({ _id: new ObjectId(r._id) }, { pending: false, offer: new Date() }, function(err, affected, resp){
+      r.update({ _id: new ObjectId(r._id) }, { pending: true, offer: new Date() }, function(err, affected, resp){
         if (err) { 
           return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         } 
-        // Email the reservations and ask for accept/decline
-        MailController.offerSpot(r, arkadevent, res);
+        count--;
+        if(count <= 0){
+          // Email the reservations and ask for accept/decline
+          MailController.offerSpot(resOffer, arkadevent, res);
+        }
       });
     }
-    resOffer.forEach(offerSeat);
-    res.send(200);
   });        
 }
 /**
