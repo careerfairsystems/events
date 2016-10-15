@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/arkadevents',
       permissions: '*'
     }, {
+      resources: '/api/arkadevents/offerseats/:arkadeventId',
+      permissions: '*'
+    }, {
       resources: '/api/arkadevents/:arkadeventId',
       permissions: '*'
     }]
@@ -29,6 +32,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/arkadevents/:arkadeventId',
       permissions: ['get']
+    }, {
+      resources: '/api/arkadevents/offerseats/:arkadeventId',
+      permissions: 'get'
     }]
   }, {
     roles: ['guest'],

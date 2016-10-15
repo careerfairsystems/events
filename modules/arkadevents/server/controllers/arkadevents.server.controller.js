@@ -54,7 +54,7 @@ exports.read = function(req, res) {
 /**
  * Offer spot for stand-by reservations that fit on the event.
  */
-exports.offer = function(req, res) {
+exports.offerseats = function(req, res) {
   // Convert mongoose document to JSON
   var arkadevent = req.arkadevent ? req.arkadevent.toJSON() : {};
 

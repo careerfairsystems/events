@@ -8,6 +8,10 @@ var arkadeventsPolicy = require('../policies/arkadevents.server.policy'),
 
 module.exports = function(app) {
   // Arkadevents Routes
+
+  app.route('/api/arkadevents/offerseats/:arkadeventId').all(arkadeventsPolicy.isAllowed)
+    .get(arkadevents.offerseats);
+
   app.route('/api/arkadevents').all(arkadeventsPolicy.isAllowed)
     .get(arkadevents.list)
     .post(arkadevents.create);
