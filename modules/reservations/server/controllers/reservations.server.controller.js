@@ -11,6 +11,7 @@ var path = require('path'),
   async = require('async'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   MailController = require(path.resolve('./modules/reservations/server/controllers/mail.server.controller')),
+  ArkadeventController = require(path.resolve('./modules/arkadevents/server/controllers/arkadevents.server.controller')),
   config = require(path.resolve('./config/config.js')),
   _ = require('lodash');
   
@@ -107,6 +108,111 @@ exports.unregister = function(req, res) {
           res.status(200).send('Unrollment successfull');
         }
       }
+    });
+  }
+};
+
+/**
+ * Accept offer for a seat.
+ */
+exports.acceptoffer = function(req, res) {
+  var arkadeventId = req.body.arkadeventId;
+  var user = req.user;
+
+  // Get the reservation from eventid and userid
+  Reservation.findOne({ user: user._id, arkadevent: arkadeventId }).exec(reservationFound);
+  function reservationFound(err, reservation) {
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } 
+    var yesterday = getYesterday();
+    
+    // If offer not older than 24h
+    if(reservation.offer >= yesterday){
+      reservation.enrolled = true;
+      reservation.pending = true;
+      reservation.save();
+    }
+  }
+};
+
+/**
+ * Decline offer for a seat.
+ */
+exports.declineoffer = function(req, res) {
+  var arkadeventId = req.body.arkadeventId;
+  var user = req.user;
+
+  Reservation.findOne({ user: user._id, arkadevent: arkadeventId }).exec(reservationsFound);
+  function reservationsFound(err, reservation) {
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } 
+    var yesterday = getYesterday();
+    
+    // If offer not older than 24h
+    if(reservation.offer >= yesterday){
+      reservation.pending = false;
+      reservation.save();
+      
+      // Offer spot to another one.
+      Arkadevent.find({ _id: arkadeventId }).exec(function(err, arkadevent){
+        if (err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else {
+          ArkadeventController.offerseats({ arkadevent: arkadevent }, res);         
+        }
+        res.status(200).send('Decline successfull');
+      });
+    }
+  }
+};
+
+/**
+  * Get yesterday-date-object
+  */
+function getYesterday(){
+  Date.prototype.removeDays = function(days) {
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+  };
+  var today = Date.now();
+  var yesterday = today.removeDays(1); 
+  return yesterday;
+}
+
+/**
+ * Decline all offers that are too old.
+ */
+exports.declineoldoffers = function(req, res) {
+  var arkadeventId = req.body.arkadeventId;
+  var user = req.user;
+
+  Reservation.find({ arkadevent: arkadeventId }).exec(reservationsFound);
+  function reservationsFound(err, reservations) {
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    }
+ 
+    var yesterday = getYesterday();
+    var oldRes = reservations.filter(isOld);
+    function isOld(r){ return r.offer < yesterday; }
+
+    oldRes.forEach(decline);
+    function decline(r){
+      r.pending = false;
+      r.save();
+    }
+    
+    // Offer spot to other standby's.
+    Arkadevent.find({ _id: arkadeventId }).exec(function(err, arkadevent){
+      if (err) {
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+      } else {
+        ArkadeventController.offerseats({ arkadevent: arkadevent }, res);         
+      }
+      res.status(200).send('Decline successfull');
     });
   }
 };
