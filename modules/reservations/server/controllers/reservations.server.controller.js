@@ -136,7 +136,7 @@ exports.acceptoffer = function(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
-    var isCurrentUserOwner = req.user && reservation.user && reservation.user._id.toString() === req.user._id.toString();
+    var isCurrentUserOwner = req.user && reservation.user && reservation.user === req.user._id.toString();
     var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
     
     // If offer not older than 24h
@@ -144,6 +144,9 @@ exports.acceptoffer = function(req, res) {
       reservation.enrolled = true;
       reservation.pending = true;
       reservation.save();
+      return res.status(200).send({ message: "Success" });
+    } else {
+      return res.status(400).send({ message: "The offer period has expired" });
     }
   }
 };
@@ -161,7 +164,7 @@ exports.declineoffer = function(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
-    var isCurrentUserOwner = req.user && reservation.user && reservation.user._id.toString() === req.user._id.toString();
+    var isCurrentUserOwner = req.user && reservation.user && reservation.user.toString() === req.user._id.toString();
     var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
     
     // If offer not older than 24h
@@ -176,8 +179,10 @@ exports.declineoffer = function(req, res) {
         } else {
           ArkadeventController.offerseats({ arkadevent: arkadevent }, res);         
         }
-        res.status(200).send('Decline successfull');
+        return res.status(200).send('Decline successfull');
       });
+    } else {
+      return res.status(400).send({ message: "The offer period has expired" });
     }
   }
 };
@@ -186,14 +191,9 @@ exports.declineoffer = function(req, res) {
   * Get yesterday-date-object
   */
 function getYesterday(){
-  Date.prototype.removeDays = function(days) {
-    var dat = new Date(this.valueOf());
-    dat.setDate(dat.getDate() + days);
-    return dat;
-  };
-  var today = Date.now();
-  var yesterday = today.removeDays(1); 
-  return yesterday;
+  var today = new Date();
+  today.setDate(today.getDate() - 1);
+  return today;
 }
 
 /**

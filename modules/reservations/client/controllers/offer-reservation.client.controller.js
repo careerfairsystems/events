@@ -38,7 +38,5 @@
     vm.redirect = function(){
       $state.go('home');
     };
-  
-    $scope.error = 'aeou';
   }
 }());
