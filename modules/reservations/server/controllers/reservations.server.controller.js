@@ -24,7 +24,7 @@ exports.create = function(req, res) {
   reservation.user = req.user;
 
   var count = 0;
-  Reservation.find({ enrolled: true }).sort('-created').exec(reservationsFound);
+  Reservation.find({ $or: [{ enrolled: true }, { pending: true }] }).sort('-created').exec(reservationsFound);
   function reservationsFound(err, reservations) {
     if (err) {
       console.log('Error: ' + err);

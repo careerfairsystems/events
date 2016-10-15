@@ -39,7 +39,7 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   arkadevent.isCurrentUserOwner = req.user && arkadevent.user && arkadevent.user._id.toString() === req.user._id.toString();
 
-  Reservation.find({ arkadevent: arkadevent._id, enrolled: true }).count(function(err, count){
+  Reservation.find({ arkadevent: arkadevent._id, $or: [{ enrolled: true }, { pending: true }] }).count(function(err, count){
     if(err){
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -98,7 +98,7 @@ exports.list = function(req, res) {
   Arkadevent.find().sort('-created').populate('user', 'displayName').exec(function(err, arkadevents) {
     var incr = 0;
     function calcSpots(e){
-      Reservation.find({ arkadevent: e._id, enrolled: true }).exec(function(err, reservations){
+      Reservation.find({ arkadevent: e._id, $or: [{ enrolled: true }, { pending: true }] }).exec(function(err, reservations){
         if(err){
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
