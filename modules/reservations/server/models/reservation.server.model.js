@@ -54,21 +54,21 @@ var ReservationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
-  /* true if reservation has been accepted and the person has accepted the spot (is set to false at unregistration)*/
   enrolled: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
-  /* true if the reservation was on standby and the person has not been offered a spot */
   standby: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
-  /* true if has been offered a spot as stand-by but not yet replied */
   pending: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
-  /* date when place was offered (set to time when reservation was made if reservation was not on stand-by) */
   offer: {
-    type: Date
+    type: Date,
+    default: new Date()
   }
 });
 

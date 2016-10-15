@@ -5,6 +5,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
+  ObjectId = mongoose.Types.ObjectId,
   Reservation = mongoose.model('Reservation'),
   Arkadevent = mongoose.model('Arkadevent'),
   nodemailer = require('nodemailer'),
@@ -81,7 +82,7 @@ exports.read = function(req, res) {
 
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  reservation.isCurrentUserOwner = req.user && reservation.user && reservation.user._id.toString() === req.user._id.toString();
+  reservation.isCurrentUserOwner = req.user && reservation.user && idCompare(reservation.user, req.user._id);
 
   res.jsonp(reservation);
 };
@@ -130,17 +131,17 @@ exports.acceptoffer = function(req, res) {
   var user = req.user;
 
   // Get the reservation from eventid and userid
-  Reservation.findOne({ user: user._id, arkadevent: arkadeventId }).exec(reservationFound);
+  Reservation.findOne({ user: new ObjectId(user._id), arkadevent: new ObjectId(arkadeventId) }, reservationFound);
   function reservationFound(err, reservation) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
-    var isCurrentUserOwner = req.user && reservation.user && reservation.user === req.user._id.toString();
+    var isCurrentUserOwner = req.user && reservation.user && idCompare(reservation.user, req.user._id);
     var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
-    
+
     // If offer not older than 24h
-    if(reservation.offer >= yesterday && (isCurrentUserOwner || isCurrentUserAdmin)){
+    if((reservation.offer.getTime() > yesterday.getTime()) && (isCurrentUserOwner || isCurrentUserAdmin)){
       reservation.enrolled = true;
       reservation.pending = true;
       reservation.save();
@@ -164,11 +165,11 @@ exports.declineoffer = function(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
-    var isCurrentUserOwner = req.user && reservation.user && reservation.user.toString() === req.user._id.toString();
+    var isCurrentUserOwner = req.user && reservation.user && idCompare(reservation.user, req.user._id);
     var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
     
     // If offer not older than 24h
-    if(reservation.offer >= yesterday && (isCurrentUserOwner || isCurrentUserAdmin)){
+    if((reservation.offer.getTime() > yesterday.getTime()) && (isCurrentUserOwner || isCurrentUserAdmin)){
       reservation.pending = false;
       reservation.save();
       
@@ -211,7 +212,7 @@ exports.declineoldoffers = function(req, res) {
  
     var yesterday = getYesterday();
     var oldRes = reservations.filter(isOld);
-    function isOld(r){ return r.offer < yesterday; }
+    function isOld(r){ return r.offer.getTime() < yesterday.getTime(); }
 
     oldRes.forEach(decline);
     function decline(r){
