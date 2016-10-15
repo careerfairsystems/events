@@ -18,6 +18,21 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reservations',
       permissions: '*'
     }, {
+      resources: '/api/reservations/unregister',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/confirmationmail',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/accept',
+      permissions: '*'
+    }, {
+      resources: '/api/reservations/decline',
+      permissions: '*'
+    }, {
+      resources: '/api/reservations/declineold',
+      permissions: '*'
+    }, {
       resources: '/api/reservations/:reservationId',
       permissions: '*'
     }]
@@ -26,6 +41,21 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/reservations',
       permissions: ['*']
+    }, {
+      resources: '/api/reservations/unregister',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/confirmationmail',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/accept',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/decline',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/declineold',
+      permissions: ['']
     }, {
       resources: '/api/reservations/:reservationId',
       permissions: ['*']
@@ -36,6 +66,21 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reservations',
       permissions: ['post', 'get']
     }, {
+      resources: '/api/reservations/unregister',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/confirmationmail',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/accept',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/decline',
+      permissions: ['*']
+    }, {
+      resources: '/api/reservations/declineold',
+      permissions: ['']
+    }, {
       resources: '/api/reservations/:reservationId',
       permissions: ['get']
     }]
@@ -43,10 +88,25 @@ exports.invokeRolesPolicies = function () {
     roles: ['guest'],
     allows: [{
       resources: '/api/reservations',
-      permissions: ['get']
+      permissions: ['']
+    }, {
+      resources: '/api/reservations/unregister',
+      permissions: ['']
+    }, {
+      resources: '/api/reservations/confirmationmail',
+      permissions: ['']
+    }, {
+      resources: '/api/reservations/accept',
+      permissions: ['']
+    }, {
+      resources: '/api/reservations/decline',
+      permissions: ['']
+    }, {
+      resources: '/api/reservations/declineold',
+      permissions: ['']
     }, {
       resources: '/api/reservations/:reservationId',
-      permissions: ['get']
+      permissions: ['']
     }]
   }]);
 };

@@ -9,11 +9,18 @@ var reservationsPolicy = require('../policies/reservations.server.policy'),
 module.exports = function(app) {
   // Reservations Routes
 
-  app.route('/api/reservations/unregister')
+  app.route('/api/reservations/unregister').all(reservationsPolicy.isAllowed)
     .post(reservations.unregister);
 
   app.route('/api/reservations/confirmationmail')
     .post(reservations.confirmationMail);
+  
+  app.route('/api/reservations/accept').all(reservationsPolicy.isAllowed)
+    .post(reservations.acceptoffer);
+  app.route('/api/reservations/decline').all(reservationsPolicy.isAllowed)
+    .post(reservations.declineoffer);
+  app.route('/api/reservations/declineold').all(reservationsPolicy.isAllowed)
+    .post(reservations.declineoldoffers);
 
   app.route('/api/reservations').all(reservationsPolicy.isAllowed)
     .get(reservations.list)

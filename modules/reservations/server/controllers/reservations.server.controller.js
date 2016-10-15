@@ -136,9 +136,11 @@ exports.acceptoffer = function(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
+    var isCurrentUserOwner = req.user && reservation.user && reservation.user._id.toString() === req.user._id.toString();
+    var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
     
     // If offer not older than 24h
-    if(reservation.offer >= yesterday){
+    if(reservation.offer >= yesterday && (isCurrentUserOwner || isCurrentUserAdmin)){
       reservation.enrolled = true;
       reservation.pending = true;
       reservation.save();
@@ -159,9 +161,11 @@ exports.declineoffer = function(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
+    var isCurrentUserOwner = req.user && reservation.user && reservation.user._id.toString() === req.user._id.toString();
+    var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
     
     // If offer not older than 24h
-    if(reservation.offer >= yesterday){
+    if(reservation.offer >= yesterday && (isCurrentUserOwner || isCurrentUserAdmin)){
       reservation.pending = false;
       reservation.save();
       
