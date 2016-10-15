@@ -18,6 +18,9 @@ var path = require('path'),
 // Create smtpTransport for mailing.
 var smtpTransport = nodemailer.createTransport(config.mailer.options);
 
+function idCompare(id1,id2){
+  return JSON.stringify(id1) === JSON.stringify(id2);
+}
 /**
  * Create a Reservation
  */
@@ -26,35 +29,46 @@ exports.create = function(req, res) {
   reservation.user = req.user;
 
   var count = 0;
-  Reservation.find({ $or: [{ enrolled: true }, { pending: true }] }).sort('-created').exec(reservationsFound);
+  Reservation.find().sort('-created').exec(reservationsFound);
   function reservationsFound(err, reservations) {
     if (err) {
       console.log('Error: ' + err);
-    } else {
-      count = reservations.length;
-      Arkadevent.find({ _id: reservation.arkadevent }).exec(eventFound);
     }
-  }
-  function eventFound(err, arkadevent){
-    if(err){
-      console.log('Error, event not found: ' + err);
-    } else {
-      arkadevent = arkadevent[0];
-      reservation.enrolled = arkadevent.nrofseats > count;
-      reservation.standby = arkadevent.nrofseats <= count;
-      doSave();
+    // Check if user already has booked spot
+    function hasBookedSpot(r){ 
+      var c = r.enrolled || r.pending || r.standby;
+      return idCompare(r.user, reservation.user._id) && idCompare(r.arkadevent, reservation.arkadevent) && c;
     }
-  }
-  function doSave(){
-    reservation.save(function(err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+    var hasBooked = reservations.filter(hasBookedSpot);
+    if(hasBooked.length > 0){
+      return res.status(400).send({ message: 'User has already a spot booked for this event' });
+    }
+    
+    // Calculate reservations that are enrolled || pending
+    function isEnrolledOrPending(r){ return r.enrolled || r.pending; }
+    count = reservations.filter(isEnrolledOrPending).length;
+ 
+    // Get event
+    Arkadevent.findOne({ _id: reservation.arkadevent }).exec(eventFound);
+    function eventFound(err, arkadevent){
+      if(err){
+        console.log('Error, event not found: ' + err);
       } else {
-        res.jsonp(reservation);
+        reservation.enrolled = arkadevent.nrofseats > count;
+        reservation.standby = arkadevent.nrofseats <= count;
+        doSave();
       }
-    });
+    }
+    // Save reservation
+    function doSave(){
+      reservation.save(function(err) {
+        if (err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else {
+          res.jsonp(reservation);
+        }
+      });
+    }
   }
 };
 
@@ -83,9 +97,7 @@ exports.unregister = function(req, res) {
   Reservation.find({ user: user._id, arkadevent: arkadeventId }).exec(reservationsFound);
   function reservationsFound(err, reservations) {
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       count = reservations.length;
       reservations.forEach(unRoll);
@@ -94,9 +106,7 @@ exports.unregister = function(req, res) {
   function unRoll(reservation){
     Reservation.findOne({ _id: reservation._id }).exec(function(err, reserv) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
       } else {
         reserv.enrolled = false;
         reserv.standby = false;
@@ -227,9 +237,7 @@ exports.update = function(req, res) {
 
   reservation.save(function(err) {
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       res.jsonp(reservation);
     }
@@ -244,9 +252,7 @@ exports.delete = function(req, res) {
 
   reservation.remove(function(err) {
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       res.jsonp(reservation);
     }
@@ -259,9 +265,7 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
   Reservation.find().sort('-created').populate('user', 'displayName').exec(function(err, reservations) {
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       res.jsonp(reservations);
     }
@@ -274,9 +278,7 @@ exports.list = function(req, res) {
 exports.reservationByID = function(req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({
-      message: 'Reservation is invalid'
-    });
+    return res.status(400).send({ message: 'Reservation is invalid' });
   }
 
   Reservation.findById(id).populate('user', 'displayName').exec(function (err, reservation) {
