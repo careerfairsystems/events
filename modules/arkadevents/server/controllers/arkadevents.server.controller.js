@@ -8,6 +8,7 @@ var path = require('path'),
   Arkadevent = mongoose.model('Arkadevent'),
   Reservation = mongoose.model('Reservation'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  MailController = require(path.resolve('./modules/reservations/server/controllers/mail.server.controller')),
   _ = require('lodash');
 
 /**
@@ -47,6 +48,59 @@ exports.read = function(req, res) {
     }
     arkadevent.seatstaken = count;
     res.jsonp(arkadevent);
+  });        
+};
+
+/**
+ * Offer spot for stand-by reservations that fit on the event.
+ */
+exports.offer = function(req, res) {
+  // Convert mongoose document to JSON
+  var arkadevent = req.arkadevent ? req.arkadevent.toJSON() : {};
+
+  // Get all reservations to this event.
+  Reservation.find({ arkadevent: arkadevent._id }).exec(function(err, reservations){
+    if(err){
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    // Sort reservations after created-date
+    function afterCreated(r1, r2) { return r1.created > r2.created; }
+    var sortRes = reservations.filter(afterCreated);
+
+    // Get reservations that should be offered a spot.
+    var nrofseats = arkadevent.nrofseats;
+    var resOffer = sortRes.reduce(resToOffer);
+    function resToOffer (pre, reservation){
+      if(nrofseats > 0){
+        return pre;
+      }
+      // Standby that hasnt been offered or enrolled.
+      if(!reservation.enrolled && !reservation.pending && reservation.standby){
+        pre.push(reservation);
+      }
+      nrofseats--;
+      return pre;
+    }
+
+    resOffer.forEach(offerSeat);
+    function offerSeat(r){
+      // Update to DB
+      r.pending = true; 
+      r.offer = Date.now(); 
+      r.save(function(err){
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } 
+      });
+      // Email the reservations and ask for accept/decline
+      MailController.offerSpot(r, res);
+    }
+    resOffer.forEach(offerSeat);
+    res.send(200);
   });        
 };
 
