@@ -17,7 +17,6 @@
     vm.user = vm.authentication.user;
 
     $scope.unregister = function (){
-
       $http.post('/api/reservations/unregister', { arkadeventId: vm.eventId }).success(function (response) {
         // Successfull
         $state.go('home');
@@ -25,13 +24,10 @@
         // Show user error message 
         $scope.error = response.message;
       });
-    
-      
     };
 
     // Save Reservation
     function save(isValid) {
-
       if (vm.reservation._id) {
         vm.reservation.$update(successReservationCallback, errorCallback);
       } else {
