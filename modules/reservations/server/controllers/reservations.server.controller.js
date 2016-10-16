@@ -101,11 +101,11 @@ exports.unregister = function(req, res) {
 /**
  * Unregister a reservation to a event.
  */
-exports.unregisteredbyadmin = function(req, res) {
+exports.unregisterbyadmin = function(req, res) {
   var arkadeventId = req.body.arkadeventId;
   var userId = req.body.userId;
 
-  User.find({ _id: new ObjectId(userId) }, function(err, user){
+  User.findOne({ _id: new ObjectId(userId) }, function(err, user){
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     }
@@ -116,7 +116,7 @@ exports.unregisteredbyadmin = function(req, res) {
 function doUnregisterReservation(user, arkadeventId, res){
   //TODO: Implement
   var count = 0;
-  Reservation.find({ user: new ObjectId(user._id), arkadevent: new ObjectId(arkadeventId) }).exec(reservationsFound);
+  Reservation.find({ user: user._id, arkadevent: new ObjectId(arkadeventId) }).exec(reservationsFound);
   function reservationsFound(err, reservations) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
@@ -126,12 +126,12 @@ function doUnregisterReservation(user, arkadeventId, res){
     Arkadevent.findOne({ _id: new ObjectId(arkadeventId) }, function(err, arkadevent){
       reservations.forEach(unRoll);
       function unRoll(reservation){
-        Reservation.update({ _id: reservation._id }, { $set: { enrolled: false, standby: false, pending: false } }).exec(function(err, affected, reserv) {
+        Reservation.update({ _id: new Object(reservation._id) }, { $set: { enrolled: false, standby: false, pending: false } }).exec(function(err, affected, reserv) {
           if (err) {
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
           }
           count--;
-          if(count === 0){
+          if(count <= 0){
             // Offer seat to other reservations
             ArkadeventController.offerSeatsOnEvent(arkadevent, res);         
           }

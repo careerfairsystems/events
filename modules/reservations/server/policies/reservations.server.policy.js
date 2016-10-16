@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reservations',
       permissions: '*'
     }, {
+      resources: '/api/reservations/unregisterbyadmin',
+      permissions: ['*']
+    }, {
       resources: '/api/reservations/unregister',
       permissions: ['*']
     }, {
@@ -41,6 +44,9 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/reservations',
       permissions: ['*']
+    }, {
+      resources: '/api/reservations/unregisterbyadmin',
+      permissions: ['']
     }, {
       resources: '/api/reservations/unregister',
       permissions: ['*']
@@ -66,6 +72,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reservations',
       permissions: ['post', 'get']
     }, {
+      resources: '/api/reservations/unregisterbyadmin',
+      permissions: ['']
+    }, {
       resources: '/api/reservations/unregister',
       permissions: ['*']
     }, {
@@ -88,6 +97,9 @@ exports.invokeRolesPolicies = function () {
     roles: ['guest'],
     allows: [{
       resources: '/api/reservations',
+      permissions: ['']
+    }, {
+      resources: '/api/reservations/unregisterbyadmin',
       permissions: ['']
     }, {
       resources: '/api/reservations/unregister',

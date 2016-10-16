@@ -6,14 +6,13 @@
     .module('reservations')
     .controller('ReservationsListController', ReservationsListController);
 
-  ReservationsListController.$inject = ['ReservationsService', '$stateParams', 'ArkadeventsService', '$state', '$filter', '$scope', '$compile'];
+  ReservationsListController.$inject = ['ReservationsService', '$stateParams', 'ArkadeventsService', '$state', '$filter', '$scope', '$compile', '$http'];
 
-  function ReservationsListController(ReservationsService, $stateParams, ArkadeventsService, $state, $filter, $scope, $compile) {
+  function ReservationsListController(ReservationsService, $stateParams, ArkadeventsService, $state, $filter, $scope, $compile, $http) {
     var vm = this;
 
     var eventId = $stateParams.arkadeventId;
     vm.arkadevent = ArkadeventsService.get({ arkadeventId: eventId });
-
 
     // Current Data tracking
     vm.enrolled = 0;
@@ -85,16 +84,39 @@
       var current = vm.reservations[index];
       $state.go('reservations.view', { reservationId: current._id });
     };
-  
-    vm.setEnrolled = function (index){
-      var imSure = window.confirm('Are you sure?');
+
+    vm.setEnrollment = function(index){
+      if(vm.reservations[index].enrolled){
+        vm.deregister(index);
+      } else {
+        vm.enroll(index);
+      }
+    };
+    // Deregister reservation
+    vm.deregister = function (index){
+      var imSure = window.confirm('Are you sure you want to deregister reservation from this event?');
       if(imSure){
-        vm.reservations[index].enrolled = !vm.reservations[index].enrolled;
+        vm.reservations[index].enrolled = false;
+        var reservation = vm.reservations[index];
+        $http.post('/api/reservations/unregisterbyadmin', { arkadeventId: reservation.arkadevent, userId: reservation.user._id }).success(function (response) {
+          alert('Succesfully deregistered student. Message: ' + response.message);
+        }).error(function (response) {
+          alert('Deregistration failed. Message: ' + response.message);
+          vm.reservations[index].enrolled = true;
+        });
+      }
+    };
+  
+    // Enroll reservation
+    vm.enroll = function (index){
+      var imSure = window.confirm('Are you sure you want to enroll reservation to event?');
+      if(imSure){
+        vm.reservations[index].enrolled = true;
         var reservation = vm.reservations[index];
         var res = ReservationsService.get({ reservationId: reservation._id }, function() {
           res.enrolled = reservation.enrolled;
           res.$save(function(r){
-            //alert("Set to: " + r.enrolled);
+            alert("Succesfully enrolled reservation.");
           });
         });
       }
@@ -132,7 +154,7 @@
           { data: 'other' },
           { data: 'enrolled', 
             'fnCreatedCell': function (nTd, sData, oData, iRow, iCol) {
-              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' data-ng-click="vm.setEnrolled('+ iRow+')" />');
+              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' data-ng-click="vm.setEnrollment('+ iRow+')" />');
               $compile(nTd)($scope);
             }
           },

@@ -34,13 +34,10 @@ exports.offerSpot = function (reservations, arkadevent, res){
     function done(err) {
       if(err){
         successfull = false;
-        console.log("oh neas");
       }
-      console.log("hej");
       if(count <= 0){
-        console.log("Fuck");
         if (!err && successfull) {
-          return res.send({ message: 'An email has been sent to the provided email with further instructions.' });
+          return res.send({ message: 'Succesfully sent offer to ' + reservations.length + '. They have been emailed about their spot.' });
         } else {
           return res.status(400).send({ message: 'Failure sending email: ' + err });
         }

@@ -89,6 +89,9 @@ function offerSeatsOnEvent(arkadevent, res){
       nrofseats--;
       return pre;
     }
+    if(resOffer.length <= 0){
+      return res.status(200).send({ message: 'No seats left for standbys. No other reservation has been enrolled' });
+    }
 
     var count = resOffer.length;
     resOffer.forEach(updateDb);

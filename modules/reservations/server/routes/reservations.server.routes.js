@@ -9,7 +9,7 @@ var reservationsPolicy = require('../policies/reservations.server.policy'),
 module.exports = function(app) {
   // Reservations Routes
 
-  app.route('/api/reservations/unregisterbydamin').all(reservationsPolicy.isAllowed)
+  app.route('/api/reservations/unregisterbyadmin').all(reservationsPolicy.isAllowed)
     .post(reservations.unregisterbyadmin);
   app.route('/api/reservations/unregister').all(reservationsPolicy.isAllowed)
     .post(reservations.unregister);
