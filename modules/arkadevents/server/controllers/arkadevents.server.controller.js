@@ -9,7 +9,7 @@ var path = require('path'),
   Arkadevent = mongoose.model('Arkadevent'),
   Reservation = mongoose.model('Reservation'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  MailController = require(path.resolve('./modules/reservations/server/controllers/mail.server.controller')),
+  MailController = require(path.resolve('./modules/mailtemplates/server/controllers/mail.server.controller')),
   _ = require('lodash');
 
 function idCompare(id1,id2){
@@ -52,7 +52,7 @@ exports.read = function(req, res) {
     }
     arkadevent.seatstaken = count;
     res.jsonp(arkadevent);
-  });        
+  });
 };
 
 /**
@@ -61,15 +61,25 @@ exports.read = function(req, res) {
 exports.offerseats = function(req, res) {
   // Convert mongoose document to JSON
   var arkadevent = req.arkadevent ? req.arkadevent.toJSON() : {};
-  offerSeatsOnEvent(arkadevent, res);
+  var hasResponded = false;
+  offerSeatsOnEvent(arkadevent, function(success){
+    if(!hasResponded){
+      if(success){
+        res.status(200).send({ message: 'Succesfully sent email' }); 
+      } else {
+        res.status(400).send({ message: 'Failed to sent email' }); 
+      }
+      hasResponded = true;
+    }
+  }, res);
 };
 
 exports.offerSeatsOnEvent = offerSeatsOnEvent;
-function offerSeatsOnEvent(arkadevent, res){
+function offerSeatsOnEvent(arkadevent, offersDone, res){
   // Get all reservations to this event.
   Reservation.find({ arkadevent: new ObjectId(arkadevent._id) }).exec(function(err, reservations){
     if(err){
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+      return offersDone({ err: true, message: errorHandler.getErrorMessage(err) });
     }
     // Sort reservations after created-date
     function afterCreated(r1, r2) { return r1.created && r2.created && r1.created.getTime() > r2.created.getTime(); }
@@ -90,7 +100,7 @@ function offerSeatsOnEvent(arkadevent, res){
       return pre;
     }
     if(resOffer.length <= 0){
-      return res.status(200).send({ message: 'No seats left for standbys. No other reservation has been enrolled' });
+      return offersDone({ err: false, message: 'No seats left for standbys. No other reservation has been enrolled' });
     }
 
     var count = resOffer.length;
@@ -99,12 +109,17 @@ function offerSeatsOnEvent(arkadevent, res){
       // Update to DB
       r.update({ _id: new ObjectId(r._id) }, { $set: { pending: true, offer: new Date() } }, function(err, affected, resp){
         if (err) { 
-          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+          return offersDone({ err: true, message: errorHandler.getErrorMessage(err) });
         } 
         count--;
         if(count <= 0){
           // Email the reservations and ask for accept/decline
-          MailController.offerSpot(resOffer, arkadevent, res);
+          var offerSuccess = MailController.offerSpot(resOffer, arkadevent, res);
+          if(offerSuccess){
+            return offersDone({ err: false, message: 'Mail sent to reservation' });
+          } else {
+            return offersDone({ err: true, message: 'Mail not sent, failure' });
+          }
         }
       });
     }

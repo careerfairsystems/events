@@ -12,7 +12,7 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   async = require('async'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  MailController = require(path.resolve('./modules/reservations/server/controllers/mail.server.controller')),
+  MailController = require(path.resolve('./modules/mailtemplates/server/controllers/mail.server.controller')),
   ArkadeventController = require(path.resolve('./modules/arkadevents/server/controllers/arkadevents.server.controller')),
   config = require(path.resolve('./config/config.js')),
   _ = require('lodash');
@@ -133,7 +133,17 @@ function doUnregisterReservation(user, arkadeventId, res){
           count--;
           if(count <= 0){
             // Offer seat to other reservations
-            ArkadeventController.offerSeatsOnEvent(arkadevent, res);         
+            var hasResponded = false;
+            ArkadeventController.offerSeatsOnEvent(arkadevent, function(success){
+              if(!hasResponded){
+                if(success){
+                  res.status(200).send({ message: 'Succesfully sent email' }); 
+                } else {
+                  res.status(400).send({ message: 'Failed to sent email' }); 
+                }
+                hasResponded = true;
+              }
+            }, res);
           }
         });
       }
@@ -164,10 +174,10 @@ exports.acceptoffer = function(req, res) {
         if(err){
           return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         }
-        return res.status(200).send({ message: "Success" });
+        return res.status(200).send({ message: 'Success' });
       });
     } else {
-      return res.status(400).send({ message: "The offer period has expired" });
+      return res.status(400).send({ message: 'The offer period has expired' });
     }
   }
 };
@@ -200,12 +210,22 @@ exports.declineoffer = function(req, res) {
           if (err) {
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
           } else {
-            ArkadeventController.offerSeatsOnEvent(arkadevent, res);         
+            var hasResponded = false;
+            ArkadeventController.offerSeatsOnEvent(arkadevent, function(success){
+              if(!hasResponded){
+                if(success){
+                  res.status(200).send({ message: 'Succesfully sent email' });
+                } else {
+                  res.status(400).send({ message: 'Failed to sent email' });
+                }
+                hasResponded = true;
+              }
+            });
           }
         });
       });
     } else {
-      return res.status(400).send({ message: "The offer period has expired" });
+      return res.status(400).send({ message: 'The offer period has expired' });
     }
   }
 };
@@ -252,7 +272,17 @@ exports.declineoldoffers = function(req, res) {
             if (err) {
               return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
             } else {
-              ArkadeventController.offerSeatsOnEvent(arkadevent, res);         
+              var hasResponded = false;
+              ArkadeventController.offerSeatsOnEvent(arkadevent, function(success){
+                if(!hasResponded){
+                  if(success){
+                    res.status(200).send({ message: 'Succesfully sent email' }); 
+                  } else {
+                    res.status(400).send({ message: 'Failed to sent email' }); 
+                  }
+                  hasResponded = true;
+                }
+              });
             }
           });
         }
@@ -335,5 +365,16 @@ exports.reservationByID = function(req, res, next, id) {
   */
 exports.confirmationMail = function (req, res, next) {
   var id = req.body.reservationId;
-  MailController.confirmationMail(id, res, next);
+  var hasResponded = false;
+  MailController.confirmationMail(id, function(result){
+    if(hasResponded){
+      return;
+    }
+    hasResponded = true;
+    if(result.error){
+      res.status(400).send({ message: result.message });
+    } else {
+      res.status(200).send({ message: result.message });
+    }
+  }, res);
 };

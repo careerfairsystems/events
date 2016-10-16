@@ -8,6 +8,8 @@ var mailtemplatesPolicy = require('../policies/mailtemplates.server.policy'),
 
 module.exports = function(app) {
   // Mailtemplates Routes
+  app.route('/api/mailtemplates/send/email').all(mailtemplatesPolicy.isAllowed)
+    .post(mailtemplates.sendemail);
   app.route('/api/mailtemplates').all(mailtemplatesPolicy.isAllowed)
     .get(mailtemplates.list)
     .post(mailtemplates.create);

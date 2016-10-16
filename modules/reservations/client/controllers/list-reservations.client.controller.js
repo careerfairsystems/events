@@ -116,7 +116,7 @@
         var res = ReservationsService.get({ reservationId: reservation._id }, function() {
           res.enrolled = reservation.enrolled;
           res.$save(function(r){
-            alert("Succesfully enrolled reservation.");
+            alert('Succesfully enrolled reservation.');
           });
         });
       }

@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/mailtemplates',
       permissions: '*'
     }, {
+      resources: '/api/mailtemplates/send/email',
+      permissions: '*'
+    }, {
       resources: '/api/mailtemplates/:mailtemplateId',
       permissions: '*'
     }]

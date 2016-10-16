@@ -39,8 +39,6 @@
           $scope.error = $sce.trustAsHtml($scope.error + 'Failed to send mail: ' + response.message + '<br />');
         });
       }
-      
-      
     };
 
   }

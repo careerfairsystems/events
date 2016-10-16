@@ -5,17 +5,50 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
+  ObjectId = mongoose.Types.ObjectId,
   Reservation = mongoose.model('Reservation'),
   Arkadevent = mongoose.model('Arkadevent'),
   Mailtemplate = mongoose.model('Mailtemplate'),
   nodemailer = require('nodemailer'),
   async = require('async'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  app = require(path.resolve('./server')).app,
   config = require(path.resolve('./config/config.js')),
   _ = require('lodash');
   
 // Create smtpTransport for mailing.
 var smtpTransport = nodemailer.createTransport(config.mailer.options);
+
+/**
+  * Send mail to offer a spot for a reservation
+  */
+exports.sendTemplateEmail = function (mailtemplateId, arkadeventId, reservationId, res, callback){
+
+  Mailtemplate.findOne({ _id: new ObjectId(mailtemplateId) }, mailtemplateFound); 
+
+  function mailtemplateFound(err, mailtemplate){
+    if(err){
+      callback(false);
+    }
+    
+    // Get variables    
+    var template = path.resolve('modules/mailtemplates/server/templates/email');
+    var content = mailtemplate.content || '';
+    var subject = mailtemplate.subject || '';
+    var contact = mailtemplate.contact || '';
+
+    Reservation.findOne({ _id: new ObjectId(reservationId) }, reservationFound);
+    function reservationFound(err, reservation){
+      if(err){
+        callback(false);
+      }
+      sendMail(reservation, template, content, subject, contact, done, res);
+      function done(err) {
+        callback(!err);
+      }
+    }
+  }
+};
 
 /**
   * Send mail to offer a spot for a reservation
@@ -30,16 +63,16 @@ exports.offerSpot = function (reservations, arkadevent, res){
   var successfull = true;
   reservations.forEach(sendOfferEmail);
   function sendOfferEmail(r){
-    sendMail(r, template, content, subject, contact, res, done);
+    sendMail(r, template, content, subject, contact, done, res);
     function done(err) {
       if(err){
         successfull = false;
       }
       if(count <= 0){
         if (!err && successfull) {
-          return res.send({ message: 'Succesfully sent offer to ' + reservations.length + '. They have been emailed about their spot.' });
+          return true;
         } else {
-          return res.status(400).send({ message: 'Failure sending email: ' + err });
+          return false;
         }
       }
       count--;
@@ -50,28 +83,26 @@ exports.offerSpot = function (reservations, arkadevent, res){
 /**
   * Send confirmation mail to reservation
   */
-exports.confirmationMail = function (reservationId, res) {
+exports.confirmationMail = function (reservationId, doneConfirmation, res) {
   if (!mongoose.Types.ObjectId.isValid(reservationId)) {
-    return res.status(400).send({
-      message: 'Reservation is invalid'
-    });
+    return doneConfirmation({ error: true, message: 'Reservation is invalid' });
   }
   Reservation.findById(reservationId).populate('user', 'displayName').exec(function (err, reservation) {
     if (err) {
-      return res.status(404).send({ message: 'Error when retrieveng reservation: ' + err });
+      return doneConfirmation({ error: true, message: 'Error when retrieveng reservation: ' + err });
     } else if (!reservation) {
-      return res.status(404).send({ message: 'No Reservation with that identifier has been found' });
+      return doneConfirmation({ error: true, message: 'No Reservation with that identifier has been found' });
     }
     var template = path.resolve('modules/reservations/server/templates/mailconfirmation');
     var content = 'Du har nu bokat en plats på ett event\n\n Om detta inte stämmer eller om vi har fått in fel uppgifter, hör av dig snarast. ';
     var contact = 'event.arkad@box.tlth.se';
     var subject = 'Bekräftelse Event anmälan / Confirmation Event booking';
-    sendMail(reservation, template, content, subject, contact, res, done);
+    sendMail(reservation, template, content, subject, contact, done, res);
     function done(err) {
       if (!err) {
-        return res.send({ message: 'An email has been sent to the provided email with further instructions.' });
+        return doneConfirmation({ error: false, message: 'An email has been sent to the provided email with further instructions.' });
       } else {
-        return res.status(400).send({ message: 'Failure sending email: ' + err });
+        return doneConfirmation({ error: false, message: 'Failure sending email: ' + err });
       }
     }
   });
@@ -82,7 +113,7 @@ exports.confirmationMail = function (reservationId, res) {
   * A generic method for sending mail to the student of a Reservation.
   */
 
-function sendMail(reservation, template, content, subject, contact, res, callback){
+function sendMail(reservation, template, content, subject, contact, callback, res){
   content = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   async.waterfall([

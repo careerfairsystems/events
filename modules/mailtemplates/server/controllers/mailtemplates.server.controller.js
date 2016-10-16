@@ -6,9 +6,37 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Mailtemplate = mongoose.model('Mailtemplate'),
+  MailController = require(path.resolve('./modules/mailtemplates/server/controllers/mail.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
+/**
+ * Create a Mailtemplate
+ */
+exports.sendemail = function(req, res) {
+  //var mailtemplate = new Mailtemplate(req.body);
+  //mailtemplate.user = req.user;
+  var arkadeventId = req.body.arkadevent;
+  var mailtemplateId = req.body.mailtemplate;
+  var reservationId = req.body.reservation;
+
+  var hasResponded = false;
+  // Email the reservations and ask for accept/decline
+  MailController.sendTemplateEmail(mailtemplateId, arkadeventId, reservationId, res, emailDone);
+  function emailDone(mailingSuccess){
+    if(hasResponded){
+      return;
+    }
+    hasResponded = true;
+    if(mailingSuccess){
+      return res.status(200).send({ message: 'Succesfully sent offer to the reservation-email' });
+    } else {
+      return res.status(400).send({ message: 'Mailing not succesfull. We have failed you.' });
+    }
+  }
+};
+
+/**
 /**
  * Create a Mailtemplate
  */
