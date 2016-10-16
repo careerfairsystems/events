@@ -93,8 +93,15 @@
           arkadeventResolve: getEvent,
         },
         data: {
+          roles: ['user'],
           pageTitle: 'Reservation {{ reservationResolve.name }}'
         }
+      })
+      .state('reservations.mail', {
+        url: '/mail',
+        templateUrl: 'modules/reservations/client/views/mail-reservations.client.view.html',
+        controller: 'ReservationsMailController',
+        controllerAs: 'vm',
       })
       .state('reservations.confirmation', {
         url: '/confirmation/:reservationId',
@@ -105,6 +112,7 @@
           reservationResolve: getReservation,
         },
         data: {
+          roles: ['user'],
           pageTitle: 'Reservation {{ reservationResolve.name }}'
         }
       })

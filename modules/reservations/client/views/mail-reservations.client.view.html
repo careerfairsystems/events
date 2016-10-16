@@ -1,0 +1,23 @@
+<section>
+  <div class="page-header">
+    <h1>Select event you wish to mailbomb</h1>
+  </div>
+  <div class="list-group" ng-show="!vm.arkadevent">
+    <div ng-repeat="event in vm.arkadevents track by $index" ng-click="vm.eventSelected($index)" class="list-group-item">
+      <h4 class="list-group-item-heading" ng-bind="event.name"></h4>
+    </div>
+  </div>
+  <div class="list-group" ng-show="vm.arkadevent">
+    <div ng-repeat="event in vm.reservations track by $index" class="list-group-item">
+      <h4 class="list-group-item-heading" ng-bind="event.name"></h4>
+    </div>
+    <div class="alert alert-warning text-center" ng-if="vm.reservations.length == 0">
+      No reservations have been created yet for this event
+    </div>
+    <hr>
+    <button class="btn btn-default" ng-click="vm.eventDeselected()">Back</button>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.arkadevents.$resolved && !vm.arkadevents.length">
+    No arkadevents have been created yet
+  </div>
+</section>
