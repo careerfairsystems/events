@@ -26,7 +26,14 @@
     Menus.addSubMenuItem('topbar', 'mailtemplates', {
       title: 'Create Mailtemplate',
       state: 'mailtemplates.create',
-      roles: ['user']
+      roles: ['admin']
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'mailtemplates', {
+      title: 'MailBOMB',
+      state: 'mailtemplates.bomb',
+      roles: ['admin']
     });
   }
 })();

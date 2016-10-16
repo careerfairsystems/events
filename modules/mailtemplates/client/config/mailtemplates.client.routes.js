@@ -24,6 +24,16 @@
           pageTitle: 'Mailtemplates List'
         }
       })
+      .state('mailtemplates.bomb', {
+        url: '/bomb',
+        templateUrl: 'modules/mailtemplates/client/views/bomb-mailtemplates.client.view.html',
+        controller: 'MailBombController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin'],
+          pageTitle: 'Mailtemplates List'
+        }
+      })
       .state('mailtemplates.create', {
         url: '/create',
         templateUrl: 'modules/mailtemplates/client/views/form-mailtemplate.client.view.html',

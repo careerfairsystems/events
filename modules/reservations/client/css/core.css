@@ -12,7 +12,8 @@
   max-height: 350px;
   display: block;
   margin: auto; }
-.arkadeventinfo pre {
+
+pre {
   border-radius: 3px;
   padding: 10px 15px; }
 
