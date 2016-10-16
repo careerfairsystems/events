@@ -8,6 +8,7 @@ var path = require('path'),
   ObjectId = mongoose.Types.ObjectId,
   Reservation = mongoose.model('Reservation'),
   Arkadevent = mongoose.model('Arkadevent'),
+  User = mongoose.model('User'),
   nodemailer = require('nodemailer'),
   async = require('async'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -94,34 +95,51 @@ exports.unregister = function(req, res) {
   var arkadeventId = req.body.arkadeventId;
   var user = req.user;
 
+  doUnregisterReservation(user, arkadeventId, res);
+};
+
+/**
+ * Unregister a reservation to a event.
+ */
+exports.unregisteredbyadmin = function(req, res) {
+  var arkadeventId = req.body.arkadeventId;
+  var userId = req.body.userId;
+
+  User.find({ _id: new ObjectId(userId) }, function(err, user){
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    }
+    doUnregisterReservation(user, arkadeventId, res);
+  });
+};
+
+function doUnregisterReservation(user, arkadeventId, res){
+  //TODO: Implement
   var count = 0;
-  Reservation.find({ user: user._id, arkadevent: arkadeventId }).exec(reservationsFound);
+  Reservation.find({ user: new ObjectId(user._id), arkadevent: new ObjectId(arkadeventId) }).exec(reservationsFound);
   function reservationsFound(err, reservations) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
-      count = reservations.length;
-      reservations.forEach(unRoll);
     }
-  }
-  function unRoll(reservation){
-    Reservation.findOne({ _id: reservation._id }).exec(function(err, reserv) {
-      if (err) {
-        return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-      } else {
-        reserv.enrolled = false;
-        reserv.standby = false;
-        reserv.pending = false;
-        reserv.showedup = false;
-        reserv.save();
-        count--;
-        if(count === 0){
-          res.status(200).send('Unrollment successfull');
-        }
+    count = reservations.length;
+
+    Arkadevent.findOne({ _id: new ObjectId(arkadeventId) }, function(err, arkadevent){
+      reservations.forEach(unRoll);
+      function unRoll(reservation){
+        Reservation.update({ _id: reservation._id }, { $set: { enrolled: false, standby: false, pending: false } }).exec(function(err, affected, reserv) {
+          if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+          }
+          count--;
+          if(count === 0){
+            // Offer seat to other reservations
+            ArkadeventController.offerSeatsOnEvent(arkadevent, res);         
+          }
+        });
       }
     });
   }
-};
+}
 
 /**
  * Accept offer for a seat.
@@ -208,7 +226,7 @@ exports.declineoldoffers = function(req, res) {
   var arkadeventId = req.body.arkadeventId;
   var user = req.user;
 
-  Reservation.find({ arkadevent: arkadeventId }).exec(reservationsFound);
+  Reservation.find({ arkadevent: new ObjectId(arkadeventId) }).exec(reservationsFound);
   function reservationsFound(err, reservations) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
@@ -218,21 +236,28 @@ exports.declineoldoffers = function(req, res) {
     var oldRes = reservations.filter(isOld);
     function isOld(r){ return r.offer.getTime() < yesterday.getTime(); }
 
+    var count = oldRes.length;
     oldRes.forEach(decline);
     function decline(r){
-      r.pending = false;
-      r.save();
+      Reservation.update({ _id: new ObjectId(r._id) }, { $set: { pending: false } }, function(err,affected){
+        if (err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        }
+        oldRes--;
+        // When all async updates are done.
+        if(oldRes <= 0){
+
+          // Offer spot to other standby's.
+          Arkadevent.find({ _id: new ObjectId(arkadeventId) }).exec(function(err, arkadevent){
+            if (err) {
+              return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+            } else {
+              ArkadeventController.offerSeatsOnEvent(arkadevent, res);         
+            }
+          });
+        }
+      });
     }
-    
-    // Offer spot to other standby's.
-    Arkadevent.find({ _id: arkadeventId }).exec(function(err, arkadevent){
-      if (err) {
-        return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-      } else {
-        ArkadeventController.offerseats({ arkadevent: arkadevent }, res);         
-      }
-      res.status(200).send('Decline successfull');
-    });
   }
 };
 

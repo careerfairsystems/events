@@ -94,7 +94,7 @@ function offerSeatsOnEvent(arkadevent, res){
     resOffer.forEach(updateDb);
     function updateDb(r){
       // Update to DB
-      r.update({ _id: new ObjectId(r._id) }, { pending: true, offer: new Date() }, function(err, affected, resp){
+      r.update({ _id: new ObjectId(r._id) }, { $set: { pending: true, offer: new Date() } }, function(err, affected, resp){
         if (err) { 
           return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         } 
