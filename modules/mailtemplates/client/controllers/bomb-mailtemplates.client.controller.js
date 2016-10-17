@@ -19,6 +19,8 @@
       vm.currEvent = index;
       vm.reservations = vm.allReservations.filter(onEvent);
       function onEvent(r){ return r.arkadevent === vm.arkadevent._id; }
+      vm.reservations = vm.reservations.filter(isEnrolled);
+      function isEnrolled(r){ return r.enrolled; }
     };
 
     vm.chooseTemplate = function (index){
