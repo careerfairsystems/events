@@ -9,6 +9,11 @@
       </div>
     </div>
   </div>
+  <div ng-show="filteredItems.length === 0">
+    <div class="alert text-center alert-warning">
+      No reservations have come in to this event.
+    </div>
+  </div>
   <div class="list-group reservations">
     <div ng-repeat="reservation in filteredItems" class="reservation list-group-item" ng-class='{ "list-group-item-success": reservation.showedup}'>
       <input type="checkbox" value="true" ng-model="reservation.edit" style="width: 20px; height: 35px;">
