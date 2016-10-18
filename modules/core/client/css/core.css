@@ -55,6 +55,9 @@ pre {
       .eventgrid .events .eventbox .info {
         padding: 15px;
         padding-top: 5px; }
+      .eventgrid .events .eventbox .eventtext {
+        height: 90px;
+        overflow: hidden; }
       .eventgrid .events .eventbox .name {
         position: absolute;
         top: 240px;

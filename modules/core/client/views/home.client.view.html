@@ -21,7 +21,8 @@
             <span class="tag"> {{ event.starttime | date:"HH:mm" }} - {{ event.endtime | date:"HH:mm" }} </span>
             <span class="tag"> {{ event.language }} </span>
             <hr />
-            <pre>{{ event.description }}</pre>
+            <div ng-bind-html="event.description" class="eventtext">
+            </div>
             <hr />
             <span> {{ event.seatsLeft }} spots left.
             </span>

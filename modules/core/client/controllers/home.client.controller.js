@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ArkadeventsService',
-  function ($scope, Authentication, ArkadeventsService) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ArkadeventsService', '$sce',
+  function ($scope, Authentication, ArkadeventsService, $sce) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     var vm = this;
@@ -19,6 +19,10 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       function addSeatsLeft(e){
         e.seatsLeft = e.nrofseats - e.seatstaken;
         e.seatsLeft = Math.max(e.seatsLeft, 0);
+        
+        //Make description to html
+        e.description = e.description.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        e.description = $sce.trustAsHtml(e.description);
       }
       vm.events.forEach(addSeatsLeft);
     }
