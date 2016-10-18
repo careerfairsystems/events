@@ -28,15 +28,18 @@
             </span>
 
             <div ng-if="event.data.isRegistered">
-              <span>
+              <span style="display: inline-block; width: 150px;">
                 You have already registered to this event
               </span>
               <button class="btn btn-sm btn-warning pull-right" data-ui-sref="reservations.unregister({ arkadeventId: event._id })">Unregister</button>
             </div>
-            <div ng-if="!event.data.isRegistered">
-              <button class="btn btn-sm btn-warning pull-right" ng-show="!event.reservationopen || event.nrofseats <= event.seatstaken" data-ui-sref="reservations.create({ arkadeventId: event._id })">Event is full, apply to reservlist</button>
-              <a class="btn btn-sm btn-primary pull-right" ng-show="event.reservationopen && event.seatstaken < event.nrofseats" data-ui-sref="reservations.create({ arkadeventId: event._id })">Reserve a spot</a>
-              <a class="btn btn-sm btn-primary pull-right" ng-show="false && event.reservationopen" data-ui-sref="reservations.create({ arkadeventId: event._id })">Sign up to reservlist</a>
+            <div ng-if="!event.reservationopen">
+              <button class="btn btn-sm btn-warning pull-right" data-ui-sref="reservations.create({ arkadeventId: event._id })">Event is closed</button>
+            </div>
+            <div ng-if="!event.data.isRegistered && event.reservationopen">
+              <button class="btn btn-sm btn-warning pull-right" ng-show=" event.nrofseats <= event.seatstaken" data-ui-sref="reservations.create({ arkadeventId: event._id })">Event is full, apply to reservlist</button>
+              <a class="btn btn-sm btn-primary pull-right" ng-show="event.seatstaken < event.nrofseats" data-ui-sref="reservations.create({ arkadeventId: event._id })">Reserve a spot</a>
+              <a class="btn btn-sm btn-primary pull-right" ng-show="false" data-ui-sref="reservations.create({ arkadeventId: event._id })">Sign up to reservlist</a>
             </div>
           </div>
         </div>
