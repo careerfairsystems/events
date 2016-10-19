@@ -56,6 +56,7 @@ pre {
         padding: 15px;
         padding-top: 5px; }
       .eventgrid .events .eventbox .eventtext {
+        text-align: justify;
         height: 90px;
         overflow: hidden; }
       .eventgrid .events .eventbox .name {

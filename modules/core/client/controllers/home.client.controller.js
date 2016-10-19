@@ -20,6 +20,12 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         e.seatsLeft = e.nrofseats - e.seatstaken;
         e.seatsLeft = Math.max(e.seatsLeft, 0);
         
+        // Trim description
+        var maxLength = 160;
+        var trimmedString = e.description.substr(0, maxLength);
+        trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+        e.description = trimmedString + '...';
+
         //Make description to html
         e.description = e.description.replace(/(?:\r\n|\r|\n)/g, '<br />');
         e.description = $sce.trustAsHtml(e.description);
