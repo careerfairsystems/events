@@ -62,8 +62,9 @@ pre {
       .eventgrid .events .eventbox .name {
         position: absolute;
         top: 240px;
+        padding: 5px;
         padding-left: 15px;
-        background-color: rgba(30, 30, 30, 0.8);
+        background-color: rgba(0, 43, 100, 0.8);
         width: 100%;
         font-size: 18px;
         font-weight: 100;
@@ -73,6 +74,16 @@ pre {
         height: 275px;
         overflow: hidden;
         background: #193f60; }
+        .eventgrid .events .eventbox .imgcontainer .registered {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          top: 0;
+          left: 0;
+          background-color: rgba(0, 43, 100, 0.8);
+          color: white;
+          padding: 10px;
+          font-style: italic; }
         .eventgrid .events .eventbox .imgcontainer img {
           position: relative;
           display: inline-block;

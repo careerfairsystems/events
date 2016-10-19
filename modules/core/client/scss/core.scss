@@ -87,8 +87,9 @@ $nameTop: $imgHeight - 35px;
       .name{
         position: absolute;
         top: $nameTop;
+        padding: 5px;
         padding-left: 15px;
-        background-color: rgba(30,30,30,0.8);
+        background-color: rgba(0,43,100,0.8);
         width: 100%;
         font-size: 18px;
         font-weight: 100;
@@ -99,6 +100,18 @@ $nameTop: $imgHeight - 35px;
         height: $eventHeight / 2;
         overflow: hidden;
         background: #193f60;
+        
+        .registered {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          top: 0;
+          left: 0;
+          background-color: rgba(0,43,100,0.8);
+          color: white;
+          padding: 10px;
+          font-style: italic
+        }
         
         img {
           position:relative;
