@@ -18,9 +18,10 @@
     <div ng-repeat="reservation in filteredItems" class="reservation list-group-item" ng-class='{ "list-group-item-success": reservation.showedup}'>
       <input type="checkbox" value="true" ng-model="reservation.edit" style="width: 20px; height: 35px;">
       <div class="info">
-        <span class="list-group-item-heading" ng-bind="reservation.name"></span>
+        <span class="list-group-item-heading">{{ reservation.name }}<span class="food" ng-if="reservation.time > vm.arkadevent.deadline">(SEN ANMÄLAN)</span></span>
         <br/>
         <span class="food" ng-bind="reservation.foodpref"></span>
+        
       </div>
       <button class="btn btn-success" ng-click="checkReservation(reservation)" ng-show="reservation.edit && !reservation.showedup"> Check</button>
       <button class="btn btn-danger" ng-click="checkReservation(reservation)" ng-show="reservation.edit && reservation.showedup"> Remove</button>

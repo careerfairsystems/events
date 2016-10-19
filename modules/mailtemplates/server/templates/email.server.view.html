@@ -1,13 +1,34 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head><title></title></head>
+<head>
+  <title></title>
+  <style>
+    pre{
+      white-space: pre-wrap;       /* Since CSS 2.1 */
+      background: transparent;
+      padding: 0px;
+      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+      white-space: -pre-wrap;      /* Opera 4-6 */
+      white-space: -o-pre-wrap;    /* Opera 7 */
+      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px
+    }
+  </style>
+  </head>
   <body>
-    <p>Hej {{name}},</p>
-    <br />
+    <p>Hello {{name}},</p>
     <pre> {{ content }} </pre>
-    <p>Har då några frågor kan du höra av dig till: <a href="mailto:{{ contact }}">{{ contact }}</a></p>
     <br />
-    <br />
-    <p>// The {{appName}} Support Team</p>
+    <p>Don't hesitate to contact us if you have any questions regarding the event.</p>
+    <p>
+      With kindest regards,
+    </p>
+    <p>
+      Emelie Holmberg and Sofia Classon, 
+      <br />
+      <strong>Event Administrators @ ARKAD 2016</strong> 
+    </p>
+
   </body>
 </html>

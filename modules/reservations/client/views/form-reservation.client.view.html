@@ -21,13 +21,17 @@
   </div>
   <hr>
 
+  <div ng-if="vm.arkadevent.data.isRegistered">
+    <div class="alert text-center alert-info">You have already registered to this event.
+    </div>
+    <button class="btn btn-lg btn-warning center-block" data-ui-sref="reservations.unregister({ arkadeventId: vm.arkadevent._id })">Unregister</button>
+  </div>
 
-  <div class="lead" ng-show="!vm.arkadevent.reservationopen">Registreringen för detta event är stängt.</div>
 
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3" ng-show="vm.arkadevent.reservationopen">
-      <h3 ng-if="vm.hasSeatsLeft">Boka en plats / Reserve a spot</h3>
-      <h3 ng-if="!vm.hasSeatsLeft">Ansök om reservplats / Apply for a reserve-spot</h3>
+  <div class="row" ng-if="!vm.arkadevent.data.isRegistered">
+    <div class="col-md-6 col-md-offset-3">
+      <h3 ng-if="vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate">Boka en plats / Reserve a spot</h3>
+      <h3 ng-if="!vm.hasSeatsLeft || !vm.arkadevent.reservationopen || vm.tooLate">Ansök om reservplats / Apply for a reserve-spot</h3>
       <form name="vm.form.reservationForm" class="form-horizontal" ng-submit="vm.save(vm.form.reservationForm.$valid)" novalidate>
         <fieldset>
           <!-- Name -->
@@ -79,7 +83,8 @@
             </div>
           </div>
           <!-- Foodpref -->
-          <div ng-if="vm.hasSeatsLeft" class="form-group" show-errors>
+          <!-- If user can choose foodpref -->
+          <div ng-if="vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate" class="form-group" show-errors>
             <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
             <br />
             <!-- Choices -->
@@ -90,13 +95,26 @@
             <!-- Other -->
             <input name="foodpref" type="text" ng-model="other" id="other" placeholder="Other..." class="form-control">
           </div>
-          <div ng-if="!vm.hasSeatsLeft" class="form-group">
+          <!-- If user can NOT choose foodpref because of reserv -->
+          <div ng-if="!vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate" class="form-group">
             <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
             <p>
               Som reserv får du inte välja matpreferens, utan blir tilldelad den maten som den lediga platsen är bokad med.
             </p>
             <p>
               As reserve you may not choose food preference. You will get the food that was booked for the spot that is opened for you.
+            </p>
+          </div>
+          <!-- If user can NOT choose foodpref because of too late -->
+          <div ng-if="!vm.arkadevent.reservationopen || vm.tooLate" class="form-group">
+            <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
+            <p>
+              Det för nära inpå eventet för att vi ska kunna ta hänsyn till 
+              din matpreferens. Du kommer att bli tilldelad den "vanliga" maten.
+            </p>
+            <p>
+              It too close before the event for us ta have a possibility to take 
+              your food preference in account. You will be served the standard food
             </p>
           </div>
           <!-- Submit -->

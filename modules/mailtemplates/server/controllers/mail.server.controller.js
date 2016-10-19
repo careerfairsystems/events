@@ -7,7 +7,6 @@ var path = require('path'),
   mongoose = require('mongoose'),
   ObjectId = mongoose.Types.ObjectId,
   Reservation = mongoose.model('Reservation'),
-  Arkadevent = mongoose.model('Arkadevent'),
   Mailtemplate = mongoose.model('Mailtemplate'),
   nodemailer = require('nodemailer'),
   async = require('async'),
@@ -19,101 +18,44 @@ var path = require('path'),
 // Create smtpTransport for mailing.
 var smtpTransport = nodemailer.createTransport(config.mailer.options);
 
+
 /**
-  * Send mail to offer a spot for a reservation
+  * Send mail With template
   */
-exports.sendTemplateEmail = function (mailtemplateId, arkadeventId, reservationId, res, callback){
+exports.sendTemplateEmail = function (mailtemplateId, reservation, res, doneMail, specifikContent){
 
   Mailtemplate.findOne({ _id: new ObjectId(mailtemplateId) }, mailtemplateFound); 
 
   function mailtemplateFound(err, mailtemplate){
-    if(err){
-      callback(false);
+    if(err || !mailtemplate){
+      return doneMail({ error: true, message: 'Mailtemplate not found. Failure sending email: ' + err });
     }
     
     // Get variables    
     var template = path.resolve('modules/mailtemplates/server/templates/email');
     var content = mailtemplate.content || '';
     var subject = mailtemplate.subject || '';
-    var contact = mailtemplate.contact || '';
 
-    Reservation.findOne({ _id: new ObjectId(reservationId) }, reservationFound);
-    function reservationFound(err, reservation){
-      if(err){
-        callback(false);
-      }
-      sendMail(reservation, template, content, subject, contact, done, res);
-      function done(err) {
-        callback(!err);
-      }
+    if (typeof specifikContent === 'function') { 
+      content += specifikContent(reservation);
     }
-  }
-};
-
-/**
-  * Send mail to offer a spot for a reservation
-  */
-exports.offerSpot = function (reservations, arkadevent, res){
-  var template = path.resolve('modules/reservations/server/templates/offerseat');
-  var content = 'Du har fått en plats ett av våra event, klicka på länken för att bekräfta eller tacka nej.\n\n' + config.host + '/reservations/offer/' + arkadevent._id.toString();
-  var contact = 'event.arkad@box.tlth.se';
-  var subject = 'En plats har öppnat sig! / A seat is available!';
-  
-  var count = reservations.length;
-  var successfull = true;
-  reservations.forEach(sendOfferEmail);
-  function sendOfferEmail(r){
-    sendMail(r, template, content, subject, contact, done, res);
+    sendMail(reservation, template, content, subject, done, res);
     function done(err) {
-      if(err){
-        successfull = false;
-      }
-      if(count <= 0){
-        if (!err && successfull) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-      count--;
-    }
-  }
-};
-
-/**
-  * Send confirmation mail to reservation
-  */
-exports.confirmationMail = function (reservationId, doneConfirmation, res) {
-  if (!mongoose.Types.ObjectId.isValid(reservationId)) {
-    return doneConfirmation({ error: true, message: 'Reservation is invalid' });
-  }
-  Reservation.findById(reservationId).populate('user', 'displayName').exec(function (err, reservation) {
-    if (err) {
-      return doneConfirmation({ error: true, message: 'Error when retrieveng reservation: ' + err });
-    } else if (!reservation) {
-      return doneConfirmation({ error: true, message: 'No Reservation with that identifier has been found' });
-    }
-    var template = path.resolve('modules/reservations/server/templates/mailconfirmation');
-    var content = 'Du har nu bokat en plats på ett event\n\n Om detta inte stämmer eller om vi har fått in fel uppgifter, hör av dig snarast. ';
-    var contact = 'event.arkad@box.tlth.se';
-    var subject = 'Bekräftelse Event anmälan / Confirmation Event booking';
-    sendMail(reservation, template, content, subject, contact, done, res);
-    function done(err) {
-      if (!err) {
-        return doneConfirmation({ error: false, message: 'An email has been sent to the provided email with further instructions.' });
+      var success = err === null;
+      if(success){
+        return doneMail({ error: false, message: 'Mail succeessfully sent' });
       } else {
-        return doneConfirmation({ error: false, message: 'Failure sending email: ' + err });
+        return doneMail({ error: true, message: 'Failure sending email: ' + err });
       }
     }
-  });
+  }
 };
-
 
 /**
   * A generic method for sending mail to the student of a Reservation.
   */
 
-function sendMail(reservation, template, content, subject, contact, callback, res){
+function sendMail(reservation, template, content, subject, callback, res){
   content = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   async.waterfall([
@@ -126,7 +68,6 @@ function sendMail(reservation, template, content, subject, contact, callback, re
         name: reservation.name,
         appName: config.app.title,
         content: content,
-        contact: contact
       }, function (err, emailHTML) {
         done(err, emailHTML);
       });
@@ -140,12 +81,11 @@ function sendMail(reservation, template, content, subject, contact, callback, re
         html: emailHTML
       };
       smtpTransport.sendMail(mailOptions, function (err) {
-        callback(err);
+        console.log('Email sent to: ' + reservation.email);
         done(err);
       });
     }
   ], function (err) {
     callback(err);
   });
-
 }

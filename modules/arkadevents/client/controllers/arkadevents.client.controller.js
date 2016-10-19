@@ -6,9 +6,9 @@
     .module('arkadevents')
     .controller('ArkadeventsController', ArkadeventsController);
 
-  ArkadeventsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arkadeventResolve'];
+  ArkadeventsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arkadeventResolve', 'MailtemplatesService'];
 
-  function ArkadeventsController ($scope, $state, $window, Authentication, arkadevent) {
+  function ArkadeventsController ($scope, $state, $window, Authentication, arkadevent, MailtemplatesService) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -17,6 +17,11 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.mailtemplates = MailtemplatesService.query();
+    $scope.registeredmail = vm.arkadevent.registeredmail;
+    $scope.reserv = vm.arkadevent.reservmail;
+    $scope.unregistered = vm.arkadevent.unregisteredmail;
+    $scope.seatoffered = vm.arkadevent.seatofferedmail;
 
     // Remove existing Arkadevent
     function remove() {
@@ -44,6 +49,20 @@
       vm.arkadevent.endtime = $scope.inputQuestions[8].variable;
       vm.arkadevent.lastregistrationdate = $scope.inputQuestions[9].variable;
 
+      if($scope.registeredmail){
+        vm.arkadevent.registeredmail = $scope.registeredmail;
+      }
+      if($scope.reserv){
+        vm.arkadevent.reservmail = $scope.reserv;
+      }
+      if($scope.unregistered){
+        vm.arkadevent.unregisteredmail = $scope.unregistered;
+      }
+      if($scope.seatoffered){
+        vm.arkadevent.seatofferedmail = $scope.seatoffered;
+      }
+
+
       // TODO: move create/update logic to service
       if (vm.arkadevent._id) {
         vm.arkadevent.$update(successCallback, errorCallback);
@@ -52,9 +71,7 @@
       }
 
       function successCallback(res) {
-        $state.go('arkadevents.view', {
-          arkadeventId: res._id
-        });
+        $state.go('arkadevents.list');
       }
 
       function errorCallback(res) {

@@ -24,6 +24,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reservations/unregister',
       permissions: ['*']
     }, {
+      resources: '/api/reservations/offerseat',
+      permissions: ['*']
+    }, {
       resources: '/api/reservations/confirmationmail',
       permissions: ['*']
     }, {
@@ -50,6 +53,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/reservations/unregister',
       permissions: ['*']
+    }, {
+      resources: '/api/reservations/offerseat',
+      permissions: ['']
     }, {
       resources: '/api/reservations/confirmationmail',
       permissions: ['*']
@@ -81,6 +87,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reservations/confirmationmail',
       permissions: ['*']
     }, {
+      resources: '/api/reservations/offerseat',
+      permissions: ['']
+    }, {
       resources: '/api/reservations/accept',
       permissions: ['*']
     }, {
@@ -103,6 +112,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['']
     }, {
       resources: '/api/reservations/unregister',
+      permissions: ['']
+    }, {
+      resources: '/api/reservations/offerseat',
       permissions: ['']
     }, {
       resources: '/api/reservations/confirmationmail',

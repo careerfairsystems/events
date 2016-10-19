@@ -53,8 +53,39 @@
           </div>
         </div>
 
+
+        <div class="col-sm-8 col-sm-offset-3">
+          <h3>Mailtemplates</h3>
+          <!-- Registered mail -->
+          <div class="form-group">
+            <label for="registeredmail">Mail to send when reservation is created as enrolled</label><br>
+            <select ng-model="registeredmail" class="form-control" name="registeredmail" ng-options="template._id as template.name for template in vm.mailtemplates">
+            </select>
+          </div>
+          <!-- Reserv mail -->
+          <div class="form-group">
+            <label for="reserv">Mail to send if reservation is created as reserve</label><br>
+            <select ng-model="reserv" class="form-control" name="reserv" ng-options="template._id as template.name for template in vm.mailtemplates">
+            </select>
+          </div>
+          <!-- unregistered mail -->
+          <div class="form-group">
+            <label for="reserv">Mail to send when reservation is unregistered</label><br>
+            <select ng-model="unregistered" class="form-control" name="unregistered" ng-options="template._id as template.name for template in vm.mailtemplates">
+            </select>
+          </div>
+          <!-- seatoffered mail -->
+          <div class="form-group">
+            <label for="reserv">Mail to send when a reserve gets offered a seat</label><br>
+            <select ng-model="seatoffered" class="form-control" name="seatoffered" ng-options="template._id as template.name for template in vm.mailtemplates">
+            </select>
+          </div>
+        </div>
+
+
         <!-- Submit -->
         <div class="form-group">
+          <a class="btn btn-default col-sm-offset-2" data-ui-sref="arkadevents.list">Back</a>
           <button type="submit" class="btn btn-primary col-sm-offset-2">{{vm.arkadevent._id ? 'Update' : 'Create'}}</button>
         </div>
         <!-- Error-msg -->

@@ -24,6 +24,13 @@
     vm.spotsLeft = vm.arkadevent.nrofseats - vm.arkadevent.seatstaken;
     vm.hasSeatsLeft = vm.spotsLeft > 0;
 
+    //Calc if late reservation.
+    var today = new Date();
+    vm.tooLate = false;
+    if(vm.arkadevent.lastregistrationdate){
+      vm.tooLate = today.getTime() > (new Date(vm.arkadevent.lastregistrationdate).getTime());
+    }
+
     var set = new Set(ProgramsService);
     $scope.programs = Array.from(set);
     

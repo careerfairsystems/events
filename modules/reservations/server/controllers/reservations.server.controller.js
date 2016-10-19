@@ -38,7 +38,7 @@ exports.create = function(req, res) {
     }
     // Check if user already has booked spot
     function hasBookedSpot(r){ 
-      var c = r.enrolled || r.pending || r.standby;
+      var c = r.enrolled || r.standby;
       return idCompare(r.user, reservation.user._id) && idCompare(r.arkadevent, reservation.arkadevent) && c;
     }
     var hasBooked = reservations.filter(hasBookedSpot);
@@ -150,6 +150,32 @@ function doUnregisterReservation(user, arkadeventId, res){
     });
   }
 }
+
+
+/**
+ * Offer seat to student.
+ */
+exports.offerseat = function(req, res) {
+  var reservationId = req.body.reservationId;
+  var today = new Date();
+
+  // Get the reservation from eventid and userid
+  Reservation.update({ _id: new ObjectId(reservationId) }, { $set: { pending: true, offer: today } }, reservationFound);
+  function reservationFound(err, affected) {
+    if (err) {
+      return res.status(400).send({ message: 'Couldnt find reservation' });
+    } 
+    // Send email to reservation of being unregistered
+    sendEmailWithTemplate(reservationId, req, res, 'seatofferedmail', specifikContent);
+    function specifikContent(reservation){
+      var str = '\n\n';
+      str += 'Link to verify that you are still interested in attending the Banquet:\n';
+      str += config.host + '/reservations/offer/' + reservation.arkadevent;
+      str += '\n';
+      return str;
+    }
+  }
+};
 
 /**
  * Accept offer for a seat.
@@ -363,18 +389,75 @@ exports.reservationByID = function(req, res, next, id) {
 /**
   * Send confirmation mail to reservation (POST)
   */
+exports.seatofferedmail = function (req, res, next) {
+  var id = req.body.reservationId;
+  sendEmailWithTemplate(req.body.reservationId, req, res, 'seatofferedmail');
+};
+
+
+/**
+  * Send confirmation mail to reservation (POST)
+  */
+exports.unregisteredmail = function (req, res, next) {
+  var id = req.body.reservationId;
+  sendEmailWithTemplate(req.body.reservationId, req, res, 'unregisteredmail');
+};
+
+/**
+  * Send confirmation mail to reservation (POST)
+  */
+function reservmail(req, res, next) {
+  sendEmailWithTemplate(req.body.reservationId, req, res, 'reservmail');
+}
+
+/**
+  * Send confirmation mail to reservation (POST)
+  */
+function registeredmail(req, res, next) {
+  sendEmailWithTemplate(req.body.reservationId, req, res, 'registeredmail');
+}
+/**
+  * Send confirmation mail to reservation (POST)
+  */
 exports.confirmationMail = function (req, res, next) {
   var id = req.body.reservationId;
-  var hasResponded = false;
-  MailController.confirmationMail(id, function(result){
-    if(hasResponded){
-      return;
+  Reservation.findOne({ _id: new ObjectId(id) }, reservationFound);
+  function reservationFound(err, reservation){
+    if(err){
+      return res.status(400).send({ message: 'Reservation not found' });
     }
-    hasResponded = true;
-    if(result.error){
-      res.status(400).send({ message: result.message });
+    if(reservation.enrolled){
+      registeredmail(req, res, next);
     } else {
-      res.status(200).send({ message: result.message });
+      reservmail(req, res, next);
     }
-  }, res);
+  }
 };
+  
+/**
+  * Generic method to send a email based on mailtemplate given
+  */
+function sendEmailWithTemplate(reservationId, req, res, mailtemplate, specifikContent) {
+  Reservation.findOne({ _id: new ObjectId(reservationId) }, function(err, reservation){
+    if(err || !reservation){
+      return res.status(400).send({ error: true, message: 'Reservation not found. Failure sending email: ' + err });
+    }
+    Arkadevent.findOne({ _id: new ObjectId(reservation.arkadevent) }, function(err, arkadevent){
+      var template = arkadevent[mailtemplate];
+      var hasResponded = false;
+      MailController.sendTemplateEmail(template, reservation, res, mailingDone, specifikContent);
+      function mailingDone(result){
+        if(hasResponded){
+          return;
+        }
+        hasResponded = true;
+        if(result.error){
+          return res.status(400).send({ message: result.message });
+        } else {
+          return res.status(200).send({ message: result.message });
+        }
+      }
+    });
+  });
+}
+

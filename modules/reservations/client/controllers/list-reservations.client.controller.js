@@ -54,15 +54,16 @@
         reservation.nr = 1 + key;
         reservation.date = $filter('date')(reservation.created, 'yyyy-MM-dd');
         reservation.pending = reservation.pending || false;
-        reservation.offer = reservation.offer || '';
+        reservation.offer = reservation.pending ? $filter('date')(reservation.offer, 'yyyy-MM-dd HH:mm') : '';
         reservation.enrolled = reservation.enrolled || false;
         reservation.standby = reservation.standby || false;
+        reservation.unregistered = !reservation.enrolled && !reservation.standby;
         reservation.program = reservation.program || '';
         reservation.other = reservation.other || '';
         
         vm.enrolled += reservation.enrolled;
         vm.pending += reservation.pending;
-        vm.standby += reservation.standby;
+        vm.standby += reservation.standby && !reservation.enrolled && !reservation.pending;
         vm.unregistered += (reservation.standby + reservation.pending + reservation.enrolled) === 0;
       });
       vm.createChart();
@@ -85,39 +86,41 @@
       $state.go('reservations.view', { reservationId: current._id });
     };
 
-    vm.setEnrollment = function(index){
-      if(vm.reservations[index].enrolled){
-        vm.deregister(index);
-      } else {
-        vm.enroll(index);
-      }
+    // Show message in 10 sec
+    vm.showMessage = function (message){
+      $scope.message = message;
+      setTimeout(function(){ 
+        $scope.message = undefined; 
+        $scope.$apply();
+      }, 10000);
     };
-    // Deregister reservation
-    vm.deregister = function (index){
+
+    // Unregister reservation
+    vm.setUnregistered = function (index){
       var imSure = window.confirm('Are you sure you want to deregister reservation from this event?');
       if(imSure){
-        vm.reservations[index].enrolled = false;
+        vm.reservations[index].unregistered = true;
         var reservation = vm.reservations[index];
         $http.post('/api/reservations/unregisterbyadmin', { arkadeventId: reservation.arkadevent, userId: reservation.user._id }).success(function (response) {
-          alert('Succesfully deregistered student. Message: ' + response.message);
+          vm.showMessage('Succesfully deregistered student. Message: ' + response.message);
         }).error(function (response) {
-          alert('Deregistration failed. Message: ' + response.message);
-          vm.reservations[index].enrolled = true;
+          vm.showMessage('Deregistration failed. Message: ' + response.message);
+          vm.reservations[index].unregistered = false;
         });
-      }
+      } 
     };
   
-    // Enroll reservation
-    vm.enroll = function (index){
-      var imSure = window.confirm('Are you sure you want to enroll reservation to event?');
+    // Offer Seat
+    vm.offerSeat = function (index){
+      var imSure = window.confirm('Are you sure you want to offer this reservation a seat?');
       if(imSure){
-        vm.reservations[index].enrolled = true;
+        vm.reservations[index].pending = true;
         var reservation = vm.reservations[index];
-        var res = ReservationsService.get({ reservationId: reservation._id }, function() {
-          res.enrolled = reservation.enrolled;
-          res.$save(function(r){
-            alert('Succesfully enrolled reservation.');
-          });
+        $http.post('/api/reservations/offerseat', { reservationId: reservation._id }).success(function (response) {
+          vm.showMessage('Succesfully offered student a seat and has been informed by mail. Message: ' + response.message);
+        }).error(function (response) {
+          vm.showMessage('Failed to offer the student a seat and send email. Message: ' + response.message);
+          vm.reservations[index].pending = false;
         });
       }
     };
@@ -154,7 +157,7 @@
           { data: 'other' },
           { data: 'enrolled', 
             'fnCreatedCell': function (nTd, sData, oData, iRow, iCol) {
-              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' data-ng-click="vm.setEnrollment('+ iRow+')" />');
+              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' disabled />');
               $compile(nTd)($scope);
             }
           },
@@ -164,9 +167,15 @@
               $compile(nTd)($scope);
             }
           },
+          { data: 'unregistered', 
+            'fnCreatedCell': function (nTd, sData, oData, iRow, iCol) {
+              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' data-ng-click="vm.setUnregistered('+ iRow+')" />');
+              $compile(nTd)($scope);
+            }
+          },
           { data: 'pending',
             'fnCreatedCell': function (nTd, sData, oData, iRow, iCol) {
-              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' disabled />');
+              $(nTd).html('<input type="checkbox" ' + (sData ? 'checked' : '') + ' data-ng-click="vm.offerSeat('+ iRow+')" />');
               $compile(nTd)($scope);
             }
           },

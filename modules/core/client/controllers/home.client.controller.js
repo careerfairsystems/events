@@ -23,7 +23,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         // Trim description
         var maxLength = 180;
         var trimmedString = e.description.substr(0, maxLength);
-        trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+        trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
         e.description = trimmedString + '...';
 
         //Make description to html

@@ -63,10 +63,22 @@ var ArkadeventSchema = new Schema({
     type: Date,
     requred: 'Pick a last registration date for the event.'
   },
-  reminders: [{
-    reminder: Schema.ObjectId,
-    hoursbeforeevent: Number
-  }],
+  registeredmail: {
+    type: Schema.ObjectId,
+    ref: 'Mailtemplate'
+  },
+  reservmail: {
+    type: Schema.ObjectId,
+    ref: 'Mailtemplate'
+  },
+  unregisteredmail: {
+    type: Schema.ObjectId,
+    ref: 'Mailtemplate'
+  },
+  seatofferedmail: {
+    type: Schema.ObjectId,
+    ref: 'Mailtemplate'
+  },
   created: {
     type: Date,
     default: Date.now

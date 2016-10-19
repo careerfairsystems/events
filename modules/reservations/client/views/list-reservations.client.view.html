@@ -2,6 +2,14 @@
   <div class="page-header">
     <h1>Reservations</h1>
   </div>
+  <div class="my-message" ng-show="message">
+    <div style="padding: 5px;">
+      <div class="my-inner-message text-center alert alert-info">
+        <button type="button" class="close" ng-click="message = undefined" data-dismiss="alert">&times;</button>
+        {{ message }}
+      </div>
+    </div>
+  </div>
   <div class="jumbotron">
     <div class="row">
       <hr>
@@ -20,7 +28,8 @@
             <th>true or false</th>
             <th>true or false</th>
             <th>true or false</th>
-            <th>Offer</th>
+            <th>true or false</th>
+            <th>Date offered</th>
           </tr>
           <tr>
             <th></th>
@@ -34,8 +43,9 @@
             <th>Other</th>
             <th>Enrolled</th>
             <th>Standby</th>
-            <th>Pending</th>
-            <th>Offer</th>
+            <th>Unregistered</th>
+            <th>Offer seat</th>
+            <th>Date offered</th>
           </tr>
         </thead>
         <tfoot>
@@ -49,10 +59,11 @@
             <th>Phone</th>
             <th>Foodpref</th>
             <th>Other</th>
-            <th>Enrolled</th>
             <th>Standby</th>
-            <th>Pending</th>
-            <th>Offer</th>
+            <th>Enrolled</th>
+            <th>Unregistered</th>
+            <th>Offer seat</th>
+            <th>Date offered</th>
           </tr>
         </tfoot>
       </table>
@@ -60,6 +71,27 @@
     <div class="row">
       <div class="col-sm-5">
         <h3>Current Data</h3>
+        <table class="table table-condensed">
+          <tr>
+            <td> Total Seats:</td>
+            <td> {{ vm.arkadevent.nrofseats }} </td>
+            <td> Enrolled: </td>
+            <td> {{ vm.enrolled }} </td>
+          </tr>
+          <tr>
+            <td> Standby: </td>
+            <td> {{ vm.standby }} </td>
+            <td> Pending: </td>
+            <td> {{ vm.pending }} </td>
+          </tr>
+          <tr>
+            <td> Unregistered: </td>
+            <td> {{ vm.unregistered }} </td>
+            <td>  </td>
+            <td>  </td>
+          </tr>
+        </table>
+        <hr>
         <canvas id="myChart" width="100" height="100"></canvas>
       </div>
     </div>

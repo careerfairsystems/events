@@ -13,6 +13,8 @@ module.exports = function(app) {
     .post(reservations.unregisterbyadmin);
   app.route('/api/reservations/unregister').all(reservationsPolicy.isAllowed)
     .post(reservations.unregister);
+  app.route('/api/reservations/offerseat').all(reservationsPolicy.isAllowed)
+    .post(reservations.offerseat);
 
   app.route('/api/reservations/confirmationmail')
     .post(reservations.confirmationMail);

@@ -17,10 +17,13 @@
     vm.error = null;
     vm.form = {};
 
+    //Calc if late reservation.
+    vm.arkadevent.deadline = (new Date(vm.arkadevent.lastregistrationdate)).getTime();
+
     $scope.reservations = [];
     ReservationsService.query(function (data){
       function sameEvent(r) { return r.arkadevent === vm.arkadevent._id; }
-      function minimizeObject(r){ return { _id: r._id, name: r.name, showedup: r.showedup, foodpref: r.foodpref }; }
+      function minimizeObject(r){ return { _id: r._id, name: r.name, showedup: r.showedup, foodpref: r.foodpref, time: (new Date(r.created).getTime()) }; }
       $scope.reservations = data.filter(sameEvent).map(minimizeObject);
       $scope.filteredItems = $scope.reservations;
     });
