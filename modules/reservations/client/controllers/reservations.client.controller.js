@@ -31,8 +31,10 @@
       vm.tooLate = today.getTime() > (new Date(vm.arkadevent.lastregistrationdate).getTime());
     }
 
-    var set = new Set(ProgramsService);
-    $scope.programs = Array.from(set);
+    // Get all programs
+    var programsSet = new Set(ProgramsService);
+    vm.programs = [];
+    programsSet.forEach(v => vm.programs.push(v));
     
     loadUserData();
     function loadUserData(){
