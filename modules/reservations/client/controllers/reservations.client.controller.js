@@ -34,7 +34,7 @@
     // Get all programs
     var programsSet = new Set(ProgramsService);
     vm.programs = [];
-    programsSet.forEach(v => vm.programs.push(v));
+    programsSet.forEach(function(v){ vm.programs.push(v); });
     
     loadUserData();
     function loadUserData(){
