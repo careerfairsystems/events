@@ -85,12 +85,12 @@
         }
       })
       .state('reservations.offer', {
-        url: '/offer/:arkadeventId',
+        url: '/offer/:reservationId',
         templateUrl: 'modules/reservations/client/views/offer-reservation.client.view.html',
         controller: 'ReservationsOfferController',
         controllerAs: 'vm',
         resolve: {
-          arkadeventResolve: getEvent,
+          reservationResolve: getReservation
         },
         data: {
           roles: ['user'],

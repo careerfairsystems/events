@@ -52,7 +52,7 @@
       vm.reservations.$resolved = true;
       angular.forEach(vm.reservations, function(reservation, key) {
         reservation.nr = 1 + key;
-        reservation.date = $filter('date')(reservation.created, 'yyyy-MM-dd');
+        reservation.date = $filter('date')(reservation.created, 'yyyy-MM-dd HH:mm');
         reservation.pending = reservation.pending || false;
         reservation.offer = reservation.pending ? $filter('date')(reservation.offer, 'yyyy-MM-dd HH:mm') : '';
         reservation.enrolled = reservation.enrolled || false;

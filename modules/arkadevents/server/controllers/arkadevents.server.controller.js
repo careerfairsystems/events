@@ -80,11 +80,11 @@ exports.offerseats = function(req, res) {
       }
       hasResponded = true;
     }
-  }, res);
+  }, res, req);
 };
 
 exports.offerSeatsOnEvent = offerSeatsOnEvent;
-function offerSeatsOnEvent(arkadevent, offersDone, res){
+function offerSeatsOnEvent(arkadevent, offersDone, res, req){
   // Get all reservations to this event.
   Reservation.find({ arkadevent: new ObjectId(arkadevent._id) }).exec(function(err, reservations){
     if(err){
@@ -113,22 +113,26 @@ function offerSeatsOnEvent(arkadevent, offersDone, res){
     }
 
     var count = resOffer.length;
+    console.log('count' + count);
+    var allSuccess = true;
     resOffer.forEach(updateDb);
     function updateDb(r){
       var offerCreated = new Date();
       // Update to DB
-      r.update({ _id: new ObjectId(r._id) }, { $set: { pending: true, offer: offerCreated } }, function(err, affected, resp){
+      Reservation.update({ _id: new ObjectId(r._id) }, { $set: { pending: true, offer: offerCreated } }, function(err, affected){
         if (err) { 
           return offersDone({ err: true, message: errorHandler.getErrorMessage(err) });
         } 
         count--;
+        console.log('count--' + count);
+        console.log('resp--' + JSON.stringify(affected));
+        // Email the reservations and ask for accept/decline
+        var offerSuccess = sendEmailWithArkadeventTemplate(arkadevent._id, r, req, res, 'seatofferedmail', specifikContent);
+        if(!offerSuccess){
+          allSuccess = false;
+        }
         if(count <= 0){
-          // Email the reservations and ask for accept/decline
-          //sendEmailWithBanquetTemplate(reservationId, req, res, 'seatofferedmail', specifikContent);
-
-
-          var offerSuccess = MailController.offerSpot(resOffer, arkadevent, res);
-          if(offerSuccess){
+          if(allSuccess){
             return offersDone({ err: false, message: 'Mail sent to reservation' });
           } else {
             return offersDone({ err: true, message: 'Mail not sent, failure' });
@@ -136,8 +140,8 @@ function offerSeatsOnEvent(arkadevent, offersDone, res){
         }
         function specifikContent(reservation){
           var str = '\n\n';
-          str += 'Link to verify that you are still interested in attending the Banquet:\n';
-          str += config.host + '/reservations/verify/' + reservation._id;
+          str += 'Link to verify that you are still interested in attending the ' + arkadevent.name + ':\n';
+          str += config.host + '/reservations/offer/' + reservation._id;
           str += '\n';
           return str;
         }
@@ -149,21 +153,17 @@ function offerSeatsOnEvent(arkadevent, offersDone, res){
 /**
   * Generic method to send a email based on mailtemplate given
   */
-function sendEmailWithArkadeventTemplate(arkadeventId, reservationId, req, res, mailtemplate, specifikContent) {
-  Arkadevent.findOne({ _id: new ObjectId(arkadeventId) }, function(err, banquet){
-    var template = banquet[mailtemplate];
+function sendEmailWithArkadeventTemplate(arkadeventId, reservation, req, res, mailtemplate, specifikContent) {
+  Arkadevent.findOne({ _id: new ObjectId(arkadeventId) }, function(err, arkadevent){
+    var template = arkadevent[mailtemplate];
     var hasResponded = false;
-    MailController.sendTemplateEmail(template, reservationId, res, mailingDone, specifikContent);
+    MailController.sendTemplateEmail(template, reservation, res, mailingDone, specifikContent);
     function mailingDone(result){
       if(hasResponded){
         return;
       }
       hasResponded = true;
-      if(result.error){
-        return res.status(400).send({ message: result.message });
-      } else {
-        return res.status(200).send({ message: result.message });
-      }
+      return result.error;
     }
   });
 }

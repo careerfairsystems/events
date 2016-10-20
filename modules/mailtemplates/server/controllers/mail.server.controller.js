@@ -30,7 +30,7 @@ exports.sendTemplateEmail = function (mailtemplateId, reservation, res, doneMail
     if(err || !mailtemplate){
       return doneMail({ error: true, message: 'Mailtemplate not found. Failure sending email: ' + err });
     }
-    
+    console.log('send mail');    
     // Get variables    
     var template = path.resolve('modules/mailtemplates/server/templates/email');
     var content = mailtemplate.content || '';

@@ -95,7 +95,7 @@ exports.unregister = function(req, res) {
   var arkadeventId = req.body.arkadeventId;
   var user = req.user;
 
-  doUnregisterReservation(user, arkadeventId, res);
+  doUnregisterReservation(user, arkadeventId, res, req);
 };
 
 /**
@@ -109,12 +109,11 @@ exports.unregisterbyadmin = function(req, res) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     }
-    doUnregisterReservation(user, arkadeventId, res);
+    doUnregisterReservation(user, arkadeventId, res, req);
   });
 };
 
-function doUnregisterReservation(user, arkadeventId, res){
-  //TODO: Implement
+function doUnregisterReservation(user, arkadeventId, res, req){
   var count = 0;
   Reservation.find({ user: user._id, arkadevent: new ObjectId(arkadeventId) }).exec(reservationsFound);
   function reservationsFound(err, reservations) {
@@ -134,6 +133,12 @@ function doUnregisterReservation(user, arkadeventId, res){
           if(count <= 0){
             // Offer seat to other reservations
             var hasResponded = false;
+            sendEmailWithTemplate(reservation._id, req, res, 'unregisteredmail', specifikContent, callback);
+          }
+          function specifikContent (reservation){
+            return '';
+          }
+          function callback(success){
             ArkadeventController.offerSeatsOnEvent(arkadevent, function(success){
               if(!hasResponded){
                 if(success){
@@ -143,7 +148,7 @@ function doUnregisterReservation(user, arkadeventId, res){
                 }
                 hasResponded = true;
               }
-            }, res);
+            }, res, req);
           }
         });
       }
@@ -170,7 +175,7 @@ exports.offerseat = function(req, res) {
     function specifikContent(reservation){
       var str = '\n\n';
       str += 'Link to verify that you are still interested in attending the Banquet:\n';
-      str += config.host + '/reservations/offer/' + reservation.arkadevent;
+      str += config.host + '/reservations/offer/' + reservation._id;
       str += '\n';
       return str;
     }
@@ -181,21 +186,20 @@ exports.offerseat = function(req, res) {
  * Accept offer for a seat.
  */
 exports.acceptoffer = function(req, res) {
-  var arkadeventId = req.body.arkadeventId;
+  var reservationId = req.body.reservationId;
   var user = req.user;
 
   // Get the reservation from eventid and userid
-  Reservation.findOne({ user: new ObjectId(user._id), arkadevent: new ObjectId(arkadeventId) }, reservationFound);
+  Reservation.findOne({ user: new ObjectId(user._id), _id: new ObjectId(reservationId) }, reservationFound);
   function reservationFound(err, reservation) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
     var isCurrentUserOwner = req.user && reservation.user && idCompare(reservation.user, req.user._id);
-    var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
 
     // If offer not older than 24h
-    if((reservation.offer && reservation.offer.getTime() > yesterday.getTime()) && (isCurrentUserOwner || isCurrentUserAdmin)){
+    if((reservation.offer && reservation.offer.getTime() > yesterday.getTime()) && isCurrentUserOwner){
       Reservation.update({ _id: new ObjectId(reservation._id) }, { pending: false, enrolled: true, offer: null }, function(err, affected, resp){
         if(err){
           return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
@@ -212,33 +216,36 @@ exports.acceptoffer = function(req, res) {
  * Decline offer for a seat.
  */
 exports.declineoffer = function(req, res) {
-  var arkadeventId = req.body.arkadeventId;
+  var reservationId = req.body.reservationId;
   var user = req.user;
 
-  Reservation.findOne({ user: new ObjectId(user._id), arkadevent: new ObjectId(arkadeventId) }, reservationFound);
+  Reservation.findOne({ _id: new ObjectId(reservationId) }, reservationFound);
   function reservationFound(err, reservation) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
-    var isCurrentUserOwner = req.user && reservation.user && idCompare(reservation.user, req.user._id);
-    var isCurrentUserAdmin = req.user && req.user.roles.indexOf('admin') > 0;
-    
+    reservation.offer = new Date(reservation.offer);
+    var isCurrentUserOwner = user && reservation.user && idCompare(reservation.user, user._id);
+
     // If offer not older than 24h
-    if((reservation.offer && reservation.offer.getTime() > yesterday.getTime()) && (isCurrentUserOwner || isCurrentUserAdmin)){
-      Reservation.update({ _id: new ObjectId(reservation._id) }, { pending: false, offer: null }, function(err, affected, resp){
+    if(reservation.offer && (reservation.offer.getTime() > yesterday.getTime()) && isCurrentUserOwner){
+      Reservation.update({ _id: new ObjectId(reservation._id) }, { standby: false, enrolled: false, pending: false, offer: null }, function(err, affected, resp){
         if(err){
           return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         }
 
+        console.log('Decline successfull');
         // Offer spot to another one.
-        Arkadevent.find({ _id: arkadeventId }).exec(function(err, arkadevent){
+        Arkadevent.findOne({ _id: reservation.arkadevent }).exec(function(err, arkadevent){
           if (err) {
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
           } else {
             var hasResponded = false;
+            console.log('Offer other students a seat');
             ArkadeventController.offerSeatsOnEvent(arkadevent, function(success){
               if(!hasResponded){
+                console.log('Success:' + JSON.stringify(success));
                 if(success){
                   res.status(200).send({ message: 'Succesfully sent email' });
                 } else {
@@ -246,7 +253,7 @@ exports.declineoffer = function(req, res) {
                 }
                 hasResponded = true;
               }
-            });
+            }, res, req);
           }
         });
       });
@@ -308,7 +315,7 @@ exports.declineoldoffers = function(req, res) {
                   }
                   hasResponded = true;
                 }
-              });
+              }, res, req);
             }
           });
         }
@@ -437,7 +444,7 @@ exports.confirmationMail = function (req, res, next) {
 /**
   * Generic method to send a email based on mailtemplate given
   */
-function sendEmailWithTemplate(reservationId, req, res, mailtemplate, specifikContent) {
+function sendEmailWithTemplate(reservationId, req, res, mailtemplate, specifikContent, callback) {
   Reservation.findOne({ _id: new ObjectId(reservationId) }, function(err, reservation){
     if(err || !reservation){
       return res.status(400).send({ error: true, message: 'Reservation not found. Failure sending email: ' + err });
@@ -451,10 +458,14 @@ function sendEmailWithTemplate(reservationId, req, res, mailtemplate, specifikCo
           return;
         }
         hasResponded = true;
-        if(result.error){
-          return res.status(400).send({ message: result.message });
+        if(typeof callback === 'function'){
+          callback(result.error);
         } else {
-          return res.status(200).send({ message: result.message });
+          if(result.error){
+            return res.status(400).send({ message: result.message });
+          } else {
+            return res.status(200).send({ message: result.message });
+          }
         }
       }
     });

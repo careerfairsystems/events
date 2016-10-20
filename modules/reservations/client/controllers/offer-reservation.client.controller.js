@@ -6,15 +6,19 @@
     .module('reservations')
     .controller('ReservationsOfferController', ReservationsOfferController);
 
-  ReservationsOfferController.$inject = ['$scope', '$http', 'arkadeventResolve', '$state'];
+  ReservationsOfferController.$inject = ['$scope', '$http', '$state', 'reservationResolve', 'ArkadeventsService'];
 
-  function ReservationsOfferController ($scope, $http, arkadeventResolve, $state) {
+  function ReservationsOfferController ($scope, $http, $state, reservationResolve, ArkadeventsService) {
     var vm = this;
 
-    vm.arkadevent = arkadeventResolve;
+    vm.reservation = reservationResolve;
+    ArkadeventsService.query(function(data){
+      function sameEvent(e){ return e._id === vm.reservation.arkadevent; }
+      vm.arkadevent = data.filter(sameEvent)[0];
+    });
     
     vm.decline = function(){
-      $http.post('/api/reservations/decline', { arkadeventId: vm.arkadevent._id }).success(function (response) {
+      $http.post('/api/reservations/decline', { reservationId: vm.reservation._id }).success(function (response) {
         // Show user success message 
         $scope.success = response.message;
         $scope.error = response.message;
@@ -25,7 +29,7 @@
       });
     };
     vm.accept = function(){
-      $http.post('/api/reservations/accept', { arkadeventId: vm.arkadevent._id }).success(function (response) {
+      $http.post('/api/reservations/accept', { reservationId: vm.reservation._id }).success(function (response) {
         // Show user success message 
         $scope.success = response.message;
         $scope.error = response.message;
