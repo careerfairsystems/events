@@ -10,6 +10,31 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <span class="close">×</span>
+          <h2>{{ current.name }}</h2>
+          <a class="btn btn-small pull-right btn-warning" disabled href="/api/companies/applicantszip/{{ current.name }}" target="_blank">Get all applicants-pdfs </a>
+          <button class="btn btn-primary pull-right" ng-click="vm.updateCompany()" disabled>Update</button>
+          <a class="btn btn-primary pull-right" href="/companies/{{current._id}}" disabled>Open</a>
+        </div>
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <div class="alert alert-info text-center">Mer funktioner och info kmr här snart // IT-Wizards
+          </div>
+        </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <h3></h3>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="jumbotron">
     <div class="row">
       <hr>

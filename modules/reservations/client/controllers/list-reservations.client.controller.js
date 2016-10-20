@@ -78,14 +78,27 @@
       vm.createDatatable(vm.reservations);
     });
 
+    vm.current = {};
+    vm.currentIndex = -1;
+    var modal = document.getElementById('myModal');
+    var btn = document.getElementById('myBtn');
+    var closeBtn = document.getElementsByClassName('close')[0];
     // Open Link to reservation.view
-
     vm.openReservation = function(index) {
       vm.currentIndex = index;
-      var current = vm.reservations[index];
-      $state.go('reservations.view', { reservationId: current._id });
+      $scope.current = vm.reservations[index];
+      modal.style.display = 'block';
     };
-
+    closeBtn.onclick = function() {
+      modal.style.display = 'none';
+      vm.currentIndex = -1;
+    };
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
     // Show message in 10 sec
     vm.showMessage = function (message){
       $scope.message = message;
