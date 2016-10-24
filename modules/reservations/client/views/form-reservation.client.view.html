@@ -45,7 +45,7 @@
           <!-- Program -->
           <div class="form-group" show-errors>
             <label class="control-label" for="program">Program / Education</label>
-            <select class="form-control" name="program" ng-model="vm.reservation.program" ng-options="program for program in programs" required>
+            <select class="form-control" name="program" ng-model="vm.reservation.program" ng-options="program for program in vm.programs" required>
               <option disabled></option>
             </select>
             <div ng-messages="vm.form.reservationForm.program.$error" role="alert">
