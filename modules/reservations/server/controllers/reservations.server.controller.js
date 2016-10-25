@@ -173,6 +173,8 @@ exports.offerseat = function(req, res) {
     // Send email to reservation of being unregistered
     sendEmailWithTemplate(reservationId, req, res, 'seatofferedmail', specifikContent);
     function specifikContent(reservation){
+      console.log('Host: ' + config.host);
+      console.log('Res_id: ' + reservation._id);
       var str = '\n\n';
       str += 'Link to verify that you are still interested in attending the Banquet:\n';
       str += config.host + '/reservations/offer/' + reservation._id;
@@ -467,13 +469,18 @@ exports.confirmationMail = function (req, res, next) {
   * Generic method to send a email based on mailtemplate given
   */
 function sendEmailWithTemplate(reservationId, req, res, mailtemplate, specifikContent, callback) {
+  console.log('resid' + reservationId);
+  console.log('mailtemplate' + mailtemplate);
+  console.log('mailtemplate' + mailtemplate);
   Reservation.findOne({ _id: new ObjectId(reservationId) }, function(err, reservation){
     if(err || !reservation){
       return res.status(400).send({ error: true, message: 'Reservation not found. Failure sending email: ' + err });
     }
+    console.log('Res Found');
     Arkadevent.findOne({ _id: new ObjectId(reservation.arkadevent) }, function(err, arkadevent){
       var template = arkadevent[mailtemplate];
       var hasResponded = false;
+      console.log('event Found');
       MailController.sendTemplateEmail(template, reservation, res, mailingDone, specifikContent);
       function mailingDone(result){
         if(hasResponded){
@@ -481,8 +488,10 @@ function sendEmailWithTemplate(reservationId, req, res, mailtemplate, specifikCo
         }
         hasResponded = true;
         if(typeof callback === 'function'){
+          console.log('callback is functino');
           callback(result.error);
         } else {
+          console.log('callback is not a function');
           if(result.error){
             return res.status(400).send({ message: result.message });
           } else {

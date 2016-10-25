@@ -37,6 +37,7 @@ exports.sendTemplateEmail = function (mailtemplateId, reservation, res, doneMail
     var subject = mailtemplate.subject || '';
 
     if (typeof specifikContent === 'function') { 
+      console.log('spec content');    
       content += specifikContent(reservation);
     }
     sendMail(reservation, template, content, subject, done, res);
@@ -80,6 +81,8 @@ function sendMail(reservation, template, content, subject, callback, res){
         subject: subject,
         html: emailHTML
       };
+      console.log('subject: ' + subject);    
+      console.log('emailHtml: ' + emailHTML);    
       smtpTransport.sendMail(mailOptions, function (err) {
         console.log('Email sent to: ' + reservation.email);
         done(err);
