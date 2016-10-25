@@ -171,7 +171,7 @@ exports.offerseat = function(req, res) {
       return res.status(400).send({ message: 'Couldnt find reservation' });
     } 
     // Send email to reservation of being unregistered
-    sendEmailWithTemplate(reservationId, req, res, 'seatofferedmail', specifikContent);
+    sendEmailWithTemplate(reservationId, req, res, 'seatofferedmail');
     function specifikContent(reservation){
       console.log('Host: ' + config.host);
       console.log('Res_id: ' + reservation._id);

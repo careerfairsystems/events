@@ -85,6 +85,7 @@ function sendMail(reservation, template, content, subject, callback, res){
       console.log('emailHtml: ' + emailHTML);    
       smtpTransport.sendMail(mailOptions, function (err) {
         console.log('Email sent to: ' + reservation.email);
+        console.log('err?: ' + JSON.stringify(err));
         done(err);
       });
     }
