@@ -43,6 +43,7 @@ exports.sendTemplateEmail = function (mailtemplateId, reservation, res, doneMail
     sendMail(reservation, template, content, subject, done, res);
     function done(err) {
       var success = err === null;
+      console.log('DONE IS CALLED');
       if(success){
         return doneMail({ error: false, message: 'Mail succeessfully sent' });
       } else {
@@ -81,15 +82,12 @@ function sendMail(reservation, template, content, subject, callback, res){
         subject: subject,
         html: emailHTML
       };
-      console.log('subject: ' + subject);    
-      console.log('emailHtml: ' + emailHTML);    
       smtpTransport.sendMail(mailOptions, function (err) {
         console.log('Email sent to: ' + reservation.email);
-        console.log('err?: ' + JSON.stringify(err));
-        callback(err);
         done(err);
       });
     }
   ], function (err) {
+    callback(err);
   });
 }
