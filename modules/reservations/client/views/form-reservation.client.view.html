@@ -27,8 +27,12 @@
     <button class="btn btn-lg btn-warning center-block" data-ui-sref="reservations.unregister({ arkadeventId: vm.arkadevent._id })">Unregister</button>
   </div>
 
+  <div ng-if="!vm.arkadevent.reservationopen">
+    <div class="alert text-center alert-info">Registration for this event is not open now.
+    </div>
+  </div>
 
-  <div class="row" ng-if="!vm.arkadevent.data.isRegistered">
+  <div class="row" ng-if="!vm.arkadevent.data.isRegistered && vm.arkadevent.reservationopen">
     <div class="col-md-6 col-md-offset-3">
       <h3 ng-if="vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate">Boka en plats / Reserve a spot</h3>
       <h3 ng-if="!vm.hasSeatsLeft || !vm.arkadevent.reservationopen || vm.tooLate">Ansök om reservplats / Apply for a reserve-spot</h3>
