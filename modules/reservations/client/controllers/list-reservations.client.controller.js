@@ -125,10 +125,14 @@
   
     // Offer Seat
     vm.offerSeat = function (index){
+      var reservation = vm.reservations[index];
+      if(!reservation.enrolled && !reservation.standby){
+        vm.showMessage('Reservation unregistered, cant offer seat');
+        return;
+      }
       var imSure = window.confirm('Are you sure you want to offer this reservation a seat?');
       if(imSure){
         vm.reservations[index].pending = true;
-        var reservation = vm.reservations[index];
         $http.post('/api/reservations/offerseat', { reservationId: reservation._id }).success(function (response) {
           vm.showMessage('Succesfully offered student a seat and has been informed by mail. Message: ' + response.message);
         }).error(function (response) {

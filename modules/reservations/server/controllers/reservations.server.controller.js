@@ -187,10 +187,21 @@ exports.offerseat = function(req, res) {
  */
 exports.acceptoffer = function(req, res) {
   var reservationId = req.body.reservationId;
+  var userId = req.body.userId;
+  var arkadeventId = req.body.arkadeventId;
   var user = req.user;
-
+  
   // Get the reservation from eventid and userid
-  Reservation.findOne({ user: new ObjectId(user._id), _id: new ObjectId(reservationId) }, reservationFound);
+  if(!reservationId){
+    if(userId && arkadeventId){
+      Reservation.findOne({ user: new ObjectId(userId), arkadevent: new ObjectId(arkadeventId) }, reservationFound);
+    } else {
+      res.status(400).send({ message: 'Bad request data. Userid and arkadeventid not given' });
+    }
+  } else {
+    Reservation.findOne({ user: new ObjectId(user._id), _id: new ObjectId(reservationId) }, reservationFound);
+  }
+  
   function reservationFound(err, reservation) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
@@ -217,9 +228,20 @@ exports.acceptoffer = function(req, res) {
  */
 exports.declineoffer = function(req, res) {
   var reservationId = req.body.reservationId;
+  var userId = req.body.userId;
+  var arkadeventId = req.body.arkadeventId;
   var user = req.user;
-
-  Reservation.findOne({ _id: new ObjectId(reservationId) }, reservationFound);
+  
+  // Get the reservation from eventid and userid
+  if(!reservationId){
+    if(userId && arkadeventId){
+      Reservation.findOne({ user: new ObjectId(userId), arkadevent: new ObjectId(arkadeventId) }, reservationFound);
+    } else {
+      res.status(400).send({ message: 'Bad request data. Userid and arkadeventid not given' });
+    }
+  } else {
+    Reservation.findOne({ user: new ObjectId(user._id), _id: new ObjectId(reservationId) }, reservationFound);
+  }
   function reservationFound(err, reservation) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });

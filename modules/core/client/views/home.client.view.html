@@ -13,7 +13,7 @@
         <div class="eventbox" ng-click="viewEvent(event)" data-ng-repeat="event in vm.events" ng-show="event.public || isAdmin">
           <div class="imgcontainer">
             <img data-ng-show="event.photo" class="" ng-src="{{event.photo}}" />
-            <div class="registered" ng-show="event.data.isRegistered">You are registered to this event</div>
+            <div class="registered" ng-show="event.data.isRegistered">You have applied to this event</div>
           </div>
           <span class="name">{{ event.name }} <span ng-show="!event.public">(private)</span></span>
           <div class="info">

@@ -21,17 +21,36 @@
   </div>
   <hr>
 
-  <div ng-if="vm.arkadevent.data.isRegistered">
-    <div class="alert text-center alert-info">You have already registered to this event.
+  <!-- isRegistered -->
+  <div ng-if="vm.arkadevent.data.isRegistered && !vm.arkadevent.data.isPending">
+    <div class="alert text-center alert-success">You have already applied to this event.
+      <br />
+      <p class="lead">
+      {{ vm.arkadevent.data.isEnrolled ? 'You have a seat' : 'You are on the reservlist' }}
+      </p>
+      <br />
+      <br />
+      <button class="btn btn-sm btn-danger center-block" data-ui-sref="reservations.unregister({ arkadeventId: vm.arkadevent._id })">Unregister</button>
     </div>
-    <button class="btn btn-lg btn-warning center-block" data-ui-sref="reservations.unregister({ arkadeventId: vm.arkadevent._id })">Unregister</button>
+  </div>
+  
+  <!-- isPending -->
+  <div ng-if="vm.arkadevent.data.isPending">
+    <div class="alert text-center alert-success">You have been offered a seat to this event.
+      <br />
+      <br />
+      <button class="btn btn-success" ng-click="vm.accept()">Accept</button>
+      <button class="btn btn-default" ng-click="vm.decline()">Decline</button>
+    </div>
   </div>
 
+  <!-- event closed -->
   <div ng-if="!vm.arkadevent.reservationopen">
-    <div class="alert text-center alert-info">Registration for this event is not open now.
+    <div class="alert text-center alert-warning">Registration for this event is not open now.
     </div>
   </div>
 
+  <!-- reservation form -->
   <div class="row" ng-if="!vm.arkadevent.data.isRegistered && vm.arkadevent.reservationopen">
     <div class="col-md-6 col-md-offset-3">
       <h3 ng-if="vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate">Boka en plats / Reserve a spot</h3>

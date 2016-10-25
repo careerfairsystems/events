@@ -58,8 +58,16 @@ exports.read = function(req, res) {
     }
     arkadevent.seatstaken = reservations.length;
     arkadevent.data = {};
-    arkadevent.data.isRegistered = reservations.filter(isUserSame).length > 0;
+    var myReservation = reservations.filter(isUserSame);
     function isUserSame(r) { return (r.enrolled || r.standby) && idCompare(r.user, userId); }
+    var isRegistered = myReservation.length > 0;
+    if(isRegistered){
+      myReservation = myReservation[0];
+      arkadevent.data.isPending = myReservation.pending;
+      arkadevent.data.isEnrolled = myReservation.enrolled;
+      arkadevent.data.isStandby = myReservation.standby;
+    }
+    arkadevent.data.isRegistered = isRegistered;
     res.jsonp(arkadevent);
   });
 };

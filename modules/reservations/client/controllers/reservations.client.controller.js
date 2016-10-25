@@ -6,9 +6,9 @@
     .module('reservations')
     .controller('ReservationsController', ReservationsController);
 
-  ReservationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reservationResolve', 'arkadeventResolve', 'Users', 'ProgramsService'];
+  ReservationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reservationResolve', 'arkadeventResolve', 'Users', 'ProgramsService', '$http'];
 
-  function ReservationsController ($scope, $state, $window, Authentication, reservation, arkadeventResolve, Users, ProgramsService) {
+  function ReservationsController ($scope, $state, $window, Authentication, reservation, arkadeventResolve, Users, ProgramsService, $http) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -118,5 +118,33 @@
         reservationId: vm.resId
       });
     }
+
+    // If is pending
+    vm.decline = function(){
+      $http.post('/api/reservations/decline', { reservationId: vm.reservation._id, userId: vm.user._id, arkadeventId: vm.arkadevent._id }).success(function (response) {
+        // Show user success message 
+        $scope.success = response.message;
+        $scope.error = response.message;
+        vm.redirect();
+      }).error(function (response) {
+        // Show user error message 
+        $scope.error = response.message;
+      });
+    };
+    vm.accept = function(){
+      $http.post('/api/reservations/accept', { reservationId: vm.reservation._id, userId: vm.user._id, arkadeventId: vm.arkadevent._id }).success(function (response) {
+        // Show user success message 
+        $scope.success = response.message;
+        $scope.error = response.message;
+        vm.redirect();
+      }).error(function (response) {
+        // Show user error message 
+        $scope.error = response.message;
+      });
+    };
+    vm.redirect = function(){
+      $state.go('home');
+    };
+
   }
 }());
