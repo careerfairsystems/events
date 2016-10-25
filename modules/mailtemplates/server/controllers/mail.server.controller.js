@@ -86,10 +86,10 @@ function sendMail(reservation, template, content, subject, callback, res){
       smtpTransport.sendMail(mailOptions, function (err) {
         console.log('Email sent to: ' + reservation.email);
         console.log('err?: ' + JSON.stringify(err));
+        callback(err);
         done(err);
       });
     }
   ], function (err) {
-    callback(err);
   });
 }
