@@ -176,7 +176,7 @@ exports.offerseat = function(req, res) {
       console.log('Host: ' + config.host);
       console.log('Res_id: ' + reservation._id);
       var str = '\n\n';
-      str += 'Link to verify that you are still interested in attending the Banquet:\n';
+      str += 'Link to verify that you are still interested in attending the event:\n';
       str += config.host + '/reservations/offer/' + reservation._id;
       str += '\n';
       return str;

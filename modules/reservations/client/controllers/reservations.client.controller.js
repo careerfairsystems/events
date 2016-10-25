@@ -119,27 +119,34 @@
       });
     }
 
+    // Show message in 10 sec
+    vm.showMessage = function (message){
+      $scope.message = message;
+      setTimeout(function(){ 
+        $scope.message = undefined; 
+        $scope.$apply();
+      }, 10000);
+    };
+
     // If is pending
     vm.decline = function(){
       $http.post('/api/reservations/decline', { reservationId: vm.reservation._id, userId: vm.user._id, arkadeventId: vm.arkadevent._id }).success(function (response) {
         // Show user success message 
-        $scope.success = response.message;
-        $scope.error = response.message;
+        vm.showMessage('Successfully accepted the seat');
         vm.redirect();
       }).error(function (response) {
         // Show user error message 
-        $scope.error = response.message;
+        vm.showMessage('Unsuccessfully declined seat... ' + response.message);
       });
     };
     vm.accept = function(){
       $http.post('/api/reservations/accept', { reservationId: vm.reservation._id, userId: vm.user._id, arkadeventId: vm.arkadevent._id }).success(function (response) {
         // Show user success message 
-        $scope.success = response.message;
-        $scope.error = response.message;
+        vm.showMessage('Successfully accepted the seat');
         vm.redirect();
       }).error(function (response) {
         // Show user error message 
-        $scope.error = response.message;
+        vm.showMessage('Unsuccessfully accepted seat... ' + response.message);
       });
     };
     vm.redirect = function(){
