@@ -65,11 +65,11 @@
     }
     fillFoodPref();
     function fillFoodPref(){
-      $scope.laktos = vm.reservation.foodpref.indexOf('Laktos') >= 0;
-      $scope.vegetarian = vm.reservation.foodpref.indexOf('Vegetarian') >= 0;
-      $scope.vegan = vm.reservation.foodpref.indexOf('Vegan') >= 0;
-      $scope.gluten = vm.reservation.foodpref.indexOf('Gluten') >= 0;
-      $scope.other = vm.reservation.other;
+      vm.laktos = vm.reservation.foodpref.indexOf('Laktos') >= 0;
+      vm.vegetarian = vm.reservation.foodpref.indexOf('Vegetarian') >= 0;
+      vm.vegan = vm.reservation.foodpref.indexOf('Vegan') >= 0;
+      vm.gluten = vm.reservation.foodpref.indexOf('Gluten') >= 0;
+      vm.other = vm.reservation.other;
     }
 
     // Remove existing Reservation
@@ -87,16 +87,16 @@
       }
 
       var food_arr = [];
-      if($scope.laktos) 
+      if(vm.laktos) 
         food_arr.push('Laktos');
-      if($scope.vegetarian) 
+      if(vm.vegetarian) 
         food_arr.push('Vegetarian');
-      if($scope.vegan) 
+      if(vm.vegan) 
         food_arr.push('Vegan');
-      if($scope.gluten) 
+      if(vm.gluten) 
         food_arr.push('Gluten');
       vm.reservation.foodpref = food_arr;
-      vm.reservation.other = $scope.other;
+      vm.reservation.other = vm.other;
 
       // TODO: move create/update logic to service
       if (vm.reservation._id) {

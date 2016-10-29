@@ -118,12 +118,12 @@
             <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
             <br />
             <!-- Choices -->
-            <input type="checkbox" ng-model="laktos" /> Laktos
-            <input type="checkbox" ng-model="vegetarian" /> Vegetarian
-            <input type="checkbox" ng-model="vegan" /> Vegan
-            <input type="checkbox" ng-model="gluten" /> Gluten
+            <input type="checkbox" ng-model="vm.laktos" value="true" /> Laktos
+            <input type="checkbox" ng-model="vm.vegetarian" value="true" /> Vegetarian
+            <input type="checkbox" ng-model="vm.vegan" value="true" /> Vegan
+            <input type="checkbox" ng-model="vm.gluten" value="true" /> Gluten
             <!-- Other -->
-            <input name="foodpref" type="text" ng-model="other" id="other" placeholder="Other..." class="form-control">
+            <input name="foodpref" type="text" ng-model="vm.other" id="other" placeholder="Other..." class="form-control">
           </div>
           <!-- If user can NOT choose foodpref because of reserv -->
           <div ng-if="!vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate" class="form-group">
