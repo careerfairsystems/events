@@ -113,39 +113,41 @@
             </div>
           </div>
           <!-- Foodpref -->
-          <!-- If user can choose foodpref -->
-          <div ng-if="vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate" class="form-group" show-errors>
-            <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
-            <br />
-            <!-- Choices -->
-            <input type="checkbox" ng-model="vm.laktos" value="true" /> Laktos
-            <input type="checkbox" ng-model="vm.vegetarian" value="true" /> Vegetarian
-            <input type="checkbox" ng-model="vm.vegan" value="true" /> Vegan
-            <input type="checkbox" ng-model="vm.gluten" value="true" /> Gluten
-            <!-- Other -->
-            <input name="foodpref" type="text" ng-model="vm.other" id="other" placeholder="Other..." class="form-control">
-          </div>
-          <!-- If user can NOT choose foodpref because of reserv -->
-          <div ng-if="!vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate" class="form-group">
-            <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
-            <p>
-              Som reserv får du inte välja matpreferens, utan blir tilldelad den maten som den lediga platsen är bokad med.
-            </p>
-            <p>
-              As reserve you may not choose food preference. You will get the food that was booked for the spot that is opened for you.
-            </p>
-          </div>
-          <!-- If user can NOT choose foodpref because of too late -->
-          <div ng-if="!vm.arkadevent.reservationopen || vm.tooLate" class="form-group">
-            <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
-            <p>
-              Det för nära inpå eventet för att vi ska kunna ta hänsyn till 
-              din matpreferens. Du kommer att bli tilldelad den "vanliga" maten.
-            </p>
-            <p>
-              It too close before the event for us ta have a possibility to take 
-              your food preference in account. You will be served the standard food
-            </p>
+          <div ng-show="vm.arkadevent.foodserved">
+            <!-- If user can choose foodpref -->
+            <div ng-if="vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate" class="form-group" show-errors>
+              <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
+              <br />
+              <!-- Choices -->
+              <input type="checkbox" ng-model="vm.laktos" value="true" /> Laktos
+              <input type="checkbox" ng-model="vm.vegetarian" value="true" /> Vegetarian
+              <input type="checkbox" ng-model="vm.vegan" value="true" /> Vegan
+              <input type="checkbox" ng-model="vm.gluten" value="true" /> Gluten
+              <!-- Other -->
+              <input name="foodpref" type="text" ng-model="vm.other" id="other" placeholder="Other..." class="form-control">
+            </div>
+            <!-- If user can NOT choose foodpref because of reserv -->
+            <div ng-if="!vm.hasSeatsLeft && vm.arkadevent.reservationopen && !vm.tooLate" class="form-group">
+              <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
+              <p>
+                Som reserv får du inte välja matpreferens, utan blir tilldelad den maten som den lediga platsen är bokad med.
+              </p>
+              <p>
+                As reserve you may not choose food preference. You will get the food that was booked for the spot that is opened for you.
+              </p>
+            </div>
+            <!-- If user can NOT choose foodpref because of too late -->
+            <div ng-if="!vm.arkadevent.reservationopen || vm.tooLate" class="form-group">
+              <label class="control-label" for="foodpref">Matpreferens / Food preference</label>
+              <p>
+                Det för nära inpå eventet för att vi ska kunna ta hänsyn till 
+                din matpreferens. Du kommer att bli tilldelad den "vanliga" maten.
+              </p>
+              <p>
+                It too close before the event for us ta have a possibility to take 
+                your food preference in account. You will be served the standard food
+              </p>
+            </div>
           </div>
           <!-- Submit -->
           <hr>
