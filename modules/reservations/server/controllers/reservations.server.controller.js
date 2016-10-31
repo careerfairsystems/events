@@ -31,7 +31,7 @@ exports.create = function(req, res) {
   reservation.user = req.user;
 
   var count = 0;
-  Reservation.find({ _id: new ObjectId(reservation.arkadevent) }).sort('-created').exec(reservationsFound);
+  Reservation.find({ arkadevent: new ObjectId(reservation.arkadevent) }).sort('-created').exec(reservationsFound);
   function reservationsFound(err, reservations) {
     if (err) {
       console.log('Error: ' + err);
