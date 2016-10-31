@@ -75,7 +75,7 @@ pre {
         overflow: hidden; }
       .eventgrid .events .eventbox .name {
         position: absolute;
-        top: 240px;
+        top: 0;
         padding: 5px;
         padding-left: 15px;
         background-color: rgba(0, 43, 100, 0.8);
@@ -92,7 +92,7 @@ pre {
           position: absolute;
           width: 100%;
           text-align: center;
-          top: 0;
+          top: 240px;
           left: 0;
           background-color: rgba(0, 43, 100, 0.8);
           color: white;
