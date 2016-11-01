@@ -23,8 +23,9 @@
     $scope.reservations = [];
     ReservationsService.query(function (data){
       function sameEvent(r) { return r.arkadevent === vm.arkadevent._id; }
+      function isEnrolled(r) { return r.enrolled; }
       function minimizeObject(r){ return { _id: r._id, name: r.name, showedup: r.showedup, foodpref: r.foodpref, time: (new Date(r.created).getTime()) }; }
-      $scope.reservations = data.filter(sameEvent).map(minimizeObject);
+      $scope.reservations = data.filter(sameEvent).filter(isEnrolled).map(minimizeObject);
       $scope.filteredItems = $scope.reservations;
     });
 
