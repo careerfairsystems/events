@@ -22,7 +22,7 @@ function idCompare(id1,id2){
 exports.create = function(req, res) {
   var arkadevent = new Arkadevent(req.body);
   arkadevent.user = req.user;
-
+  arkadevent.data = {};
   arkadevent.save(function(err) {
     if (err) {
       return res.status(400).send({
@@ -185,6 +185,7 @@ exports.update = function(req, res) {
 
   arkadevent = _.extend(arkadevent, req.body);
 
+  arkadevent.data = {};
   arkadevent.save(function(err) {
     if (err) {
       return res.status(400).send({
