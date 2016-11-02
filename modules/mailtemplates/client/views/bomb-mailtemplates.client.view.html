@@ -14,6 +14,10 @@
   </div>
   <!-- Choose Template -->
   <div class="row" ng-show="vm.reservations">
+    <h4>Email to enrolled students</h4>
+    <input type="text" class="form-control" ng-model="vm.emailList">
+  </div>
+  <div class="row" ng-show="vm.reservations && false">
     <h4>Choose mailtemplate to use</h4>
     <div class="list-group">
       <div data-ng-repeat="mailtemplate in vm.mailtemplates track by $index" ng-class="{active: $index === vm.currTemplate}" ng-click="vm.chooseTemplate($index)" class="list-group-item" style="cursor: pointer;">

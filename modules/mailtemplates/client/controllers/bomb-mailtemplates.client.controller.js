@@ -21,6 +21,8 @@
       function onEvent(r){ return r.arkadevent === vm.arkadevent._id; }
       vm.reservations = vm.reservations.filter(isEnrolled);
       function isEnrolled(r){ return r.enrolled; }
+      vm.emailList = vm.reservations.map(getEmail);
+      function getEmail(r){ return r.email; }
     };
 
     vm.chooseTemplate = function (index){
@@ -29,7 +31,9 @@
     };
 
     vm.sendEmails = function(){
-
+      // Turn off until completely implemented.
+      return;
+      /*
       vm.reservations.forEach(sendEmail);
       function sendEmail(reservation){
         $scope.success = '';
@@ -41,6 +45,7 @@
           $scope.error = $sce.trustAsHtml($scope.error + 'Failed to send mail: ' + response.message + '<br />');
         });
       }
+      */
     };
 
   }
