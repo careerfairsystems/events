@@ -1,5 +1,5 @@
 @media screen and (max-width: 380px) {
-  .row {
+  .row.eventgrid {
     margin-left: -45px; } }
 
 .my-message {
