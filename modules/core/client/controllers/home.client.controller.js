@@ -31,6 +31,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         e.description = $sce.trustAsHtml(e.description);
       }
       vm.events.forEach(addSeatsLeft);
+      vm.events.sort(afterDate);
+      function afterDate(e1, e2){ return e1.date >  e2.date ? 1 : -1; }
     }
   }
 ]);
