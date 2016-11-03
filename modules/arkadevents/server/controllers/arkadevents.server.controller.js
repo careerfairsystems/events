@@ -23,6 +23,7 @@ exports.create = function(req, res) {
   var arkadevent = new Arkadevent(req.body);
   arkadevent.user = req.user;
   arkadevent.data = {};
+  arkadevent.seatstaken = 0;
   arkadevent.save(function(err) {
     if (err) {
       return res.status(400).send({
@@ -58,6 +59,7 @@ exports.read = function(req, res) {
     }
     arkadevent.seatstaken = reservations.length;
     arkadevent.data = {};
+    arkadevent.seatstaken = 0;
     var myReservation = reservations.filter(isUserSame);
     function isUserSame(r) { return (r.enrolled || r.standby) && idCompare(r.user, userId); }
     var isRegistered = myReservation.length > 0;
@@ -224,35 +226,38 @@ exports.list = function(req, res) {
     userId = user._id;
   }
   Arkadevent.find().sort('-created').populate('user', 'displayName').exec(function(err, arkadevents) {
-    var incr = 0;
-    function calcSpots(e){
-      Reservation.find({ arkadevent: e._id, $or: [{ enrolled: true }, { standby: true }] }).exec(function(err, reservations){
-        if(err){
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        }
-        function isUserSame(r) { return (r.standby || r.enrolled) && idCompare(r.user, userId); }
-        e.data = {};
-        e.seatstaken = reservations.length;
-        e.data.isRegistered = reservations.filter(isUserSame).length > 0;
-        incr++;
-        if(incr === arkadevents.length){
-          res.jsonp(arkadevents);
-        }
-      });        
-    }
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      arkadevents.map(calcSpots);
+      Reservation.find({ $or: [{ enrolled: true }, { standby: true }] }).exec(function(err, reservations){
+        if(err){
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        }
+        reservations.forEach(goThroughReservations);
+        function goThroughReservations(r){
+          arkadevents.forEach(addReservationsData);
+          function addReservationsData(e){
+            function isUserSame(r) { return (r.standby || r.enrolled) && idCompare(r.user, userId); }
+            if(idCompare(e._id, r.arkadevent)){
+              e.data = !e.data ? {} : e.data;
+              e.seatstaken = !e.seatstaken ? 1 : e.seatstaken + 1;
+              if(isUserSame(r)){
+                e.data.isRegistered = true;
+              }
+            }
+          }
+        }
+        res.jsonp(arkadevents);
+      });        
     }
   });
 };
 
-/**
+/*
  * Arkadevent middleware
  */
 exports.arkadeventByID = function(req, res, next, id) {
