@@ -51,15 +51,13 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   arkadevent.isCurrentUserOwner = req.user && arkadevent.user && arkadevent.user._id.toString() === req.user._id.toString();
 
-  Reservation.find({ arkadevent: arkadevent._id, $or: [{ enrolled: true }, { standby: true }] }).exec(function(err, reservations){
+  Reservation.find({ arkadevent: new ObjectId(arkadevent._id), $or: [{ enrolled: true }, { standby: true }] }).exec(function(err, reservations){
     if(err){
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     }
     arkadevent.seatstaken = reservations.length;
-    arkadevent.data = {};
-    arkadevent.seatstaken = 0;
     var myReservation = reservations.filter(isUserSame);
     function isUserSame(r) { return (r.enrolled || r.standby) && idCompare(r.user, userId); }
     var isRegistered = myReservation.length > 0;
@@ -186,7 +184,8 @@ exports.update = function(req, res) {
   var arkadevent = req.arkadevent;
 
   arkadevent = _.extend(arkadevent, req.body);
-
+  arkadevent.data = {};
+  arkadevent.seatstaken = 0;
   arkadevent.data = {};
   arkadevent.save(function(err) {
     if (err) {
