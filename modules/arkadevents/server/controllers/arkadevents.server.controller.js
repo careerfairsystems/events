@@ -230,13 +230,16 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      arkadevents.forEach(function(a){ a.data = {}; });
+      res.jsonp(arkadevents);
+      /*
       Reservation.find({ $or: [{ enrolled: true }, { standby: true }] }).exec(function(err, reservations){
         if(err){
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           });
         }
-        reservations.forEach(goThroughReservations);
+        //reservations.forEach(goThroughReservations);
         function goThroughReservations(r){
           arkadevents.forEach(addReservationsData);
           function addReservationsData(e){
@@ -250,8 +253,8 @@ exports.list = function(req, res) {
             }
           }
         }
-        res.jsonp(arkadevents);
-      });        
+      });
+      */        
     }
   });
 };
