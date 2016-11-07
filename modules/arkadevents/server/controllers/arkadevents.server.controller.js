@@ -63,11 +63,11 @@ exports.read = function(req, res) {
     var isRegistered = myReservation.length > 0;
     if(isRegistered){
       myReservation = myReservation[0];
-      arkadevent.data.isPending = myReservation.pending;
-      arkadevent.data.isEnrolled = myReservation.enrolled;
-      arkadevent.data.isStandby = myReservation.standby;
+      //arkadevent.data.isPending = myReservation.pending;
+      //arkadevent.data.isEnrolled = myReservation.enrolled;
+      //arkadevent.data.isStandby = myReservation.standby;
     }
-    arkadevent.data.isRegistered = isRegistered;
+    //arkadevent.data.isRegistered = isRegistered;
     res.jsonp(arkadevent);
   });
 };
