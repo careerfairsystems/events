@@ -15,7 +15,8 @@
 
 pre {
   border-radius: 3px;
-  padding: 10px 15px; }
+  padding: 10px 15px;
+  word-break: break-word; }
 
 .reservations .reservation {
   padding: 15px; }
