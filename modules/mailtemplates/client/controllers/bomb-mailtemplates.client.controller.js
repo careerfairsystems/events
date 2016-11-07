@@ -19,6 +19,12 @@
       vm.currEvent = index;
       vm.reservations = vm.allReservations.filter(onEvent);
       function onEvent(r){ return r.arkadevent === vm.arkadevent._id; }
+
+
+      vm.standbys = vm.reservations.filter(isStandby);
+      function isStandby(r){ return r.standby; }
+      vm.standbyEmailList = vm.standbys.map(getEmail);
+
       vm.reservations = vm.reservations.filter(isEnrolled);
       function isEnrolled(r){ return r.enrolled; }
       vm.emailList = vm.reservations.map(getEmail);

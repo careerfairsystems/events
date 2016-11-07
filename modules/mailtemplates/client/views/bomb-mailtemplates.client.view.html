@@ -14,8 +14,14 @@
   </div>
   <!-- Choose Template -->
   <div class="row" ng-show="vm.reservations">
+    <p class="lead">
+      REMEMBER: Add to Bcc! So that it is a secret copy.
+    </p>
     <h4>Email to enrolled students</h4>
     <input type="text" class="form-control" ng-model="vm.emailList">
+    <br>
+    <h4>Email to standby students (reserves)</h4>
+    <input type="text" class="form-control" ng-model="vm.standbyEmailList">
   </div>
   <div class="row" ng-show="vm.reservations && false">
     <h4>Choose mailtemplate to use</h4>
