@@ -52,6 +52,15 @@
       // Set 'date's time to starttime
       vm.arkadevent.date.setHours(vm.arkadevent.starttime.getHours());
       vm.arkadevent.date.setMinutes(vm.arkadevent.starttime.getMinutes());
+      vm.arkadevent.starttime = vm.arkadevent.date;
+      // Set date of starttime and endtime
+      var endTime = new Date();
+      endTime.setTime(vm.arkadevent.date.getTime());
+      endTime.setHours(vm.arkadevent.endtime.getHours());
+      endTime.setMinutes(vm.arkadevent.endtime.getMinutes());
+      vm.arkadevent.endtime = endTime;
+
+      
 
       if($scope.registeredmail){
         vm.arkadevent.registeredmail = $scope.registeredmail;
