@@ -209,7 +209,10 @@ exports.acceptoffer = function(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } 
     var yesterday = getYesterday();
-    var isCurrentUserOwner = req.user && reservation.user && idCompare(reservation.user, req.user._id);
+    if(!reservation){
+      return res.status(400).send({ message: 'Unfortunately wo couldnt find your reservation, please contact event.arkad@gmail.com.' });
+    }
+    var isCurrentUserOwner = req.user && reservation && reservation.user && idCompare(reservation.user, req.user._id);
 
     // If offer not older than 24h
     if((reservation.offer && reservation.offer.getTime() > yesterday.getTime()) && isCurrentUserOwner){
@@ -220,7 +223,7 @@ exports.acceptoffer = function(req, res) {
         return res.status(200).send({ message: 'Success' });
       });
     } else {
-      return res.status(400).send({ message: 'The offer period has expired' });
+      return res.status(400).send({ message: 'You had 24 hours to accept you seat, the time has passed. Contact event.arkad@gmail.com if you have any questions.' });
     }
   }
 };
