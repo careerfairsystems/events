@@ -49,6 +49,10 @@
       vm.arkadevent.endtime = $scope.inputQuestions[8].variable;
       vm.arkadevent.lastregistrationdate = $scope.inputQuestions[9].variable;
 
+      // Set 'date's time to starttime
+      vm.arkadevent.date.setHours(vm.arkadevent.starttime.getHours());
+      vm.arkadevent.date.setMinutes(vm.arkadevent.starttime.getMinutes());
+
       if($scope.registeredmail){
         vm.arkadevent.registeredmail = $scope.registeredmail;
       }
