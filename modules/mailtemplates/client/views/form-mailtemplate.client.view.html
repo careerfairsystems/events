@@ -29,6 +29,14 @@
             <p class="help-block error-text" ng-message="required">Mailtemplate content is required.</p>
           </div>
         </div>
+        <!-- Content -->
+        <div class="form-group" show-errors>
+          <label class="control-label" for="signature">Signature</label>
+          <textarea ng-model="vm.mailtemplate.signature" id="signature" class="form-control" placeholder="Event Administrators @ ARKAD 2017" required></textarea>
+          <div ng-messages="vm.form.mailtemplateForm.signaure.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Mailtemplate signature is required.</p>
+          </div>
+        </div>
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.mailtemplate._id ? 'Update' : 'Create'}}</button>
         </div>

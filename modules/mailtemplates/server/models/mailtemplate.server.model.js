@@ -26,6 +26,11 @@ var MailtemplateSchema = new Schema({
     default: '',
     trim: true
   },
+  signature: {
+    type: String,
+    default: '',
+    trim: true
+  },
   created: {
     type: Date,
     default: Date.now
