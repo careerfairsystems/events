@@ -33,7 +33,10 @@ exports.sendTemplateEmail = function (mailtemplateId, reservation, res, doneMail
     console.log('send mail');    
     // Get variables    
     var template = path.resolve('modules/mailtemplates/server/templates/email');
-    var content = mailtemplate.content + "\n\n" + mailtemplate.signature || '';
+    var content = mailtemplate.content + 
+		  "\n\nDon't hesitate to contact us if you have any questions regarding the event.\n\n" + 
+		  "Kind regards,\n\n" +  
+		  mailtemplate.signature || '';
     var subject = mailtemplate.subject || '';
 
     if (typeof specifikContent === 'function') { 

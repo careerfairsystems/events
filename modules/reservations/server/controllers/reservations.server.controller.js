@@ -455,6 +455,7 @@ function registeredmail(req, res, next) {
   */
 exports.confirmationMail = function (req, res, next) {
   var id = req.body.reservationId;
+  console.log("Reservation id: " + id);
   Reservation.findOne({ _id: new ObjectId(id) }, reservationFound);
   function reservationFound(err, reservation){
     if(err){
