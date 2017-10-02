@@ -25,8 +25,9 @@
 	<h4 ng-if="arkadevent.reglabels.length > 0" >Food preferences by the numbers</h4>
 	<table class="table" ng-repeat="label in arkadevent.reglabels track by $index">
 	  <tr>
-	    <td>{{ label }}</td>
-	    <td>{{ arkadevent.regdata[$index] }}</td>
+	    <td ng-if="label.length > 0" style="width: 81%">{{ label }}</td>
+	    <td ng-if="label.length <= 0" style="width: 81%">No preferences</td>
+	    <td style="width: 19%">{{ arkadevent.regdata[$index] }}</td>
 	  </tr>
 	</table>
     </div>
@@ -34,8 +35,9 @@
 	<h4 ng-if="arkadevent.unreglabels.length > 0" >Unregistered food preferences by the numbers</h4>
 	<table class="table" ng-repeat="label in arkadevent.unreglabels track by $index">
 	  <tr>
-	    <td>{{ label }}</td>
-	    <td>{{ arkadevent.unregdata[$index] }}</td>
+	    <td ng-if="label.length > 0" style="width: 81%">{{ label }}</td>
+	    <td ng-if="label.length <= 0" style="width: 81%">No preferences</td>
+	    <td style="width: 19%">{{ arkadevent.unregdata[$index] }}</td>
 	  </tr>
 	</table>
     </div>
