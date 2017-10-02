@@ -55,6 +55,7 @@
       vm.user.phone = vm.reservation.phone;
       vm.user.email = vm.reservation.email;
       vm.user.foodpref = vm.reservation.foodpref;
+      console.log("User foodpref: " + vm.user.foodpref);
       vm.user.other = vm.reservation.other;
       vm.user.guild = vm.reservation.guild;
       vm.user.year = vm.reservation.year;
@@ -95,7 +96,10 @@
         food_arr.push('Vegan');
       if(vm.gluten) 
         food_arr.push('Gluten');
+      if(vm.other)
+	food_arr.push(vm.other);
       vm.reservation.foodpref = food_arr;
+      console.log("Foodpref: " + vm.reservation.foodpref);
       vm.reservation.other = vm.other;
 
       // TODO: move create/update logic to service

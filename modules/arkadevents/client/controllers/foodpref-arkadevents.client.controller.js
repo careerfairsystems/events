@@ -56,6 +56,7 @@
         function groupTheList(prev, foodpref){
           if(foodpref in prev) prev[foodpref] ++;
           else prev[foodpref] = 1;
+	  console.log(foodpref + ": " + prev[foodpref]);
           return prev;
         }
       }
@@ -84,6 +85,7 @@
       vm.arkadevents.forEach(createEventCharts);
       function createEventCharts(e){
         vm.createChart('#registered-' + pos, e.regdata, e.reglabels);
+	console.log("regdata: " + e.regdata + ", Labels: " + e.reglabels);
         vm.createChart('#unregistered-' + pos, e.unregdata, e.unreglabels);
         pos++;
       }
