@@ -71,6 +71,14 @@
       vm.gluten = vm.reservation.foodpref.indexOf('Gluten') >= 0;
       vm.other = vm.reservation.other;
     }
+    $http({
+      method: 'GET',
+      url: '/api/arkadevents/reservationstate/' + vm.arkadevent._id
+    }).then(function successCallback(res) {
+      vm.reservationstate = res;
+    }, function errorCallback(err) {
+      vm.showMessage.log(err.message);
+    });
 
     // Remove existing Reservation
     function remove() {

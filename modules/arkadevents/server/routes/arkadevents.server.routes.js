@@ -21,6 +21,8 @@ module.exports = function(app) {
     .put(arkadevents.update)
     .delete(arkadevents.delete);
 
+  app.route('/api/arkadevents/reservationstate/:arkadeventId').get(arkadevents.readreservation);
+
   // Finish by binding the Arkadevent middleware
   app.param('arkadeventId', arkadevents.arkadeventByID);
 };

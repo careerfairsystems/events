@@ -29,11 +29,11 @@
   <hr>
 
   <!-- isRegistered -->
-  <div ng-if="vm.arkadevent.data.isRegistered && !vm.arkadevent.data.isPending">
+  <div ng-if="vm.reservationstate.data.isRegistered && !vm.arkadevent.data.isPending">
     <div class="alert text-center alert-success">You have already applied to this event.
       <br />
       <p class="lead">
-      {{ vm.arkadevent.data.isEnrolled ? 'You have a seat' : 'You are on the reservlist' }}
+      {{ vm.arkadevent.reservationstate.isEnrolled ? 'You have a seat' : 'You are on the reservlist' }}
       </p>
       <br />
       <br />
@@ -42,7 +42,7 @@
   </div>
   
   <!-- isPending -->
-  <div ng-if="vm.arkadevent.data.isPending">
+  <div ng-if="vm.reservationstate.data.isPending">
     <div class="alert text-center alert-success">You have been offered a seat to this event.
       <br />
       <br />
