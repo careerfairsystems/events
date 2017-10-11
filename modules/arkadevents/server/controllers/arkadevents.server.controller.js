@@ -58,17 +58,46 @@ exports.read = function(req, res) {
       });
     }
     arkadevent.seatstaken = reservations.length;
+    res.jsonp(arkadevent);
+  });
+};
+
+/**
+ * GetReservation
+ */
+exports.readreservation = function(req, res) {
+  var arkadevent = req.arkadevent ? req.arkadevent.toJSON() : {};
+  var user = req.user;
+  var userId = '';
+  var reservationState = {
+    isPending: undefined,
+    isEnrolled: undefined,
+    isStandby: undefined,
+    isRegistered: undefined,
+  };
+  if(user){
+    userId = user._id;
+  }
+  // Add a custom field to the Article, for determining if the current User is the "owner".
+  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
+  arkadevent.isCurrentUserOwner = req.user && arkadevent.user && arkadevent.user._id.toString() === req.user._id.toString();
+  Reservation.find({ arkadevent: new ObjectId(arkadevent._id), $or: [{ enrolled: true }, { standby: true }] }).exec(function(err, reservations){
+    if(err){
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
     var myReservation = reservations.filter(isUserSame);
     function isUserSame(r) { return (r.enrolled || r.standby) && idCompare(r.user, userId); }
     var isRegistered = myReservation.length > 0;
     if(isRegistered){
       myReservation = myReservation[0];
-      //arkadevent.data.isPending = myReservation.pending;
-      //arkadevent.data.isEnrolled = myReservation.enrolled;
-      //arkadevent.data.isStandby = myReservation.standby;
+      reservationState.isPending = myReservation.pending;
+      reservationState.isEnrolled = myReservation.enrolled;
+      reservationState.isStandby = myReservation.standby;
     }
-    //arkadevent.data.isRegistered = isRegistered;
-    res.jsonp(arkadevent);
+    reservationState.isRegistered = isRegistered;
+    res.jsonp(reservationState);
   });
 };
 
