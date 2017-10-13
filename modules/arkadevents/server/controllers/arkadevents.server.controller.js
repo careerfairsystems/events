@@ -111,9 +111,9 @@ exports.offerseats = function(req, res) {
   offerSeatsOnEvent(arkadevent, function(success){
     if(!hasResponded){
       if(success){
-        res.status(200).send({ message: 'Succesfully sent email' }); 
+        res.status(200).send({ message: 'Succesfully sent email' });
       } else {
-        res.status(400).send({ message: 'Failed to sent email' }); 
+        res.status(400).send({ message: 'Failed to sent email' });
       }
       hasResponded = true;
     }
@@ -157,9 +157,9 @@ function offerSeatsOnEvent(arkadevent, offersDone, res, req){
       var offerCreated = new Date();
       // Update to DB
       Reservation.update({ _id: new ObjectId(r._id) }, { $set: { pending: true, offer: offerCreated } }, function(err, affected){
-        if (err) { 
+        if (err) {
           return offersDone({ err: true, message: errorHandler.getErrorMessage(err) });
-        } 
+        }
         count--;
         console.log('count--' + count);
         console.log('resp--' + JSON.stringify(affected));
@@ -184,7 +184,7 @@ function offerSeatsOnEvent(arkadevent, offersDone, res, req){
         }
       });
     }
-  });        
+  });
 }
 
 /**
@@ -214,7 +214,7 @@ exports.update = function(req, res) {
 
   arkadevent = _.extend(arkadevent, req.body);
   arkadevent.data = {};
-  arkadevent.seatstaken = 0;
+  //arkadevent.seatstaken = 0;
   arkadevent.data = {};
   arkadevent.save(function(err) {
     if (err) {
@@ -259,7 +259,10 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      arkadevents.forEach(function(a){ a.data = {}; });
+      arkadevents.forEach(function(a){
+				a.data = {};
+				a.eventURL = process.env.HOST_URL + "/reservations/create/" + a.id;
+			});
       res.jsonp(arkadevents);
       /*
       Reservation.find({ $or: [{ enrolled: true }, { standby: true }] }).exec(function(err, reservations){
@@ -283,7 +286,7 @@ exports.list = function(req, res) {
           }
         }
       });
-      */        
+      */
     }
   });
 };

@@ -94,7 +94,11 @@ var ArkadeventSchema = new Schema({
   reservationopen: {
     type: Boolean,
     default: false
-  }
+  },
+	eventURL: {
+		type: String,
+		default: process.env.HOST_URL + "/reservations/create/"
+	}
 });
 
 mongoose.model('Arkadevent', ArkadeventSchema);
